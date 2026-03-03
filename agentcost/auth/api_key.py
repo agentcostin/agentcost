@@ -99,7 +99,7 @@ def validate_api_key(key: str, db=None) -> Optional[AuthContext]:
 
     # Build auth context — API keys get org_member role by default,
     # scoped by the scopes column
-    scopes = (row.get("scopes") or "*").split(",")
+    (row.get("scopes") or "*").split(",")
     claims = TokenClaims(
         sub=f"apikey:{row['id']}",
         email="",

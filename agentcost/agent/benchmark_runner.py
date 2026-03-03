@@ -356,7 +356,7 @@ class BenchmarkRunner:
         r = self.results
         # A task is "completed" only if the LLM actually produced output (tokens > 0)
         completed = [x for x in r if x.input_tokens > 0]
-        failed = [x for x in r if x.input_tokens == 0]
+        [x for x in r if x.input_tokens == 0]
         total_income = sum(x.actual_payment for x in r)
         total_cost = sum(x.total_cost for x in r)
         net = total_income - total_cost

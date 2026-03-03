@@ -114,7 +114,7 @@ async def oidc_callback(
         raise HTTPException(400, f"Token validation failed: {token_data.get('error_description', token_data['error'])}")
 
     access_token = token_data["access_token"]
-    refresh_token = token_data.get("refresh_token", "")
+    token_data.get("refresh_token", "")
     print("[AUTH DEBUG] Token exchange OK, validating JWT...")
 
     # Validate the access token to get claims

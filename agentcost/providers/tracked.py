@@ -469,7 +469,7 @@ class TrackedProvider:
                     else:
                         raise
             except Exception as e:
-                err_str = str(e)
+                str(e)
                 # Extract useful info from OpenAI error responses
                 if hasattr(e, 'status_code'):
                     code = e.status_code

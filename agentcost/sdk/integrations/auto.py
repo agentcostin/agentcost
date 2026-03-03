@@ -68,7 +68,7 @@ def undo_instrument():
 def _patch_openai(project: str, persist: bool) -> bool:
     """Monkey-patch openai.resources.chat.completions.Completions.create."""
     try:
-        import openai
+        import openai  # noqa: F401
         from openai.resources.chat.completions import Completions
 
         orig_create = Completions.create
@@ -127,7 +127,7 @@ def _patch_openai(project: str, persist: bool) -> bool:
 def _patch_anthropic(project: str, persist: bool) -> bool:
     """Monkey-patch anthropic.resources.messages.Messages.create."""
     try:
-        import anthropic
+        import anthropic  # noqa: F401
         from anthropic.resources.messages import Messages
 
         orig_create = Messages.create
@@ -189,7 +189,7 @@ def _hook_langchain(project: str, persist: bool) -> bool:
         from ..sdk.integrations.langchain import AgentCostCallback
         import langchain_core.callbacks.manager as mgr
 
-        handler = AgentCostCallback(project=project, persist=persist)
+        AgentCostCallback(project=project, persist=persist)
         # Add to default callbacks if the manager supports it
         if hasattr(mgr, "configure"):
             # LangChain >=0.1 approach

@@ -52,3 +52,5 @@ benchmark-report.md
 
 # Docker
 docker/keycloak/data/
+
+PUBLISHING.md

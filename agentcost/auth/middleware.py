@@ -34,7 +34,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
-        config = get_auth_config()
+        get_auth_config()
         start_time = time.time()
 
         # Skip auth processing for health/docs endpoints

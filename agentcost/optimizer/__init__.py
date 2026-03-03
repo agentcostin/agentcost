@@ -249,7 +249,7 @@ class CostOptimizer:
         for model, m in stats["by_model"].items():
             if m["calls"] > 10:
                 # If fewer unique prompts than calls, caching could help
-                duplication_ratio = 1 - (m["unique_prompts"] / m["calls"]) if m["unique_prompts"] > 0 else 0
+                1 - (m["unique_prompts"] / m["calls"]) if m["unique_prompts"] > 0 else 0
                 if m["calls"] > 20 and m["cost"] > 0:
                     # Estimate: temperature=0 calls are cache candidates
                     est_cache_hit = 0.3  # Conservative 30% cache hit rate estimate
@@ -275,7 +275,7 @@ class CostOptimizer:
                 ratio = m["output_tokens"] / m["input_tokens"]
                 if ratio > 3.0 and m["calls"] > 5:
                     # Output is 3x+ input — likely verbose responses
-                    excess_tokens = m["output_tokens"] - m["input_tokens"] * 2
+                    m["output_tokens"] - m["input_tokens"] * 2
                     est_savings = m["cost"] * 0.2  # ~20% savings by constraining output
                     savings += est_savings
                     recs.append({

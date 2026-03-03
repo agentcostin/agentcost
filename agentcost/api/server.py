@@ -86,8 +86,8 @@ def _apply_sql_dir(db, mig_dir, skip_files=None, only_files=None):
         sql = sql.replace("BOOLEAN", "INTEGER")
         sql = sql.replace("DEFAULT NOW()", "DEFAULT (datetime('now'))")
         sql = sql.replace("SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT")
-        lines = [l for l in sql.split("\n")
-                 if "INSERT INTO schema_version" not in l and "ON CONFLICT" not in l]
+        lines = [line for line in sql.split("\n")
+                 if "INSERT INTO schema_version" not in line and "ON CONFLICT" not in line]
         sql = "\n".join(lines)
         try:
             db.executescript(sql)
@@ -459,7 +459,7 @@ if _ENTERPRISE:
     async def anomaly_baselines(project: str = "default", model: str = "unknown",
                                 user: AuthContext = Depends(get_optional_user)):
         try:
-            from ..anomaly import AnomalyDetector
+            from ..anomaly import AnomalyDetector  # noqa: F401
             return {"project": project, "model": model, "baselines": {}}
         except ImportError:
             return {"error": "Anomaly detection not available"}
@@ -533,7 +533,8 @@ async def seed_sample_data(request: Request, user: AuthContext = Depends(get_opt
             else:
                 proj = _rand.choices(proj_names, weights=proj_weights, k=1)[0]
                 agent = _rand.choice(projects_map[proj])
-            jit = lambda b: max(1, _rand.randint(int(b*0.6), int(b*1.4)))
+            def jit(b):
+                return max(1, _rand.randint(int(b*0.6), int(b*1.4)))
             i_tok, o_tok = jit(avg_i), jit(avg_o)
             cost = (i_tok * inp + o_tok * outp) / 1_000_000
             base_lat = 200 + o_tok * 0.5

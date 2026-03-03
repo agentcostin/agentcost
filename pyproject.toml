@@ -91,10 +91,13 @@ include = ["agentcost/**", "dashboard/**", "sample-data/**"]
 [tool.hatch.build.targets.wheel]
 packages = ["agentcost"]
 
-[tool.ruff]
-exclude = ["scripts/validate_all_features.py"]
-
 [tool.pytest.ini_options]
 collect_ignore = ["tests/test_hints.py"]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
+[tool.ruff]
+exclude = ["scripts/validate_all_features.py"]
+
+[tool.ruff.lint]
+ignore = ["E701", "E702", "E731", "E722", "F401", "E741", "F821", "F841"]

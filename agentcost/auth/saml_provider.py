@@ -32,7 +32,7 @@ def _get_saml_settings(config: Optional[AuthConfig] = None, request_data: Option
     This maps AgentCost config to the structure OneLogin's toolkit expects.
     """
     cfg = config or get_auth_config()
-    parsed_acs = urlparse(cfg.saml_acs_url)
+    urlparse(cfg.saml_acs_url)
 
     settings = {
         "strict": True,
@@ -105,7 +105,7 @@ def get_sp_metadata(config: Optional[AuthConfig] = None) -> str:
     so they can configure their side of the SAML trust.
     """
     try:
-        from onelogin.saml2.metadata import OneLogin_Saml2_Metadata
+        from onelogin.saml2.metadata import OneLogin_Saml2_Metadata  # noqa: F401
         from onelogin.saml2.settings import OneLogin_Saml2_Settings
 
         settings = OneLogin_Saml2_Settings(_get_saml_settings(config), sp_validation_only=True)

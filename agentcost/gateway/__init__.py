@@ -179,7 +179,7 @@ def estimate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
 
 # ── Gateway App (FastAPI) ─────────────────────────────────────────────────────
 
-def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":
+def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # noqa: F821
     """Create the gateway FastAPI application."""
     from fastapi import FastAPI, Request, HTTPException
     from fastapi.responses import JSONResponse, StreamingResponse

@@ -1,0 +1,62 @@
+name: "AgentCost Benchmark"
+description: "Run AgentCost LLM benchmarks in CI and fail if cost exceeds threshold"
+inputs:
+  model:
+    description: "LLM model to benchmark"
+    required: true
+    default: "gpt-4o-mini"
+  tasks:
+    description: "Number of benchmark tasks"
+    required: false
+    default: "5"
+  max-cost:
+    description: "Maximum allowed cost in USD (fail if exceeded)"
+    required: false
+    default: ""
+  provider:
+    description: "LLM provider (openai, anthropic, ollama)"
+    required: false
+    default: "openai"
+  api-key:
+    description: "AgentCost API key for remote tracking"
+    required: false
+    default: ""
+  server-url:
+    description: "AgentCost server URL for remote tracking"
+    required: false
+    default: ""
+runs:
+  using: "composite"
+  steps:
+    - name: Install AgentCost
+      shell: bash
+      run: pip install agentcost
+
+    - name: Run Benchmark
+      shell: bash
+      env:
+        AGENTCOST_API_KEY: ${{ inputs.api-key }}
+        AGENTCOST_SERVER_URL: ${{ inputs.server-url }}
+      run: |
+        set -e
+        OUTPUT=$(python -m agentcost benchmark \
+          --model "${{ inputs.model }}" \
+          --tasks "${{ inputs.tasks }}" \
+          --provider "${{ inputs.provider }}" \
+          2>&1) || true
+        echo "$OUTPUT"
+
+        # Extract cost
+        COST=$(echo "$OUTPUT" | grep -oP 'Total Cost:\s+\$\K[0-9.]+' || echo "0")
+        echo "benchmark_cost=$COST" >> $GITHUB_OUTPUT
+
+        # Check threshold
+        MAX="${{ inputs.max-cost }}"
+        if [ -n "$MAX" ] && [ "$MAX" != "" ]; then
+          EXCEEDED=$(python3 -c "print('yes' if float('$COST') > float('$MAX') else 'no')")
+          if [ "$EXCEEDED" = "yes" ]; then
+            echo "::error::Benchmark cost \$$COST exceeds max-cost threshold \$$MAX"
+            exit 1
+          fi
+          echo "✅ Cost \$$COST within threshold \$$MAX"
+        fi

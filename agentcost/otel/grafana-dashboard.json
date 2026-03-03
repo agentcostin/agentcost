@@ -1,0 +1,153 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "Total LLM Cost ($)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "fieldConfig": {
+        "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" },
+          "thresholds": { "steps": [
+            { "color": "green", "value": null },
+            { "color": "yellow", "value": 10 },
+            { "color": "red", "value": 100 }
+          ]}
+        }
+      },
+      "targets": [{ "expr": "sum(agentcost_llm_cost_total)", "legendFormat": "Total Cost" }]
+    },
+    {
+      "title": "Total LLM Calls",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" },
+        "thresholds": { "steps": [{ "color": "blue", "value": null }] } } },
+      "targets": [{ "expr": "sum(agentcost_llm_calls_total)", "legendFormat": "Total Calls" }]
+    },
+    {
+      "title": "Total Tokens",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" },
+        "thresholds": { "steps": [{ "color": "purple", "value": null }] } } },
+      "targets": [{ "expr": "sum(agentcost_llm_tokens_total)", "legendFormat": "Total Tokens" }]
+    },
+    {
+      "title": "Avg Latency (p50)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" },
+        "thresholds": { "steps": [
+          { "color": "green", "value": null },
+          { "color": "yellow", "value": 2 },
+          { "color": "red", "value": 10 }
+        ]} } },
+      "targets": [{ "expr": "histogram_quantile(0.5, sum(rate(agentcost_llm_latency_seconds_bucket[5m])) by (le))",
+        "legendFormat": "p50 Latency" }]
+    },
+    {
+      "title": "Cost Over Time by Model",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "fieldConfig": { "defaults": { "unit": "currencyUSD", "custom": { "fillOpacity": 10 } } },
+      "targets": [{ "expr": "sum(rate(agentcost_llm_cost_total[5m])) by (model) * 60",
+        "legendFormat": "{{model}}" }]
+    },
+    {
+      "title": "Call Rate by Model",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "fillOpacity": 10 } } },
+      "targets": [{ "expr": "sum(rate(agentcost_llm_calls_total[5m])) by (model)",
+        "legendFormat": "{{model}}" }]
+    },
+    {
+      "title": "Token Throughput (input vs output)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "fieldConfig": { "defaults": { "custom": { "fillOpacity": 20 } } },
+      "targets": [
+        { "expr": "sum(rate(agentcost_llm_tokens_total{direction='input'}[5m])) by (model)",
+          "legendFormat": "{{model}} input" },
+        { "expr": "sum(rate(agentcost_llm_tokens_total{direction='output'}[5m])) by (model)",
+          "legendFormat": "{{model}} output" }
+      ]
+    },
+    {
+      "title": "Latency Distribution (p50, p90, p99)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "targets": [
+        { "expr": "histogram_quantile(0.5, sum(rate(agentcost_llm_latency_seconds_bucket[5m])) by (le, model))",
+          "legendFormat": "{{model}} p50" },
+        { "expr": "histogram_quantile(0.9, sum(rate(agentcost_llm_latency_seconds_bucket[5m])) by (le, model))",
+          "legendFormat": "{{model}} p90" },
+        { "expr": "histogram_quantile(0.99, sum(rate(agentcost_llm_latency_seconds_bucket[5m])) by (le, model))",
+          "legendFormat": "{{model}} p99" }
+      ]
+    },
+    {
+      "title": "Error Rate by Model",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "custom": { "fillOpacity": 10 },
+        "thresholds": { "steps": [
+          { "color": "green", "value": null },
+          { "color": "red", "value": 0.05 }
+        ]} } },
+      "targets": [{
+        "expr": "sum(rate(agentcost_llm_calls_total{status!='success'}[5m])) by (model) / sum(rate(agentcost_llm_calls_total[5m])) by (model)",
+        "legendFormat": "{{model}}"
+      }]
+    },
+    {
+      "title": "Budget Utilization by Project",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "min": 0, "max": 1,
+        "thresholds": { "steps": [
+          { "color": "green", "value": null },
+          { "color": "yellow", "value": 0.7 },
+          { "color": "red", "value": 0.9 }
+        ]} } },
+      "targets": [{ "expr": "agentcost_budget_utilization", "legendFormat": "{{project}}" }]
+    },
+    {
+      "title": "Cost by Provider",
+      "type": "piechart",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 28 },
+      "targets": [{ "expr": "sum(agentcost_llm_cost_total) by (provider)", "legendFormat": "{{provider}}" }]
+    },
+    {
+      "title": "Calls by Project",
+      "type": "piechart",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 28 },
+      "targets": [{ "expr": "sum(agentcost_llm_calls_total) by (project)", "legendFormat": "{{project}}" }]
+    },
+    {
+      "title": "Cost per Call by Model",
+      "type": "bargauge",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 28 },
+      "fieldConfig": { "defaults": { "unit": "currencyUSD" } },
+      "targets": [{ "expr": "sum(agentcost_llm_cost_total) by (model) / sum(agentcost_llm_calls_total) by (model)",
+        "legendFormat": "{{model}}" }]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["agentcost", "llm", "ai-cost"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "AgentCost - AI Cost Monitoring",
+  "uid": "agentcost-overview",
+  "version": 1
+}

@@ -1,0 +1,46 @@
+name: Plugin Request
+description: Request or propose a new AgentCost plugin
+title: "[Plugin]: "
+labels: ["plugin", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: "Want a new plugin? Tell us what you need!"
+
+  - type: input
+    id: name
+    attributes:
+      label: Plugin name
+      placeholder: "agentcost-my-plugin"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What should it do?
+      description: Describe the plugin functionality
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Plugin type
+      options:
+        - Exporter (send data to external service)
+        - Integration (framework callback)
+        - Alerting (cost/anomaly notifications)
+        - Analytics (custom reports/views)
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: willingness
+    attributes:
+      label: Are you willing to build it?
+      options:
+        - "Yes, I'd like to contribute this"
+        - "I could help with guidance"
+        - "No, requesting it for the team"

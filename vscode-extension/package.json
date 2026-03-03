@@ -1,0 +1,130 @@
+{
+  "name": "agentcost-vscode",
+  "displayName": "AgentCost - AI Cost Monitor",
+  "description": "Track LLM costs, view traces, monitor budgets, and get policy warnings directly in VS Code",
+  "version": "0.1.0",
+  "publisher": "agentcost",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.109.0"
+  },
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "keywords": [
+    "ai",
+    "llm",
+    "cost",
+    "monitoring",
+    "openai",
+    "anthropic",
+    "budget"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agentcostin/agentcost-vscode"
+  },
+  "activationEvents": [
+    "onLanguage:python",
+    "onLanguage:typescript",
+    "onLanguage:javascript"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "agentcost",
+          "title": "AgentCost",
+          "icon": "images/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "agentcost": [
+        {
+          "id": "agentcost.summary",
+          "name": "Cost Summary"
+        },
+        {
+          "id": "agentcost.traces",
+          "name": "Recent Traces"
+        },
+        {
+          "id": "agentcost.budgets",
+          "name": "Budgets"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "agentcost.refreshSummary",
+        "title": "Refresh Cost Summary",
+        "category": "AgentCost"
+      },
+      {
+        "command": "agentcost.showTraces",
+        "title": "Show Recent Traces",
+        "category": "AgentCost"
+      },
+      {
+        "command": "agentcost.configure",
+        "title": "Configure AgentCost",
+        "category": "AgentCost"
+      }
+    ],
+    "configuration": {
+      "title": "AgentCost",
+      "properties": {
+        "agentcost.endpoint": {
+          "type": "string",
+          "default": "http://localhost:8100",
+          "description": "AgentCost API endpoint URL"
+        },
+        "agentcost.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "AgentCost API key for authentication"
+        },
+        "agentcost.project": {
+          "type": "string",
+          "default": "",
+          "description": "Default project to monitor"
+        },
+        "agentcost.showInlineCosts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show estimated costs as inline hints in code"
+        },
+        "agentcost.refreshInterval": {
+          "type": "number",
+          "default": 30,
+          "description": "Auto-refresh interval in seconds"
+        }
+      }
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "agentcost.refreshSummary",
+          "when": "view == agentcost.summary",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.109.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.0"
+  }
+}

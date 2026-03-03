@@ -1,0 +1,39 @@
+# AgentCost Community Edition — Docker Compose (Dev)
+#
+# Zero-dependency local development:
+#   docker compose -f docker-compose.dev.yml up
+#
+# Features:
+#   - SQLite (no PostgreSQL needed)
+#   - No auth (no Keycloak)
+#   - Dashboard at http://localhost:8100
+#   - API docs at http://localhost:8100/docs
+#   - Sample data seeded on startup
+
+services:
+  agentcost:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dashboard
+    container_name: agentcost-dev
+    environment:
+      AGENTCOST_EDITION: community
+      AGENTCOST_PORT: "8100"
+      AGENTCOST_AUTH_ENABLED: "false"
+    ports:
+      - "${AGENTCOST_PORT:-8100}:8100"
+    volumes:
+      - agentcost_data:/app/data
+    command: >
+      sh -c "python scripts/seed_sample_data.py --days 7 2>/dev/null;
+             python -m agentcost dashboard --host 0.0.0.0 --port 8100"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8100/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  agentcost_data:
+    driver: local

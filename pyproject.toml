@@ -1,0 +1,106 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentcostin"
+version = "1.0.0"
+description = "AI Agent Cost Governance — track, control, and optimize LLM spending"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "AgentCost", email = "open@agentcost.in" }]
+keywords = ["llm", "ai", "cost", "tracking", "openai", "anthropic", "agent", "governance", "observability"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: System :: Monitoring",
+]
+
+dependencies = [
+    "openai>=1.0",
+    "anthropic>=0.30.0",
+    "litellm>=1.40.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+server = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "psycopg2-binary>=2.9.0",
+    "PyJWT[crypto]>=2.8.0",
+    "python3-saml>=1.16.0",
+    "websockets>=12.0",
+]
+auth = [
+    "PyJWT[crypto]>=2.8.0",
+    "python3-saml>=1.16.0",
+]
+langchain = [
+    "langchain-core>=0.1.0",
+]
+llamaindex = [
+    "llama-index-core>=0.10.0",
+]
+otel = [
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+    "prometheus-client>=0.19.0",
+]
+all = [
+    "agentcost[server,auth,langchain,llamaindex,otel]",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.24.0",
+    "ruff>=0.1.0",
+    "mypy>=1.8.0",
+]
+docs = [
+    "mkdocs-material>=9.5.0",
+    "mkdocs-autorefs>=0.5.0",
+    "mkdocstrings[python]>=0.24.0",
+]
+
+[project.scripts]
+agentcost = "agentcost.cli:main"
+
+[project.entry-points."agentcost.plugins"]
+# Example: my_plugin = "my_package.plugin:MyPlugin"
+
+[project.urls]
+Homepage = "https://agentcost.in"
+Documentation = "https://docs.agentcost.in"
+Repository = "https://github.com/agentcostin/agentcost"
+Changelog = "https://github.com/agentcostin/agentcost/blob/main/CHANGELOG.md"
+Issues = "https://github.com/agentcostin/agentcost/issues"
+Discord = "https://discord.gg/agentcost"
+
+[tool.hatch.build.targets.sdist]
+include = ["agentcost/**", "dashboard/**", "sample-data/**"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["agentcost"]
+
+
+cat >> pyproject.toml << 'EOF'
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+exclude = ["scripts/validate_all_features.py"]
+EOF
+
+[tool.pytest.ini_options]
+collect_ignore = ["tests/test_hints.py"]
+testpaths = ["tests"]
+asyncio_mode = "auto"

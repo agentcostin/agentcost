@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentcost-cost-limiter"
+version = "0.1.0"
+description = "AgentCost policy plugin: cost-limiter"
+requires-python = ">=3.10"
+dependencies = ["agentcost>=0.5.0"]
+
+[project.entry-points."agentcost.plugins"]
+cost-limiter = "cost_limiter.plugin:CostLimiterPlugin"
+
+[tool.hatch.build.targets.wheel]
+packages = ["cost_limiter"]

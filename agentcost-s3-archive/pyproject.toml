@@ -1,0 +1,13 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentcost-s3-archive"
+version = "0.1.0"
+description = "AgentCost exporter plugin: s3-archive"
+requires-python = ">=3.10"
+dependencies = ["agentcost>=0.5.0"]
+
+[project.entry-points."agentcost.plugins"]
+s3-archive = "s3_archive.plugin:S3ArchivePlugin"

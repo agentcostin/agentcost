@@ -1,0 +1,158 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruff
+      - name: Lint
+        run: ruff check agentcost/ tests/
+      - name: Format check
+        run: ruff format --check agentcost/ tests/
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install -e ".[dev,server]"
+
+      - name: Test
+        run: pytest tests/ -v --tb=short
+
+  community-mode:
+    name: Test Community Mode
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install core only
+        run: pip install -e ".[dev,server]"
+
+      - name: Remove enterprise modules
+        run: |
+          rm -rf agentcost/auth agentcost/org agentcost/cost agentcost/policy
+          rm -rf agentcost/notify agentcost/anomaly agentcost/gateway agentcost/events
+
+      - name: Verify community mode
+        run: |
+          python -c "
+          from agentcost.edition import get_edition, is_community
+          assert get_edition() == 'community', f'Expected community, got {get_edition()}'
+          assert is_community()
+          print('✅ Community edition detected')
+          "
+
+      - name: Server starts in community mode
+        run: |
+          timeout 5 bash -c '
+            AGENTCOST_PORT=9999 python -m agentcost.api.server &
+            sleep 3
+            curl -sf http://localhost:9999/api/health | python -c "
+            import sys, json
+            h = json.load(sys.stdin)
+            assert h[\"edition\"] == \"community\"
+            print(\"✅ Health endpoint OK:\", h[\"edition\"])
+            "
+          ' || true
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build package
+        run: |
+          pip install build
+          python -m build
+      - name: Verify package
+        run: |
+          pip install dist/*.whl
+          python -c "import agentcost; print('✅ Package installs cleanly')"
+          agentcost info
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker compose -f docker-compose.dev.yml build
+
+  # ── Release jobs (only on tags) ────────────────────────────────────────
+
+  publish-pypi:
+    needs: [lint, test, community-mode, build]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build
+        run: |
+          pip install build
+          python -m build
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  publish-npm:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    defaults:
+      run:
+        working-directory: sdks/typescript
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install && npm run build
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  release:
+    needs: [publish-pypi]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true

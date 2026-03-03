@@ -1,0 +1,20 @@
+openai>=1.0
+anthropic>=0.30.0
+litellm>=1.40.0
+websockets>=12.0
+python-dotenv>=1.0.0
+
+# Phase 2 — Dashboard & API
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# Phase 3 — PostgreSQL (install for enterprise deployments)
+psycopg2-binary>=2.9.0
+
+# Phase 3 Block 1 — SSO/SAML Authentication
+PyJWT[crypto]>=2.8.0
+python3-saml>=1.16.0
+
+# Optional integrations (install as needed)
+# langchain-core>=0.1.0
+# langchain-openai>=0.0.5

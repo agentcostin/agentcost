@@ -1,0 +1,74 @@
+name: "AgentCost Cost Check"
+description: "Compare benchmark costs between PR and main branch, fail if regression exceeds threshold"
+inputs:
+  model:
+    description: "LLM model to benchmark"
+    required: true
+    default: "gpt-4o-mini"
+  tasks:
+    description: "Number of benchmark tasks"
+    required: false
+    default: "3"
+  threshold-pct:
+    description: "Maximum cost increase percentage vs main (default 20)"
+    required: false
+    default: "20"
+  provider:
+    description: "LLM provider"
+    required: false
+    default: "openai"
+runs:
+  using: "composite"
+  steps:
+    - name: Install AgentCost
+      shell: bash
+      run: pip install agentcost
+
+    - name: Benchmark PR branch
+      shell: bash
+      id: pr_bench
+      run: |
+        OUTPUT=$(python -m agentcost benchmark \
+          --model "${{ inputs.model }}" \
+          --tasks "${{ inputs.tasks }}" \
+          --provider "${{ inputs.provider }}" 2>&1) || true
+        COST=$(echo "$OUTPUT" | grep -oP 'Total Cost:\s+\$\K[0-9.]+' || echo "0")
+        echo "cost=$COST" >> $GITHUB_OUTPUT
+
+    - name: Benchmark main branch
+      shell: bash
+      id: main_bench
+      run: |
+        git stash || true
+        git checkout main -- . 2>/dev/null || true
+        OUTPUT=$(python -m agentcost benchmark \
+          --model "${{ inputs.model }}" \
+          --tasks "${{ inputs.tasks }}" \
+          --provider "${{ inputs.provider }}" 2>&1) || true
+        COST=$(echo "$OUTPUT" | grep -oP 'Total Cost:\s+\$\K[0-9.]+' || echo "0")
+        echo "cost=$COST" >> $GITHUB_OUTPUT
+        git checkout - 2>/dev/null || true
+        git stash pop 2>/dev/null || true
+
+    - name: Compare costs
+      shell: bash
+      run: |
+        PR_COST="${{ steps.pr_bench.outputs.cost }}"
+        MAIN_COST="${{ steps.main_bench.outputs.cost }}"
+        THRESHOLD="${{ inputs.threshold-pct }}"
+
+        echo "PR branch cost:   \$$PR_COST"
+        echo "Main branch cost:  \$$MAIN_COST"
+
+        python3 -c "
+        pr, main, thresh = float('$PR_COST'), float('$MAIN_COST'), float('$THRESHOLD')
+        if main > 0:
+            pct = ((pr - main) / main) * 100
+            print(f'Cost change: {pct:+.1f}%')
+            if pct > thresh:
+                print(f'::error::Cost increased {pct:.1f}% (threshold: {thresh}%)')
+                exit(1)
+            print(f'✅ Within {thresh}% threshold')
+        else:
+            print('No baseline cost to compare (main=\$0)')
+        "

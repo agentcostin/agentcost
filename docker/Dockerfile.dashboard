@@ -1,0 +1,53 @@
+# AgentCost — Production Docker Image
+#
+# Community:   docker build -t agentcost -f docker/Dockerfile.dashboard .
+# Enterprise:  docker build -t agentcost --build-arg EDITION=enterprise -f docker/Dockerfile.dashboard .
+#
+# Run:         docker run -p 8100:8100 agentcost
+# With data:   docker run -p 8100:8100 -v agentcost_data:/data agentcost
+
+FROM python:3.12-slim AS base
+
+# System deps (xmlsec for enterprise SAML, curl for healthcheck)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pkg-config libxml2-dev libxmlsec1-dev libxmlsec1-openssl gcc curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application
+COPY agentcost/ ./agentcost/
+COPY dashboard/ ./dashboard/
+COPY scripts/ ./scripts/
+COPY sample-data/ ./sample-data/
+COPY pyproject.toml README.md LICENSE ./
+
+# Install package
+RUN pip install --no-cache-dir -e .
+
+# Edition control
+ARG EDITION=auto
+ENV AGENTCOST_EDITION=${EDITION}
+ENV AGENTCOST_PORT=8100
+ENV AGENTCOST_DB=/data/agentcost.db
+
+# Create data directory
+RUN mkdir -p /data
+
+EXPOSE 8100
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD curl -f http://localhost:8100/api/health || exit 1
+
+CMD ["python", "-m", "agentcost.api.server"]
+
+# Labels
+LABEL org.opencontainers.image.title="AgentCost"
+LABEL org.opencontainers.image.description="AI Agent Cost Governance"
+LABEL org.opencontainers.image.url="https://agentcost.dev"
+LABEL org.opencontainers.image.source="https://github.com/agentcost/agentcost"
+LABEL org.opencontainers.image.licenses="MIT"

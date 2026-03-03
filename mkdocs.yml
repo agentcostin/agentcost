@@ -1,0 +1,85 @@
+site_name: AgentCost
+site_description: "AI Agent Cost Governance — track, control, and optimize LLM spending"
+site_url: https://docs.agentcost.in
+repo_url: https://github.com/agentcostin/agentcost
+repo_name: agentcost/agentcost
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - content.code.copy
+    - content.tabs.link
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started.md
+    - Core Concepts: concepts.md
+  - Guides:
+    - Dashboard: guides/dashboard.md
+    - LangChain: guides/langchain.md
+    - CrewAI: guides/crewai.md
+    - AutoGen: guides/autogen.md
+    - LlamaIndex: guides/llamaindex.md
+    - Plugins: guides/plugins.md
+    - Exporters: guides/exporters.md
+    - Self-Hosting: guides/self-hosting.md
+  - Reference:
+    - Python SDK: reference/python-sdk.md
+    - TypeScript SDK: reference/typescript-sdk.md
+    - REST API: reference/api.md
+    - CLI: reference/cli.md
+  - Enterprise:
+    - Overview: enterprise/overview.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - tables
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/agentcostin/agentcost
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/agentcost
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/agentcost
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/agentcostin/

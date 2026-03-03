@@ -1,0 +1,13 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentcost-slack-alerts"
+version = "0.1.0"
+description = "AgentCost notifier plugin: slack-alerts"
+requires-python = ">=3.10"
+dependencies = ["agentcost>=0.5.0"]
+
+[project.entry-points."agentcost.plugins"]
+slack-alerts = "slack_alerts.plugin:SlackAlertsPlugin"

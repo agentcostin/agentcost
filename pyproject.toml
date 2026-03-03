@@ -91,14 +91,8 @@ include = ["agentcost/**", "dashboard/**", "sample-data/**"]
 [tool.hatch.build.targets.wheel]
 packages = ["agentcost"]
 
-
-cat >> pyproject.toml << 'EOF'
-
 [tool.ruff]
-line-length = 120
-target-version = "py310"
 exclude = ["scripts/validate_all_features.py"]
-EOF
 
 [tool.pytest.ini_options]
 collect_ignore = ["tests/test_hints.py"]

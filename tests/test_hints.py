@@ -1,7 +1,10 @@
 # test_hints.py
 from openai import OpenAI
 
-client = OpenAI()
+try:
+    client = OpenAI()
+except Exception:
+    client = None
 
 # These model names should show inline cost hints
 response = client.chat.completions.create(

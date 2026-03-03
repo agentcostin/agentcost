@@ -13,6 +13,7 @@ Key differences from SQLite handled automatically:
 Config via env:
   AGENTCOST_DATABASE_URL=postgresql://user:pass@host:5432/agentcost
 """
+
 from __future__ import annotations
 
 import re

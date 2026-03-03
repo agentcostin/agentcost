@@ -20,6 +20,7 @@ Architecture:
     Client → AgentCost Gateway → (policy check → cache check → provider) → response
     Every request is logged as a TraceEvent with full cost attribution.
 """
+
 import os
 import time
 import json
@@ -34,24 +35,28 @@ logger = logging.getLogger("agentcost.gateway")
 
 # ── Gateway Config ────────────────────────────────────────────────────────────
 
+
 @dataclass
 class ProviderRoute:
     """Maps a project key prefix to a real provider."""
-    name: str               # "openai", "anthropic", "ollama"
-    base_url: str           # "https://api.openai.com/v1"
-    api_key: str            # real provider API key
+
+    name: str  # "openai", "anthropic", "ollama"
+    base_url: str  # "https://api.openai.com/v1"
+    api_key: str  # real provider API key
     models: list[str] = field(default_factory=list)  # allowed models (empty = all)
+
 
 @dataclass
 class GatewayConfig:
     """Gateway configuration."""
+
     host: str = "0.0.0.0"
     port: int = 8200
     agentcost_api: str = "http://localhost:8100"  # dashboard API for trace ingestion
     cache_enabled: bool = True
-    cache_ttl: int = 3600          # seconds
+    cache_ttl: int = 3600  # seconds
     max_cache_entries: int = 10000
-    rate_limit_rpm: int = 600      # requests per minute per project
+    rate_limit_rpm: int = 600  # requests per minute per project
     providers: Dict[str, ProviderRoute] = field(default_factory=dict)
 
     @classmethod
@@ -64,20 +69,28 @@ class GatewayConfig:
             rate_limit_rpm=int(os.getenv("GATEWAY_RATE_LIMIT", "600")),
         )
         # Auto-configure providers from env
-        for name, env_key in [("openai", "OPENAI_API_KEY"),
-                               ("anthropic", "ANTHROPIC_API_KEY"),
-                               ("ollama", "OLLAMA_BASE_URL")]:
+        for name, env_key in [
+            ("openai", "OPENAI_API_KEY"),
+            ("anthropic", "ANTHROPIC_API_KEY"),
+            ("ollama", "OLLAMA_BASE_URL"),
+        ]:
             key = os.getenv(env_key)
             if key:
                 if name == "openai":
-                    cfg.providers[name] = ProviderRoute(name, "https://api.openai.com/v1", key)
+                    cfg.providers[name] = ProviderRoute(
+                        name, "https://api.openai.com/v1", key
+                    )
                 elif name == "anthropic":
-                    cfg.providers[name] = ProviderRoute(name, "https://api.anthropic.com/v1", key)
+                    cfg.providers[name] = ProviderRoute(
+                        name, "https://api.anthropic.com/v1", key
+                    )
                 elif name == "ollama":
                     cfg.providers[name] = ProviderRoute(name, f"{key}/v1", "ollama")
         return cfg
 
+
 # ── Response Cache ────────────────────────────────────────────────────────────
+
 
 class ResponseCache:
     """Simple in-memory LRU cache for identical requests."""
@@ -88,10 +101,14 @@ class ResponseCache:
         self._ttl = ttl
 
     def _key(self, model: str, messages: list, temperature: float = 1.0) -> str:
-        raw = json.dumps({"m": model, "msgs": messages, "t": temperature}, sort_keys=True)
+        raw = json.dumps(
+            {"m": model, "msgs": messages, "t": temperature}, sort_keys=True
+        )
         return hashlib.sha256(raw.encode()).hexdigest()
 
-    def get(self, model: str, messages: list, temperature: float = 1.0) -> Optional[dict]:
+    def get(
+        self, model: str, messages: list, temperature: float = 1.0
+    ) -> Optional[dict]:
         k = self._key(model, messages, temperature)
         entry = self._cache.get(k)
         if entry and (time.time() - entry[0]) < self._ttl:
@@ -101,7 +118,9 @@ class ResponseCache:
             del self._cache[k]
         return None
 
-    def put(self, model: str, messages: list, temperature: float, response: dict) -> None:
+    def put(
+        self, model: str, messages: list, temperature: float, response: dict
+    ) -> None:
         k = self._key(model, messages, temperature)
         if len(self._cache) >= self._max:
             oldest = min(self._cache, key=lambda x: self._cache[x][0])
@@ -112,7 +131,9 @@ class ResponseCache:
     def size(self) -> int:
         return len(self._cache)
 
+
 # ── Rate Limiter ──────────────────────────────────────────────────────────────
+
 
 class RateLimiter:
     """Token-bucket rate limiter per project."""
@@ -137,15 +158,24 @@ class RateLimiter:
         active = [t for t in window if now - t < 60]
         return max(0, self._rpm - len(active))
 
+
 # ── Model → Provider Routing ─────────────────────────────────────────────────
 
 # Known model prefixes for auto-routing
 MODEL_PROVIDER_MAP = {
-    "gpt-": "openai", "o1": "openai", "o3": "openai", "chatgpt": "openai",
+    "gpt-": "openai",
+    "o1": "openai",
+    "o3": "openai",
+    "chatgpt": "openai",
     "claude-": "anthropic",
-    "llama": "ollama", "mistral": "ollama", "gemma": "ollama",
-    "qwen": "ollama", "phi": "ollama", "deepseek": "ollama",
+    "llama": "ollama",
+    "mistral": "ollama",
+    "gemma": "ollama",
+    "qwen": "ollama",
+    "phi": "ollama",
+    "deepseek": "ollama",
 }
+
 
 def resolve_provider(model: str, config: GatewayConfig) -> Optional[ProviderRoute]:
     """Determine which provider to use for a given model."""
@@ -162,12 +192,15 @@ def resolve_provider(model: str, config: GatewayConfig) -> Optional[ProviderRout
         return next(iter(config.providers.values()))
     return None
 
+
 # ── Pricing (reuse from SDK) ─────────────────────────────────────────────────
+
 
 def estimate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
     """Estimate cost using the SDK's pricing data."""
     try:
         from ..sdk.trace import CostTracker
+
         tracker = CostTracker.__new__(CostTracker)
         tracker.project = "_gateway"
         tracker._events = []
@@ -177,7 +210,9 @@ def estimate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
     except Exception:
         return 0.0
 
+
 # ── Gateway App (FastAPI) ─────────────────────────────────────────────────────
+
 
 def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # noqa: F821
     """Create the gateway FastAPI application."""
@@ -189,9 +224,15 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
         config = GatewayConfig.from_env()
 
     app = FastAPI(title="AgentCost AI Gateway", version="0.5.0")
-    app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+    app.add_middleware(
+        CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+    )
 
-    cache = ResponseCache(config.max_cache_entries, config.cache_ttl) if config.cache_enabled else None
+    cache = (
+        ResponseCache(config.max_cache_entries, config.cache_ttl)
+        if config.cache_enabled
+        else None
+    )
     limiter = RateLimiter(config.rate_limit_rpm)
 
     # ── Health ────────────────────────────────────────────────────────────
@@ -214,10 +255,16 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
 
         # Rate limit
         if not limiter.check(project):
-            raise HTTPException(429, detail={
-                "error": {"message": "Rate limit exceeded", "type": "rate_limit_error"},
-                "remaining": 0,
-            })
+            raise HTTPException(
+                429,
+                detail={
+                    "error": {
+                        "message": "Rate limit exceeded",
+                        "type": "rate_limit_error",
+                    },
+                    "remaining": 0,
+                },
+            )
 
         body = await request.json()
         model = body.get("model", "gpt-4o")
@@ -230,19 +277,31 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
             cached = cache.get(model, messages, temperature)
             if cached:
                 # Log cache hit as trace
-                _log_trace(config, project, model, "cache",
-                           cached.get("usage", {}).get("prompt_tokens", 0),
-                           cached.get("usage", {}).get("completion_tokens", 0),
-                           0.0, 0, metadata={"cache": "hit"})
+                _log_trace(
+                    config,
+                    project,
+                    model,
+                    "cache",
+                    cached.get("usage", {}).get("prompt_tokens", 0),
+                    cached.get("usage", {}).get("completion_tokens", 0),
+                    0.0,
+                    0,
+                    metadata={"cache": "hit"},
+                )
                 return JSONResponse(cached)
 
         # Resolve provider
         provider = resolve_provider(model, config)
         if not provider:
-            raise HTTPException(502, detail={
-                "error": {"message": f"No provider configured for model: {model}",
-                          "type": "provider_not_found"}
-            })
+            raise HTTPException(
+                502,
+                detail={
+                    "error": {
+                        "message": f"No provider configured for model: {model}",
+                        "type": "provider_not_found",
+                    }
+                },
+            )
 
         # Forward to provider
         start = time.time()
@@ -253,7 +312,9 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
             if stream:
                 # For streaming, return as-is (tracking happens via chunk parsing)
                 return StreamingResponse(
-                    _stream_and_track(response_data, config, project, model, provider.name, start),
+                    _stream_and_track(
+                        response_data, config, project, model, provider.name, start
+                    ),
                     media_type="text/event-stream",
                 )
 
@@ -263,8 +324,16 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
             output_tokens = usage.get("completion_tokens", 0)
             cost = estimate_cost(model, input_tokens, output_tokens)
 
-            _log_trace(config, project, model, provider.name,
-                       input_tokens, output_tokens, cost, latency_ms)
+            _log_trace(
+                config,
+                project,
+                model,
+                provider.name,
+                input_tokens,
+                output_tokens,
+                cost,
+                latency_ms,
+            )
 
             # Cache if deterministic
             if cache and temperature == 0:
@@ -276,11 +345,27 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
             raise
         except Exception as e:
             latency_ms = int((time.time() - start) * 1000)
-            _log_trace(config, project, model, provider.name,
-                       0, 0, 0, latency_ms, status="error", error=str(e))
-            raise HTTPException(502, detail={
-                "error": {"message": f"Provider error: {e}", "type": "upstream_error"}
-            })
+            _log_trace(
+                config,
+                project,
+                model,
+                provider.name,
+                0,
+                0,
+                0,
+                latency_ms,
+                status="error",
+                error=str(e),
+            )
+            raise HTTPException(
+                502,
+                detail={
+                    "error": {
+                        "message": f"Provider error: {e}",
+                        "type": "upstream_error",
+                    }
+                },
+            )
 
     # ── OpenAI-compatible: Models list ────────────────────────────────────
     @app.get("/v1/models")
@@ -295,7 +380,9 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
     @app.get("/v1/gateway/stats")
     async def gateway_stats():
         return {
-            "providers": {name: route.base_url for name, route in config.providers.items()},
+            "providers": {
+                name: route.base_url for name, route in config.providers.items()
+            },
             "cache_enabled": config.cache_enabled,
             "cache_size": cache.size if cache else 0,
             "rate_limit_rpm": config.rate_limit_rpm,
@@ -306,6 +393,7 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
 
 # ── Helper Functions ──────────────────────────────────────────────────────────
 
+
 def _extract_project(api_key: str) -> str:
     """Extract project name from API key. Format: ac_<project>_<secret> or just use as project."""
     if api_key.startswith("ac_"):
@@ -314,7 +402,9 @@ def _extract_project(api_key: str) -> str:
     return "gateway-default"
 
 
-async def _forward_to_provider(provider: ProviderRoute, body: dict, stream: bool = False):
+async def _forward_to_provider(
+    provider: ProviderRoute, body: dict, stream: bool = False
+):
     """Forward request to the upstream LLM provider."""
     import urllib.request
     import urllib.error
@@ -341,7 +431,9 @@ async def _forward_to_provider(provider: ProviderRoute, body: dict, stream: bool
         raise Exception(f"Cannot reach provider {provider.name}: {e}")
 
 
-async def _stream_and_track(response, config, project, model, provider_name, start_time):
+async def _stream_and_track(
+    response, config, project, model, provider_name, start_time
+):
     """Stream response chunks while tracking usage."""
     total_chunks = 0
     for line in response:
@@ -351,21 +443,43 @@ async def _stream_and_track(response, config, project, model, provider_name, sta
 
     latency_ms = int((time.time() - start_time) * 1000)
     # Approximate: streaming doesn't give us token counts easily
-    _log_trace(config, project, model, provider_name,
-               0, 0, 0, latency_ms, metadata={"stream": True, "chunks": total_chunks})
+    _log_trace(
+        config,
+        project,
+        model,
+        provider_name,
+        0,
+        0,
+        0,
+        latency_ms,
+        metadata={"stream": True, "chunks": total_chunks},
+    )
 
 
-def _log_trace(config: GatewayConfig, project: str, model: str, provider: str,
-               input_tokens: int, output_tokens: int, cost: float, latency_ms: int,
-               status: str = "success", error: str = None, metadata: dict = None):
+def _log_trace(
+    config: GatewayConfig,
+    project: str,
+    model: str,
+    provider: str,
+    input_tokens: int,
+    output_tokens: int,
+    cost: float,
+    latency_ms: int,
+    status: str = "success",
+    error: str = None,
+    metadata: dict = None,
+):
     """Log a trace event to the AgentCost API (fire-and-forget)."""
     import threading
 
     def _send():
         try:
             import urllib.request
+
             event = {
-                "trace_id": hashlib.md5(f"{time.time()}{model}{project}".encode()).hexdigest(),
+                "trace_id": hashlib.md5(
+                    f"{time.time()}{model}{project}".encode()
+                ).hexdigest(),
                 "project": project,
                 "model": model,
                 "provider": provider,
@@ -394,9 +508,11 @@ def _log_trace(config: GatewayConfig, project: str, model: str, provider: str,
 
 # ── CLI entry point ───────────────────────────────────────────────────────────
 
+
 def run_gateway(host: str = "0.0.0.0", port: int = 8200):
     """Start the AI gateway server."""
     import uvicorn
+
     config = GatewayConfig.from_env()
     config.host = host
     config.port = port

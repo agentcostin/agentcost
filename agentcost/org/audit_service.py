@@ -14,6 +14,7 @@ and supports the AI governance compliance features (AI6 framework).
 
 The audit log is APPEND-ONLY — no updates or deletes.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -81,8 +82,20 @@ class AuditService:
             "(event_type, actor_id, actor_type, org_id, resource_type, resource_id, "
             "action, details, prev_hash, entry_hash, timestamp, retention_until) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (event_type, actor_id, actor_type, org_id, resource_type, resource_id,
-             action, details_json, prev_hash, entry_hash, now_str, retention_until),
+            (
+                event_type,
+                actor_id,
+                actor_type,
+                org_id,
+                resource_type,
+                resource_id,
+                action,
+                details_json,
+                prev_hash,
+                entry_hash,
+                now_str,
+                retention_until,
+            ),
         )
 
         return {
@@ -98,44 +111,74 @@ class AuditService:
 
     def log_login(self, user_id: str, org_id: str, method: str, ip: str = "") -> dict:
         return self.log(
-            event_type="login", org_id=org_id, actor_id=user_id,
-            action="login", details={"method": method, "ip": ip},
+            event_type="login",
+            org_id=org_id,
+            actor_id=user_id,
+            action="login",
+            details={"method": method, "ip": ip},
         )
 
     def log_role_change(
-        self, org_id: str, actor_id: str, target_user_id: str,
-        old_role: str, new_role: str,
+        self,
+        org_id: str,
+        actor_id: str,
+        target_user_id: str,
+        old_role: str,
+        new_role: str,
     ) -> dict:
         return self.log(
-            event_type="member.role_change", org_id=org_id, actor_id=actor_id,
-            resource_type="user", resource_id=target_user_id, action="update",
+            event_type="member.role_change",
+            org_id=org_id,
+            actor_id=actor_id,
+            resource_type="user",
+            resource_id=target_user_id,
+            action="update",
             details={"old_role": old_role, "new_role": new_role},
         )
 
     def log_invite(self, org_id: str, actor_id: str, email: str, role: str) -> dict:
         return self.log(
-            event_type="member.invite", org_id=org_id, actor_id=actor_id,
-            resource_type="invite", action="create",
+            event_type="member.invite",
+            org_id=org_id,
+            actor_id=actor_id,
+            resource_type="invite",
+            action="create",
             details={"email": email, "role": role},
         )
 
     def log_member_remove(self, org_id: str, actor_id: str, removed_email: str) -> dict:
         return self.log(
-            event_type="member.remove", org_id=org_id, actor_id=actor_id,
-            resource_type="user", action="delete",
+            event_type="member.remove",
+            org_id=org_id,
+            actor_id=actor_id,
+            resource_type="user",
+            action="delete",
             details={"email": removed_email},
         )
 
-    def log_api_key_event(self, org_id: str, actor_id: str, key_id: str, action: str) -> dict:
+    def log_api_key_event(
+        self, org_id: str, actor_id: str, key_id: str, action: str
+    ) -> dict:
         return self.log(
-            event_type=f"api_key.{action}", org_id=org_id, actor_id=actor_id,
-            resource_type="api_key", resource_id=key_id, action=action,
+            event_type=f"api_key.{action}",
+            org_id=org_id,
+            actor_id=actor_id,
+            resource_type="api_key",
+            resource_id=key_id,
+            action=action,
         )
 
-    def log_org_event(self, org_id: str, actor_id: str, action: str, details: dict = None) -> dict:
+    def log_org_event(
+        self, org_id: str, actor_id: str, action: str, details: dict = None
+    ) -> dict:
         return self.log(
-            event_type=f"org.{action}", org_id=org_id, actor_id=actor_id,
-            resource_type="org", resource_id=org_id, action=action, details=details,
+            event_type=f"org.{action}",
+            org_id=org_id,
+            actor_id=actor_id,
+            resource_type="org",
+            resource_id=org_id,
+            action=action,
+            details=details,
         )
 
     # ── Query ────────────────────────────────────────────────────
@@ -213,7 +256,11 @@ class AuditService:
             r = dict(row)
             # Verify prev_hash matches
             if r["prev_hash"] != expected_prev:
-                return {"valid": False, "entries_checked": r["id"], "first_broken": r["id"]}
+                return {
+                    "valid": False,
+                    "entries_checked": r["id"],
+                    "first_broken": r["id"],
+                }
 
             # Normalize timestamp — Postgres returns a datetime object or
             # a string with timezone. We need to match what was hashed:
@@ -228,7 +275,7 @@ class AuditService:
                 ts = ts.replace(" ", "T")
                 for suffix in ["+00:00", "+00", "Z"]:
                     if ts.endswith(suffix):
-                        ts = ts[:-len(suffix)]
+                        ts = ts[: -len(suffix)]
                         break
 
             # Normalize details — re-serialize to match what was hashed
@@ -246,10 +293,16 @@ class AuditService:
                 f"{r['event_type']}|{r['actor_id']}|{r['actor_type']}|{r['org_id']}|"
                 f"{r['resource_type']}|{r['resource_id']}|{r['action']}|{details_raw}|{ts}"
             )
-            recomputed = hashlib.sha256(f"{expected_prev}|{entry_data}".encode()).hexdigest()
+            recomputed = hashlib.sha256(
+                f"{expected_prev}|{entry_data}".encode()
+            ).hexdigest()
 
             if recomputed != r["entry_hash"]:
-                return {"valid": False, "entries_checked": r["id"], "first_broken": r["id"]}
+                return {
+                    "valid": False,
+                    "entries_checked": r["id"],
+                    "first_broken": r["id"],
+                }
 
             expected_prev = r["entry_hash"]
 

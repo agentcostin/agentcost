@@ -22,6 +22,7 @@ Endpoints:
     GET    /notify/scorecards/{agent_id}     → Scorecard history for an agent
     POST   /notify/scorecards/compare        → Compare agents side-by-side
 """
+
 from __future__ import annotations
 
 import logging
@@ -40,6 +41,7 @@ notify_router = APIRouter(prefix="/notify", tags=["notify"])
 
 # ── Request Models ───────────────────────────────────────────────────────────
 
+
 class ChannelCreate(BaseModel):
     channel_type: str
     name: str
@@ -47,23 +49,28 @@ class ChannelCreate(BaseModel):
     events: str = "*"
     enabled: bool = True
 
+
 class ChannelUpdate(BaseModel):
     name: Optional[str] = None
     config: Optional[dict] = None
     events: Optional[str] = None
     enabled: Optional[bool] = None
 
+
 class ChannelToggle(BaseModel):
     enabled: bool
+
 
 class DispatchEvent(BaseModel):
     event_type: str
     message: str = ""
     details: Optional[dict] = None
 
+
 class ScorecardGenerate(BaseModel):
     agent_id: str
     period: Optional[str] = None
+
 
 class ScorecardCompare(BaseModel):
     agent_ids: list[str]
@@ -72,26 +79,35 @@ class ScorecardCompare(BaseModel):
 
 # ── Service factories ────────────────────────────────────────────────────────
 
+
 def _channel_svc():
     from .channel_service import ChannelService
+
     return ChannelService()
+
 
 def _dispatcher():
     from .dispatcher import Dispatcher
+
     return Dispatcher()
+
 
 def _scorecard_svc():
     from .scorecard_service import ScorecardService
+
     return ScorecardService()
+
 
 def _audit_svc():
     from ..org.audit_service import AuditService
+
     return AuditService()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CHANNEL ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @notify_router.post("/channels")
 async def create_channel(
@@ -102,17 +118,23 @@ async def create_channel(
     svc = _channel_svc()
     audit = _audit_svc()
     result = svc.create(
-        org_id=user.org_id, channel_type=body.channel_type,
-        name=body.name, config=body.config,
-        events=body.events, enabled=body.enabled,
+        org_id=user.org_id,
+        channel_type=body.channel_type,
+        name=body.name,
+        config=body.config,
+        events=body.events,
+        enabled=body.enabled,
     )
     if "error" in result:
         raise HTTPException(400, result["error"])
 
     audit.log(
-        event_type="notification.channel.create", org_id=user.org_id,
-        actor_id=user.user_id, resource_type="notification_channel",
-        resource_id=result.get("id", ""), action="create",
+        event_type="notification.channel.create",
+        org_id=user.org_id,
+        actor_id=user.user_id,
+        resource_type="notification_channel",
+        resource_id=result.get("id", ""),
+        action="create",
         details={"name": body.name, "type": body.channel_type},
     )
     return result
@@ -181,9 +203,12 @@ async def delete_channel(
     audit = _audit_svc()
     result = svc.delete(ch_id, user.org_id)
     audit.log(
-        event_type="notification.channel.delete", org_id=user.org_id,
-        actor_id=user.user_id, resource_type="notification_channel",
-        resource_id=ch_id, action="delete",
+        event_type="notification.channel.delete",
+        org_id=user.org_id,
+        actor_id=user.user_id,
+        resource_type="notification_channel",
+        resource_id=ch_id,
+        action="delete",
     )
     return result
 
@@ -202,6 +227,7 @@ async def test_channel(
 # DISPATCH ENDPOINT
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @notify_router.post("/send")
 async def dispatch_event(
     body: DispatchEvent,
@@ -218,6 +244,7 @@ async def dispatch_event(
 # ─────────────────────────────────────────────────────────────────────────────
 # SCORECARD ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @notify_router.post("/scorecards/generate")
 async def generate_scorecard(

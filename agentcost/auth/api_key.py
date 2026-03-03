@@ -10,6 +10,7 @@ Flow:
   3. Verify bcrypt hash against full key
   4. Return AuthContext with org_id and scopes from the key row
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -64,6 +65,7 @@ def validate_api_key(key: str, db=None) -> Optional[AuthContext]:
     # Get database
     if db is None:
         from ..data.connection import get_db
+
         db = get_db()
 
     key_hash = _hash_key(key)
@@ -83,7 +85,11 @@ def validate_api_key(key: str, db=None) -> Optional[AuthContext]:
         try:
             expires = datetime.fromisoformat(row["expires_at"].replace("Z", "+00:00"))
             if expires < datetime.now(expires.tzinfo):
-                logger.warning("Expired API key: %s (expired %s)", row["key_prefix"], row["expires_at"])
+                logger.warning(
+                    "Expired API key: %s (expired %s)",
+                    row["key_prefix"],
+                    row["expires_at"],
+                )
                 return None
         except (ValueError, TypeError):
             pass

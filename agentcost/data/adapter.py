@@ -10,6 +10,7 @@ Usage:
     db = get_db()
     rows = db.fetch_all("SELECT * FROM trace_events WHERE project=?", ("my-app",))
 """
+
 from __future__ import annotations
 
 import abc
@@ -20,6 +21,7 @@ from typing import Any, Iterator, Sequence
 class Row(dict):
     """Dict subclass that also supports attribute-style access (row.column_name).
     Mirrors sqlite3.Row behaviour so existing code using dict(row) still works."""
+
     def __getattr__(self, key: str) -> Any:
         try:
             return self[key]

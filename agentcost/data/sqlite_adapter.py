@@ -6,6 +6,7 @@ Zero external dependencies (uses Python's built-in sqlite3).
 
 All SQL uses `?` placeholders natively — no translation needed.
 """
+
 from __future__ import annotations
 
 import os

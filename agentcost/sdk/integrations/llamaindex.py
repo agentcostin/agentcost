@@ -12,6 +12,7 @@ Works with both llama-index-core and legacy llama-index imports.
 Does NOT require llama-index to be installed — the module is always
 importable (errors at runtime only if used without the package).
 """
+
 from __future__ import annotations
 import time
 import uuid
@@ -24,18 +25,26 @@ from ..trace import TraceEvent, get_tracker, _persist_event, _calc
 # importable and _CBEventType / _EventPayload are never None.
 
 try:
-    from llama_index.core.callbacks.schema import CBEventType as _CBEventType, EventPayload as _EventPayload
+    from llama_index.core.callbacks.schema import (
+        CBEventType as _CBEventType,
+        EventPayload as _EventPayload,
+    )
 except ImportError:
     try:
-        from llama_index.callbacks.schema import CBEventType as _CBEventType, EventPayload as _EventPayload
+        from llama_index.callbacks.schema import (
+            CBEventType as _CBEventType,
+            EventPayload as _EventPayload,
+        )
     except ImportError:
         # Stubs — module importable, works for testing, won't pass LlamaIndex isinstance checks
         class _CBEventType:  # type: ignore
             LLM = "llm"
+
         class _EventPayload:  # type: ignore
             SERIALIZED = "serialized"
             RESPONSE = "response"
             PROMPT = "prompt"
+
 
 # Public constant for testing convenience
 LLM_EVENT = _CBEventType.LLM
@@ -49,7 +58,9 @@ class AgentCostLlamaIndex:
     Integrates with LlamaIndex's callback manager system.
     """
 
-    def __init__(self, project: str = "default", persist: bool = True, agent_id: str = None):
+    def __init__(
+        self, project: str = "default", persist: bool = True, agent_id: str = None
+    ):
         self.project = project
         self.persist = persist
         self.agent_id = agent_id
@@ -63,36 +74,55 @@ class AgentCostLlamaIndex:
         """Called at the start of a trace. Required by LlamaIndex interface."""
         pass
 
-    def end_trace(self, trace_id: Optional[str] = None,
-                  trace_map: Optional[Dict[str, List[str]]] = None) -> None:
+    def end_trace(
+        self,
+        trace_id: Optional[str] = None,
+        trace_map: Optional[Dict[str, List[str]]] = None,
+    ) -> None:
         """Called at the end of a trace. Required by LlamaIndex interface."""
         pass
 
-    def on_event_start(self, event_type, payload: Optional[Dict[str, Any]] = None,
-                       event_id: str = "", parent_id: str = "", **kwargs) -> str:
+    def on_event_start(
+        self,
+        event_type,
+        payload: Optional[Dict[str, Any]] = None,
+        event_id: str = "",
+        parent_id: str = "",
+        **kwargs,
+    ) -> str:
         """Called when a callback event starts."""
         # Only track LLM events
-        evt = getattr(event_type, 'value', event_type) if hasattr(event_type, 'value') else event_type
-        llm_val = getattr(_CBEventType.LLM, 'value', _CBEventType.LLM)
+        evt = (
+            getattr(event_type, "value", event_type)
+            if hasattr(event_type, "value")
+            else event_type
+        )
+        llm_val = getattr(_CBEventType.LLM, "value", _CBEventType.LLM)
         if evt != llm_val and event_type != _CBEventType.LLM:
             return event_id
 
         model = "unknown"
         if payload:
-            model = (
-                payload.get("model_name")
-                or payload.get(
-                    getattr(_EventPayload, "SERIALIZED", "serialized"), {}
-                ).get("model", "unknown")
-            )
+            model = payload.get("model_name") or payload.get(
+                getattr(_EventPayload, "SERIALIZED", "serialized"), {}
+            ).get("model", "unknown")
         self._pending[event_id] = {"model": model, "start": time.time()}
         return event_id
 
-    def on_event_end(self, event_type, payload: Optional[Dict[str, Any]] = None,
-                     event_id: str = "", **kwargs) -> None:
+    def on_event_end(
+        self,
+        event_type,
+        payload: Optional[Dict[str, Any]] = None,
+        event_id: str = "",
+        **kwargs,
+    ) -> None:
         """Called when a callback event ends. Extracts usage and logs trace."""
-        evt = getattr(event_type, 'value', event_type) if hasattr(event_type, 'value') else event_type
-        llm_val = getattr(_CBEventType.LLM, 'value', _CBEventType.LLM)
+        evt = (
+            getattr(event_type, "value", event_type)
+            if hasattr(event_type, "value")
+            else event_type
+        )
+        llm_val = getattr(_CBEventType.LLM, "value", _CBEventType.LLM)
         if evt != llm_val and event_type != _CBEventType.LLM:
             return
 
@@ -127,6 +157,7 @@ class AgentCostLlamaIndex:
 
 # ── Token extraction ──────────────────────────────────────────────────────────
 
+
 def _extract_tokens_llamaindex(payload: Optional[Dict]) -> tuple:
     """Extract (input_tokens, output_tokens) from LlamaIndex event payload."""
     it, ot = 0, 0
@@ -148,8 +179,16 @@ def _extract_tokens_llamaindex(payload: Optional[Dict]) -> tuple:
                 it = usage.get("prompt_tokens", 0) or usage.get("input_tokens", 0)
                 ot = usage.get("completion_tokens", 0) or usage.get("output_tokens", 0)
             else:
-                it = getattr(usage, "prompt_tokens", 0) or getattr(usage, "input_tokens", 0) or 0
-                ot = getattr(usage, "completion_tokens", 0) or getattr(usage, "output_tokens", 0) or 0
+                it = (
+                    getattr(usage, "prompt_tokens", 0)
+                    or getattr(usage, "input_tokens", 0)
+                    or 0
+                )
+                ot = (
+                    getattr(usage, "completion_tokens", 0)
+                    or getattr(usage, "output_tokens", 0)
+                    or 0
+                )
 
     # Fallback: direct token counts in payload
     if not it:

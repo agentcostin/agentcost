@@ -69,22 +69,24 @@ class ModelComparison:
     def run(self, verbose: bool = True) -> list[RunSummary]:
         """Run benchmark for each model sequentially."""
         if verbose:
-            print(f"\n{'='*64}")
+            print(f"\n{'=' * 64}")
             print("  AgentCost — Multi-Model Comparison")
             print(f"  Models: {', '.join(self.models)}")
             print(f"  Tasks per model: {self.num_tasks}")
             if self.sector:
                 print(f"  Sector filter: {self.sector}")
             if self.default_provider in ("proxy", "litellm", "ollama"):
-                print(f"  Provider: {self.default_provider}"
-                      + (f" ({self.default_base_url})" if self.default_base_url else ""))
-            print(f"{'='*64}\n")
+                print(
+                    f"  Provider: {self.default_provider}"
+                    + (f" ({self.default_base_url})" if self.default_base_url else "")
+                )
+            print(f"{'=' * 64}\n")
 
         for i, model in enumerate(self.models, 1):
             if verbose:
-                print(f"\n{'─'*64}")
+                print(f"\n{'─' * 64}")
                 print(f"  Running model {i}/{len(self.models)}: {model}")
-                print(f"{'─'*64}")
+                print(f"{'─' * 64}")
 
             provider_name = self._detect_provider(model)
             api_key = self._get_api_key(model, provider_name)

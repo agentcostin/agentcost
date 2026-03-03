@@ -4,6 +4,7 @@ OrgService — Organization lifecycle management.
 Handles creation, updates, plan changes, and SSO configuration for orgs.
 All methods are org-scoped and require an AuthContext for authorization.
 """
+
 from __future__ import annotations
 
 import json
@@ -91,7 +92,8 @@ class OrgService:
             "SELECT COUNT(*) as count FROM trace_events WHERE org_id = ?", (org_id,)
         )
         total_cost = self._db.fetch_one(
-            "SELECT COALESCE(SUM(cost), 0) as total FROM trace_events WHERE org_id = ?", (org_id,)
+            "SELECT COALESCE(SUM(cost), 0) as total FROM trace_events WHERE org_id = ?",
+            (org_id,),
         )
         api_key_count = self._db.fetch_one(
             "SELECT COUNT(*) as count FROM api_keys WHERE org_id = ?", (org_id,)
@@ -135,9 +137,18 @@ class OrgService:
         In production, this should be a soft-delete with a grace period.
         """
         # Delete in dependency order
-        for table in ["cost_allocations", "cost_centers", "approval_requests",
-                       "policies", "notification_channels", "agent_scorecards",
-                       "audit_log", "invites", "api_keys", "users"]:
+        for table in [
+            "cost_allocations",
+            "cost_centers",
+            "approval_requests",
+            "policies",
+            "notification_channels",
+            "agent_scorecards",
+            "audit_log",
+            "invites",
+            "api_keys",
+            "users",
+        ]:
             self._db.execute(f"DELETE FROM {table} WHERE org_id = ?", (org_id,))
 
         self._db.execute("DELETE FROM orgs WHERE id = ?", (org_id,))

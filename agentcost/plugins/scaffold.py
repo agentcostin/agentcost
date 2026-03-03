@@ -3,6 +3,7 @@ Plugin scaffolding generator — creates ready-to-develop plugin projects.
 
 Usage: agentcost plugin create my-notifier --type notifier
 """
+
 from __future__ import annotations
 
 import os
@@ -55,7 +56,6 @@ class {class_name}(NotifierPlugin):
         return HealthStatus(healthy=bool(self.webhook_url),
             message="ok" if self.webhook_url else "webhook_url not configured")
 ''',
-
     "policy": '''"""
 {name} — AgentCost Policy Plugin
 """
@@ -79,7 +79,6 @@ class {class_name}(PolicyPlugin):
                 action="require_approval")
         return PolicyDecision(allowed=True)
 ''',
-
     "exporter": '''"""
 {name} — AgentCost Exporter Plugin
 """
@@ -112,7 +111,6 @@ class {class_name}(ExporterPlugin):
     def supported_formats(self) -> list[str]:
         return ["json", "csv"]
 ''',
-
     "provider": '''"""
 {name} — AgentCost Provider Plugin
 """
@@ -147,7 +145,7 @@ class {class_name}(ProviderPlugin):
 }
 
 
-PYPROJECT_TEMPLATE = '''[build-system]
+PYPROJECT_TEMPLATE = """[build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
@@ -163,7 +161,7 @@ dependencies = ["agentcost>=0.5.0"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["{module_name}"]
-'''
+"""
 
 
 def scaffold_plugin(name: str, plugin_type: str = "notifier", output_dir: str = "."):
@@ -174,7 +172,9 @@ def scaffold_plugin(name: str, plugin_type: str = "notifier", output_dir: str = 
 
     template = PLUGIN_TEMPLATES.get(plugin_type)
     if not template:
-        raise ValueError(f"Unknown plugin type: {plugin_type}. Use: {list(PLUGIN_TEMPLATES.keys())}")
+        raise ValueError(
+            f"Unknown plugin type: {plugin_type}. Use: {list(PLUGIN_TEMPLATES.keys())}"
+        )
 
     base = Path(output_dir) / f"agentcost-{pkg_name}"
     pkg_dir = base / module_name
@@ -186,7 +186,7 @@ def scaffold_plugin(name: str, plugin_type: str = "notifier", output_dir: str = 
         name=name, pkg_name=pkg_name, class_name=class_name, module_name=module_name
     )
     (pkg_dir / "plugin.py").write_text(plugin_code)
-    (pkg_dir / "__init__.py").write_text(f'from .plugin import {class_name}\n')
+    (pkg_dir / "__init__.py").write_text(f"from .plugin import {class_name}\n")
 
     # pyproject.toml
     pyproject = PYPROJECT_TEMPLATE.format(

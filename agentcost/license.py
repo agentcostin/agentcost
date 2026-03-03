@@ -18,6 +18,7 @@ The license key encodes:
   - Expiry date
   - HMAC signature (prevents tampering)
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -44,18 +45,19 @@ LICENSE_FILE_PATHS = [
 # This key is used to sign trial keys locally. Enterprise keys are signed
 # server-side and validated here.
 _SIGNING_KEY = os.environ.get(
-    "AGENTCOST_LICENSE_SECRET",
-    "agentcost-v1-default-signing-key-change-in-production"
+    "AGENTCOST_LICENSE_SECRET", "agentcost-v1-default-signing-key-change-in-production"
 ).encode()
 
 # ── License Data ─────────────────────────────────────────────────────────────
 
+
 @dataclass
 class License:
     """Parsed and validated license."""
+
     valid: bool = False
-    tier: str = "community"           # community | trial | enterprise
-    max_users: int = 5                # 0 = unlimited
+    tier: str = "community"  # community | trial | enterprise
+    max_users: int = 5  # 0 = unlimited
     expires_at: Optional[datetime] = None
     licensed_to: str = ""
     features: list[str] = field(default_factory=list)
@@ -76,7 +78,9 @@ class License:
 
     @property
     def is_enterprise(self) -> bool:
-        return self.valid and self.tier in ("enterprise", "trial") and not self.is_expired
+        return (
+            self.valid and self.tier in ("enterprise", "trial") and not self.is_expired
+        )
 
     def to_dict(self) -> dict:
         return {
@@ -100,17 +104,33 @@ COMMUNITY_LICENSE = License(
     max_users=5,
     expires_at=None,
     licensed_to="Community User",
-    features=["tracing", "dashboard", "forecasting", "optimizer",
-              "analytics", "estimator", "plugins", "cli", "otel_export"],
+    features=[
+        "tracing",
+        "dashboard",
+        "forecasting",
+        "optimizer",
+        "analytics",
+        "estimator",
+        "plugins",
+        "cli",
+        "otel_export",
+    ],
 )
 
 ENTERPRISE_FEATURES = [
-    "auth", "org", "budget_enforcement", "policy_engine",
-    "notifications", "anomaly_detection", "gateway", "event_bus",
+    "auth",
+    "org",
+    "budget_enforcement",
+    "policy_engine",
+    "notifications",
+    "anomaly_detection",
+    "gateway",
+    "event_bus",
 ]
 
 
 # ── Key Validation ───────────────────────────────────────────────────────────
+
 
 def _sign(payload: str) -> str:
     """HMAC-SHA256 signature for a payload."""
@@ -120,17 +140,22 @@ def _sign(payload: str) -> str:
 def generate_trial_key(days: int = 30, max_users: int = 10) -> str:
     """Generate a self-service trial license key (local signing)."""
     import base64
+
     expires = datetime.utcnow() + timedelta(days=days)
-    payload = json.dumps({
-        "t": "trial",
-        "u": max_users,
-        "e": expires.strftime("%Y%m%d"),
-        "l": "Trial User",
-    }, separators=(",", ":"))
+    payload = json.dumps(
+        {
+            "t": "trial",
+            "u": max_users,
+            "e": expires.strftime("%Y%m%d"),
+            "l": "Trial User",
+        },
+        separators=(",", ":"),
+    )
 
     encoded = base64.urlsafe_b64encode(payload.encode()).decode().rstrip("=")
     sig = _sign(payload)
     return f"AC-{sig}-{encoded}"
+
 
 def _parse_key(key: str) -> License:
     """Parse and validate a license key string."""
@@ -145,10 +170,11 @@ def _parse_key(key: str) -> License:
         return License(valid=False, error="Invalid key format: missing signature")
 
     sig = parts[:dash_pos]
-    encoded = parts[dash_pos + 1:]
+    encoded = parts[dash_pos + 1 :]
 
     # Decode payload
     import base64
+
     try:
         # Restore padding
         padded = encoded + "=" * (4 - len(encoded) % 4)
@@ -191,6 +217,7 @@ def _parse_key(key: str) -> License:
 
 
 # ── Key Loading ──────────────────────────────────────────────────────────────
+
 
 def _load_key_from_env() -> Optional[str]:
     """Load license key from environment variable."""
@@ -239,9 +266,13 @@ def get_license() -> License:
             f"expires: {_cached_license.expires_at.strftime('%Y-%m-%d') if _cached_license.expires_at else 'never'})"
         )
     else:
-        logger.warning(f"License invalid: {_cached_license.error} — falling back to community")
+        logger.warning(
+            f"License invalid: {_cached_license.error} — falling back to community"
+        )
         _cached_license = License(
-            valid=True, tier="community", max_users=5,
+            valid=True,
+            tier="community",
+            max_users=5,
             licensed_to="Community User",
             features=COMMUNITY_LICENSE.features,
             error=_cached_license.error,

@@ -4,6 +4,7 @@ Event Store — Persistence for trace events with time-series queries.
 Refactored to use DatabaseAdapter (supports both SQLite and PostgreSQL).
 All SQL is written in portable syntax with `?` placeholders.
 """
+
 from __future__ import annotations
 
 import json
@@ -68,7 +69,9 @@ class EventStore:
                 pass  # Column already exists
         # Create index on org_id after ensuring column exists
         try:
-            self.db.execute("CREATE INDEX IF NOT EXISTS idx_te_org ON trace_events(org_id)")
+            self.db.execute(
+                "CREATE INDEX IF NOT EXISTS idx_te_org ON trace_events(org_id)"
+            )
         except Exception:
             pass
 
@@ -82,9 +85,18 @@ class EventStore:
                 error, metadata, timestamp)
                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (
-                event.trace_id, event.project, event.agent_id, event.session_id,
-                event.model, event.provider, event.input_tokens, event.output_tokens,
-                event.cost, event.latency_ms, event.status, event.error,
+                event.trace_id,
+                event.project,
+                event.agent_id,
+                event.session_id,
+                event.model,
+                event.provider,
+                event.input_tokens,
+                event.output_tokens,
+                event.cost,
+                event.latency_ms,
+                event.status,
+                event.error,
                 json.dumps(event.metadata) if event.metadata else None,
                 event.timestamp or datetime.now().isoformat(),
             ),
@@ -141,7 +153,8 @@ class EventStore:
         w = "WHERE project=?" if project else ""
         p = [project] if project else []
         return [
-            dict(r) for r in self.db.fetch_all(
+            dict(r)
+            for r in self.db.fetch_all(
                 f"""SELECT model, COUNT(*) as calls,
                     ROUND(CAST(SUM(cost) AS NUMERIC),6) as total_cost, SUM(input_tokens) as input_tokens,
                     SUM(output_tokens) as output_tokens, ROUND(CAST(AVG(latency_ms) AS NUMERIC),0) as avg_latency_ms
@@ -152,7 +165,8 @@ class EventStore:
 
     def get_cost_by_project(self):
         return [
-            dict(r) for r in self.db.fetch_all(
+            dict(r)
+            for r in self.db.fetch_all(
                 """SELECT project, COUNT(*) as calls,
                    ROUND(CAST(SUM(cost) AS NUMERIC),6) as total_cost, SUM(input_tokens) as input_tokens,
                    SUM(output_tokens) as output_tokens, MIN(timestamp) as first_call,
@@ -175,7 +189,8 @@ class EventStore:
             "day": "SUBSTR(timestamp,1,10)",
         }.get(interval, "SUBSTR(timestamp,1,13)")
         return [
-            dict(r) for r in self.db.fetch_all(
+            dict(r)
+            for r in self.db.fetch_all(
                 f"""SELECT {bkt} as time_bucket, COUNT(*) as calls,
                     ROUND(CAST(SUM(cost) AS NUMERIC),6) as cost, SUM(input_tokens) as input_tokens,
                     SUM(output_tokens) as output_tokens FROM trace_events {w}
@@ -186,8 +201,14 @@ class EventStore:
 
     # ── Budgets ──────────────────────────────────────────────────
 
-    def set_budget(self, project, daily_limit=None, monthly_limit=None,
-                   total_limit=None, alert_threshold=0.8):
+    def set_budget(
+        self,
+        project,
+        daily_limit=None,
+        monthly_limit=None,
+        total_limit=None,
+        alert_threshold=0.8,
+    ):
         now = datetime.now().isoformat()
         self.db.execute(
             """INSERT INTO budgets
@@ -200,7 +221,15 @@ class EventStore:
                    total_limit=excluded.total_limit,
                    alert_threshold=excluded.alert_threshold,
                    updated_at=excluded.updated_at""",
-            (project, daily_limit, monthly_limit, total_limit, alert_threshold, now, now),
+            (
+                project,
+                daily_limit,
+                monthly_limit,
+                total_limit,
+                alert_threshold,
+                now,
+                now,
+            ),
         )
 
     def get_budget(self, project):
@@ -228,6 +257,8 @@ class EventStore:
             "has_budget": True,
             "current_spend": round(cur, 6),
             "total_limit": b.get("total_limit"),
-            "pct_used": round(cur / b["total_limit"] * 100, 1) if b.get("total_limit") else None,
+            "pct_used": round(cur / b["total_limit"] * 100, 1)
+            if b.get("total_limit")
+            else None,
             "alerts": alerts,
         }

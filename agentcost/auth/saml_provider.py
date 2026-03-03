@@ -14,6 +14,7 @@ In production, each enterprise customer configures their corporate IdP
 Dependencies: python3-saml (OneLogin's SAML toolkit)
   pip install python3-saml
 """
+
 from __future__ import annotations
 
 import logging
@@ -26,7 +27,9 @@ from .models import TokenClaims
 logger = logging.getLogger("agentcost.auth.saml")
 
 
-def _get_saml_settings(config: Optional[AuthConfig] = None, request_data: Optional[dict] = None) -> dict:
+def _get_saml_settings(
+    config: Optional[AuthConfig] = None, request_data: Optional[dict] = None
+) -> dict:
     """Build the python3-saml settings dict from our config.
 
     This maps AgentCost config to the structure OneLogin's toolkit expects.
@@ -108,7 +111,9 @@ def get_sp_metadata(config: Optional[AuthConfig] = None) -> str:
         from onelogin.saml2.metadata import OneLogin_Saml2_Metadata  # noqa: F401
         from onelogin.saml2.settings import OneLogin_Saml2_Settings
 
-        settings = OneLogin_Saml2_Settings(_get_saml_settings(config), sp_validation_only=True)
+        settings = OneLogin_Saml2_Settings(
+            _get_saml_settings(config), sp_validation_only=True
+        )
         metadata = settings.get_sp_metadata()
         errors = settings.validate_metadata(metadata)
 
@@ -192,8 +197,11 @@ def process_saml_response(
         errors = saml_auth.get_errors()
 
         if errors:
-            logger.error("SAML response errors: %s (reason: %s)",
-                         errors, saml_auth.get_last_error_reason())
+            logger.error(
+                "SAML response errors: %s (reason: %s)",
+                errors,
+                saml_auth.get_last_error_reason(),
+            )
             return None, errors
 
         if not saml_auth.is_authenticated():
@@ -203,7 +211,9 @@ def process_saml_response(
         attributes = saml_auth.get_attributes()
         name_id = saml_auth.get_nameid()
 
-        logger.info("SAML auth success: name_id=%s attrs=%s", name_id, list(attributes.keys()))
+        logger.info(
+            "SAML auth success: name_id=%s attrs=%s", name_id, list(attributes.keys())
+        )
 
         claims = TokenClaims.from_saml(attributes, name_id=name_id)
         return claims, []

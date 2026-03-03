@@ -9,6 +9,7 @@ Features:
 
 This module has NO FastAPI dependency — can be used from CLI, workers, etc.
 """
+
 from __future__ import annotations
 
 import json
@@ -33,6 +34,7 @@ def _ensure_imports():
     if _jwt is None:
         try:
             import jwt as pyjwt
+
             _jwt = pyjwt
         except ImportError:
             raise ImportError(
@@ -68,12 +70,16 @@ class JWKSKeyCache:
         ctx.verify_mode = ssl.CERT_NONE
 
         try:
-            req = urllib.request.Request(self._jwks_url, headers={"Accept": "application/json"})
+            req = urllib.request.Request(
+                self._jwks_url, headers={"Accept": "application/json"}
+            )
             with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
                 data = json.loads(resp.read())
                 self._keys = {k["kid"]: k for k in data.get("keys", [])}
                 self._last_fetch = time.time()
-                logger.info("JWKS refreshed from %s — %d keys", self._jwks_url, len(self._keys))
+                logger.info(
+                    "JWKS refreshed from %s — %d keys", self._jwks_url, len(self._keys)
+                )
         except Exception as e:
             logger.error("Failed to fetch JWKS from %s: %s", self._jwks_url, e)
             if not self._keys:
@@ -95,7 +101,9 @@ class JWKSKeyCache:
 
         key_data = self._keys.get(kid)
         if not key_data:
-            raise ValueError(f"Key ID '{kid}' not found in JWKS (available: {list(self._keys.keys())})")
+            raise ValueError(
+                f"Key ID '{kid}' not found in JWKS (available: {list(self._keys.keys())})"
+            )
 
         return RSAAlgorithm.from_jwk(json.dumps(key_data))
 
@@ -120,6 +128,7 @@ def reset_key_cache() -> None:
 
 
 # ── Token validation ─────────────────────────────────────────────────────────
+
 
 def validate_jwt(token: str, config: Optional[AuthConfig] = None) -> TokenClaims:
     """Validate a Keycloak-issued JWT and return structured claims.
@@ -193,7 +202,9 @@ def validate_jwt(token: str, config: Optional[AuthConfig] = None) -> TokenClaims
 
     # Step 4-5: build claims object
     claims = TokenClaims.from_jwt(payload)
-    logger.debug("JWT validated: sub=%s org=%s roles=%s", claims.sub, claims.org_id, claims.roles)
+    logger.debug(
+        "JWT validated: sub=%s org=%s roles=%s", claims.sub, claims.org_id, claims.roles
+    )
     return claims
 
 

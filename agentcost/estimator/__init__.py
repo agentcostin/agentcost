@@ -28,6 +28,7 @@ Usage:
         {"model": "gpt-4o-mini", "prompt": "Hello"},
     ])
 """
+
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, List, Optional
@@ -59,7 +60,6 @@ MODEL_PRICING = {
     # OpenAI open-source
     "gpt-oss-20b": (0.03, 0.14),
     "gpt-oss-120b": (0.039, 0.19),
-
     # ── Anthropic ─── (per 1M tokens: input, output) ──────────────────────
     # Claude 4.6 (Feb 2026 — latest)
     "claude-opus-4-6": (5.00, 25.00),
@@ -70,24 +70,20 @@ MODEL_PRICING = {
     "claude-haiku-4-5": (1.00, 5.00),
     # Claude 4.x (legacy, still active)
     "claude-sonnet-4": (3.00, 15.00),
-
     # ── Google Gemini ─── (per 1M tokens: input, output) ──────────────────
     "gemini-3-pro": (2.00, 12.00),
     "gemini-2.5-pro": (1.25, 10.00),
     "gemini-2.5-flash": (0.15, 0.60),
     "gemini-2.5-flash-lite": (0.10, 0.40),
     "gemini-2.0-flash": (0.10, 0.40),
-
     # ── xAI Grok ─── (per 1M tokens: input, output) ──────────────────────
     "grok-4": (3.00, 15.00),
     "grok-4-fast": (0.20, 0.50),
     "grok-4.1-fast": (0.20, 0.50),
-
     # ── DeepSeek ─── (per 1M tokens: input, output) ──────────────────────
     "deepseek-chat": (0.28, 0.42),
     "deepseek-reasoner": (0.28, 0.42),
     "deepseek-r1": (0.55, 2.19),
-
     # ── Local / Self-hosted (free) ────────────────────────────────────────
     "llama3:8b": (0.0, 0.0),
     "llama3:70b": (0.0, 0.0),
@@ -99,14 +95,14 @@ MODEL_PRICING = {
 
 # Average output-to-input ratios by task type
 OUTPUT_RATIOS = {
-    "chat": 2.0,          # Conversational responses
-    "code": 3.0,          # Code generation
-    "summary": 0.3,       # Summarization (output < input)
-    "analysis": 2.5,      # Analytical tasks
-    "creative": 4.0,      # Creative writing
-    "translation": 1.1,   # Translation (roughly same length)
-    "extraction": 0.5,    # Data extraction
-    "classification": 0.1, # Classification (very short output)
+    "chat": 2.0,  # Conversational responses
+    "code": 3.0,  # Code generation
+    "summary": 0.3,  # Summarization (output < input)
+    "analysis": 2.5,  # Analytical tasks
+    "creative": 4.0,  # Creative writing
+    "translation": 1.1,  # Translation (roughly same length)
+    "extraction": 0.5,  # Data extraction
+    "classification": 0.1,  # Classification (very short output)
     "default": 2.0,
 }
 
@@ -114,6 +110,7 @@ OUTPUT_RATIOS = {
 @dataclass
 class CostEstimate:
     """Pre-call cost estimate."""
+
     model: str
     estimated_input_tokens: int
     estimated_output_tokens: int
@@ -189,9 +186,13 @@ class CostEstimator:
         total += 3  # reply priming
         return total
 
-    def estimate(self, model: str, prompt: str,
-                 task_type: str = "default",
-                 max_output_tokens: int = None) -> CostEstimate:
+    def estimate(
+        self,
+        model: str,
+        prompt: str,
+        task_type: str = "default",
+        max_output_tokens: int = None,
+    ) -> CostEstimate:
         """
         Estimate cost for a prompt string.
 
@@ -204,9 +205,13 @@ class CostEstimator:
         input_tokens = self.count_tokens(prompt)
         return self._build_estimate(model, input_tokens, task_type, max_output_tokens)
 
-    def estimate_messages(self, model: str, messages: List[dict],
-                          task_type: str = "default",
-                          max_output_tokens: int = None) -> CostEstimate:
+    def estimate_messages(
+        self,
+        model: str,
+        messages: List[dict],
+        task_type: str = "default",
+        max_output_tokens: int = None,
+    ) -> CostEstimate:
         """Estimate cost for chat messages."""
         input_tokens = self.count_message_tokens(messages)
         return self._build_estimate(model, input_tokens, task_type, max_output_tokens)
@@ -221,21 +226,24 @@ class CostEstimator:
             model = req.get("model", "unknown")
             if "messages" in req:
                 est = self.estimate_messages(
-                    model, req["messages"],
+                    model,
+                    req["messages"],
                     task_type=req.get("task_type", "default"),
                     max_output_tokens=req.get("max_output_tokens"),
                 )
             else:
                 est = self.estimate(
-                    model, req.get("prompt", ""),
+                    model,
+                    req.get("prompt", ""),
                     task_type=req.get("task_type", "default"),
                     max_output_tokens=req.get("max_output_tokens"),
                 )
             results.append(est)
         return results
 
-    def compare_models(self, prompt: str, models: List[str] = None,
-                       task_type: str = "default") -> List[dict]:
+    def compare_models(
+        self, prompt: str, models: List[str] = None, task_type: str = "default"
+    ) -> List[dict]:
         """
         Compare estimated costs across models for the same prompt.
         Returns sorted by cost (cheapest first).
@@ -252,8 +260,13 @@ class CostEstimator:
 
     # ── Internal ─────────────────────────────────────────────────────────
 
-    def _build_estimate(self, model: str, input_tokens: int,
-                        task_type: str, max_output_tokens: int = None) -> CostEstimate:
+    def _build_estimate(
+        self,
+        model: str,
+        input_tokens: int,
+        task_type: str,
+        max_output_tokens: int = None,
+    ) -> CostEstimate:
         # Estimate output tokens
         ratio = OUTPUT_RATIOS.get(task_type, OUTPUT_RATIOS["default"])
         estimated_output = int(input_tokens * ratio)
@@ -270,7 +283,9 @@ class CostEstimator:
 
         # Determine confidence
         if model in self._pricing:
-            pricing_source = "free" if input_price == 0 and output_price == 0 else "known"
+            pricing_source = (
+                "free" if input_price == 0 and output_price == 0 else "known"
+            )
             confidence = "high" if task_type != "default" else "medium"
         else:
             pricing_source = "estimated"

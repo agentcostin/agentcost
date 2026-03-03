@@ -20,6 +20,7 @@ CLI:
     agentcost plugin create NAME    # scaffold a new plugin project
     agentcost plugin test NAME      # run plugin health check
 """
+
 from __future__ import annotations
 
 import logging
@@ -33,6 +34,7 @@ logger = logging.getLogger("agentcost.plugins")
 
 # ── Plugin Types ──────────────────────────────────────────────────────────────
 
+
 class PluginType(str, Enum):
     NOTIFIER = "notifier"
     POLICY = "policy"
@@ -43,6 +45,7 @@ class PluginType(str, Enum):
 @dataclass
 class PluginMeta:
     """Metadata about a plugin."""
+
     name: str
     version: str
     plugin_type: PluginType
@@ -54,6 +57,7 @@ class PluginMeta:
 @dataclass
 class PluginContext:
     """Runtime context passed to plugins during lifecycle events."""
+
     config: dict = field(default_factory=dict)
     db_url: str | None = None
     server_url: str | None = None
@@ -68,9 +72,11 @@ class HealthStatus:
 
 # ── Notifier Types ────────────────────────────────────────────────────────────
 
+
 @dataclass
 class NotifyEvent:
     """Event payload sent to notifier plugins."""
+
     event_type: str  # "budget.warning", "policy.violation", etc.
     severity: str  # "info", "warning", "critical"
     title: str
@@ -89,9 +95,11 @@ class SendResult:
 
 # ── Policy Types ──────────────────────────────────────────────────────────────
 
+
 @dataclass
 class PolicyContext:
     """Context for policy evaluation."""
+
     model: str
     provider: str
     estimated_cost: float
@@ -109,6 +117,7 @@ class PolicyDecision:
 
 
 # ── Base Plugin Classes ───────────────────────────────────────────────────────
+
 
 class AgentCostPlugin(ABC):
     """Base class for all AgentCost plugins."""
@@ -171,7 +180,9 @@ class ProviderPlugin(AgentCostPlugin):
     """Plugin that adds cost calculation for custom/new LLM providers."""
 
     @abstractmethod
-    def calculate_cost(self, model: str, input_tokens: int, output_tokens: int) -> float | None:
+    def calculate_cost(
+        self, model: str, input_tokens: int, output_tokens: int
+    ) -> float | None:
         """Calculate cost for a model. Return None if model not supported."""
         ...
 
@@ -182,6 +193,7 @@ class ProviderPlugin(AgentCostPlugin):
 
 
 # ── Plugin Registry ───────────────────────────────────────────────────────────
+
 
 class PluginRegistry:
     """Discovers, loads, and manages AgentCost plugins."""
@@ -198,6 +210,7 @@ class PluginRegistry:
         found: list[PluginMeta] = []
         try:
             from importlib.metadata import entry_points
+
             eps = entry_points()
             # Python 3.12+ returns a SelectableGroups dict
             if hasattr(eps, "select"):
@@ -210,10 +223,14 @@ class PluginRegistry:
             for ep in group:
                 try:
                     plugin_cls = ep.load()
-                    if isinstance(plugin_cls, type) and issubclass(plugin_cls, AgentCostPlugin):
+                    if isinstance(plugin_cls, type) and issubclass(
+                        plugin_cls, AgentCostPlugin
+                    ):
                         instance = plugin_cls()
                         found.append(instance.meta)
-                        logger.info(f"Discovered plugin: {instance.meta.name} v{instance.meta.version}")
+                        logger.info(
+                            f"Discovered plugin: {instance.meta.name} v{instance.meta.version}"
+                        )
                 except Exception as e:
                     logger.warning(f"Failed to load plugin {ep.name}: {e}")
         except Exception as e:

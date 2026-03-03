@@ -22,6 +22,7 @@ Usage:
     # Export
     analytics.export_csv("/path/to/report.csv")
 """
+
 from __future__ import annotations
 from collections import defaultdict
 from datetime import datetime
@@ -62,7 +63,9 @@ class UsageAnalytics:
             key = t.get(by, "unknown")
             agg[key]["cost"] += float(t.get("cost", 0))
             agg[key]["calls"] += 1
-            agg[key]["tokens"] += int(t.get("input_tokens", 0)) + int(t.get("output_tokens", 0))
+            agg[key]["tokens"] += int(t.get("input_tokens", 0)) + int(
+                t.get("output_tokens", 0)
+            )
 
         ranked = sorted(agg.items(), key=lambda x: -x[1]["cost"])[:limit]
         return [
@@ -71,7 +74,9 @@ class UsageAnalytics:
                 "cost": round(data["cost"], 4),
                 "calls": data["calls"],
                 "tokens": data["tokens"],
-                "cost_per_call": round(data["cost"] / data["calls"], 6) if data["calls"] > 0 else 0,
+                "cost_per_call": round(data["cost"] / data["calls"], 6)
+                if data["calls"] > 0
+                else 0,
             }
             for name, data in ranked
         ]
@@ -94,17 +99,25 @@ class UsageAnalytics:
         result = []
         for model, m in by_model.items():
             total_tokens = m["input"] + m["output"]
-            result.append({
-                "model": model,
-                "input_tokens": m["input"],
-                "output_tokens": m["output"],
-                "total_tokens": total_tokens,
-                "output_input_ratio": round(m["output"] / m["input"], 2) if m["input"] > 0 else 0,
-                "cost_per_1k_tokens": round(m["cost"] / total_tokens * 1000, 6) if total_tokens > 0 else 0,
-                "tokens_per_call": round(total_tokens / m["calls"]) if m["calls"] > 0 else 0,
-                "cost": round(m["cost"], 4),
-                "calls": m["calls"],
-            })
+            result.append(
+                {
+                    "model": model,
+                    "input_tokens": m["input"],
+                    "output_tokens": m["output"],
+                    "total_tokens": total_tokens,
+                    "output_input_ratio": round(m["output"] / m["input"], 2)
+                    if m["input"] > 0
+                    else 0,
+                    "cost_per_1k_tokens": round(m["cost"] / total_tokens * 1000, 6)
+                    if total_tokens > 0
+                    else 0,
+                    "tokens_per_call": round(total_tokens / m["calls"])
+                    if m["calls"] > 0
+                    else 0,
+                    "cost": round(m["cost"], 4),
+                    "calls": m["calls"],
+                }
+            )
 
         return sorted(result, key=lambda r: -r["cost"])
 
@@ -136,10 +149,17 @@ class UsageAnalytics:
 
             agg[key]["cost"] += float(t.get("cost", 0))
             agg[key]["calls"] += 1
-            agg[key]["tokens"] += int(t.get("input_tokens", 0)) + int(t.get("output_tokens", 0))
+            agg[key]["tokens"] += int(t.get("input_tokens", 0)) + int(
+                t.get("output_tokens", 0)
+            )
 
         return [
-            {"period": k, "cost": round(v["cost"], 4), "calls": v["calls"], "tokens": v["tokens"]}
+            {
+                "period": k,
+                "cost": round(v["cost"], 4),
+                "calls": v["calls"],
+                "tokens": v["tokens"],
+            }
             for k, v in sorted(agg.items())
         ]
 
@@ -157,16 +177,18 @@ class UsageAnalytics:
         for model, lats in by_model.items():
             lats.sort()
             n = len(lats)
-            result.append({
-                "model": model,
-                "calls": n,
-                "p50_ms": round(lats[n // 2], 1) if n > 0 else 0,
-                "p90_ms": round(lats[int(n * 0.9)], 1) if n > 0 else 0,
-                "p99_ms": round(lats[int(n * 0.99)], 1) if n > 0 else 0,
-                "avg_ms": round(sum(lats) / n, 1) if n > 0 else 0,
-                "min_ms": round(lats[0], 1) if n > 0 else 0,
-                "max_ms": round(lats[-1], 1) if n > 0 else 0,
-            })
+            result.append(
+                {
+                    "model": model,
+                    "calls": n,
+                    "p50_ms": round(lats[n // 2], 1) if n > 0 else 0,
+                    "p90_ms": round(lats[int(n * 0.9)], 1) if n > 0 else 0,
+                    "p99_ms": round(lats[int(n * 0.99)], 1) if n > 0 else 0,
+                    "avg_ms": round(sum(lats) / n, 1) if n > 0 else 0,
+                    "min_ms": round(lats[0], 1) if n > 0 else 0,
+                    "max_ms": round(lats[-1], 1) if n > 0 else 0,
+                }
+            )
 
         return sorted(result, key=lambda r: -r["calls"])
 
@@ -177,26 +199,34 @@ class UsageAnalytics:
         Generate a chargeback report grouped by dimension.
         Returns summary + line items suitable for finance export.
         """
-        groups = defaultdict(lambda: {"cost": 0, "calls": 0, "tokens": 0, "models": set()})
+        groups = defaultdict(
+            lambda: {"cost": 0, "calls": 0, "tokens": 0, "models": set()}
+        )
 
         for t in self._traces:
             key = t.get(group_by, "unassigned")
             groups[key]["cost"] += float(t.get("cost", 0))
             groups[key]["calls"] += 1
-            groups[key]["tokens"] += int(t.get("input_tokens", 0)) + int(t.get("output_tokens", 0))
+            groups[key]["tokens"] += int(t.get("input_tokens", 0)) + int(
+                t.get("output_tokens", 0)
+            )
             groups[key]["models"].add(t.get("model", "unknown"))
 
         total_cost = sum(g["cost"] for g in groups.values())
         line_items = []
         for name, g in sorted(groups.items(), key=lambda x: -x[1]["cost"]):
-            line_items.append({
-                group_by: name,
-                "cost": round(g["cost"], 4),
-                "calls": g["calls"],
-                "tokens": g["tokens"],
-                "models_used": sorted(g["models"]),
-                "pct_of_total": round(g["cost"] / total_cost * 100, 1) if total_cost > 0 else 0,
-            })
+            line_items.append(
+                {
+                    group_by: name,
+                    "cost": round(g["cost"], 4),
+                    "calls": g["calls"],
+                    "tokens": g["tokens"],
+                    "models_used": sorted(g["models"]),
+                    "pct_of_total": round(g["cost"] / total_cost * 100, 1)
+                    if total_cost > 0
+                    else 0,
+                }
+            )
 
         return {
             "report_type": "chargeback",
@@ -227,7 +257,9 @@ class UsageAnalytics:
             "unique_projects": len(projects),
             "error_count": errors,
             "error_rate": round(errors / len(self._traces), 3) if self._traces else 0,
-            "avg_cost_per_call": round(total_cost / len(self._traces), 6) if self._traces else 0,
+            "avg_cost_per_call": round(total_cost / len(self._traces), 6)
+            if self._traces
+            else 0,
         }
 
     # ── Export ────────────────────────────────────────────────────────────
@@ -237,8 +269,15 @@ class UsageAnalytics:
         Export traces as CSV. Returns CSV string if no filepath.
         """
         fields = [
-            "timestamp", "project", "model", "provider", "input_tokens",
-            "output_tokens", "cost", "latency_ms", "status",
+            "timestamp",
+            "project",
+            "model",
+            "provider",
+            "input_tokens",
+            "output_tokens",
+            "cost",
+            "latency_ms",
+            "status",
         ]
         output = io.StringIO()
         writer = csv.DictWriter(output, fieldnames=fields, extrasaction="ignore")

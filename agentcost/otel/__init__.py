@@ -17,6 +17,7 @@ Usage:
     from agentcost.otel import start_metrics_server
     start_metrics_server(port=9090)
 """
+
 from __future__ import annotations
 
 import logging
@@ -27,6 +28,7 @@ logger = logging.getLogger("agentcost.otel")
 
 
 # ── OpenTelemetry Span Exporter ───────────────────────────────────────────────
+
 
 class AgentCostSpanExporter:
     """
@@ -39,6 +41,7 @@ class AgentCostSpanExporter:
         try:
             from opentelemetry import trace as otel_trace
             from opentelemetry.trace import StatusCode
+
             self._tracer = otel_trace.get_tracer(tracer_name)
             self._StatusCode = StatusCode
             self._available = True
@@ -102,12 +105,17 @@ def setup_otel(
 
         if endpoint:
             try:
-                from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+                from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
+                    OTLPSpanExporter,
+                )
                 from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
                 otlp_exporter = OTLPSpanExporter(endpoint=endpoint)
                 provider.add_span_processor(BatchSpanProcessor(otlp_exporter))
             except ImportError:
-                logger.warning("OTLP exporter not available — install opentelemetry-exporter-otlp")
+                logger.warning(
+                    "OTLP exporter not available — install opentelemetry-exporter-otlp"
+                )
 
         otel_trace.set_tracer_provider(provider)
 
@@ -115,17 +123,23 @@ def setup_otel(
 
         # Hook into CostTracker
         from ..sdk.trace import get_tracker
+
         get_tracker(project).on_trace(exporter.export_event)
 
-        logger.info(f"OTel tracing configured: service={service_name}, endpoint={endpoint}")
+        logger.info(
+            f"OTel tracing configured: service={service_name}, endpoint={endpoint}"
+        )
         return exporter
 
     except ImportError:
-        logger.warning("opentelemetry-sdk not installed — run: pip install agentcostin[otel]")
+        logger.warning(
+            "opentelemetry-sdk not installed — run: pip install agentcostin[otel]"
+        )
         return None
 
 
 # ── Prometheus Metrics ────────────────────────────────────────────────────────
+
 
 class PrometheusMetrics:
     """
@@ -142,6 +156,7 @@ class PrometheusMetrics:
     def __init__(self):
         try:
             from prometheus_client import Counter, Histogram, Gauge
+
             self._available = True
 
             self.calls_total = Counter(
@@ -213,6 +228,7 @@ def setup_prometheus(project: str = "default") -> PrometheusMetrics:
     metrics = get_metrics()
     if metrics.available:
         from ..sdk.trace import get_tracker
+
         get_tracker(project).on_trace(metrics.record_event)
         logger.info(f"Prometheus metrics attached to project={project}")
     return metrics
@@ -222,7 +238,10 @@ def start_metrics_server(port: int = 9090) -> None:
     """Start a standalone Prometheus HTTP metrics server."""
     try:
         from prometheus_client import start_http_server
+
         start_http_server(port)
         logger.info(f"Prometheus metrics server started on :{port}")
     except ImportError:
-        logger.error("prometheus-client not installed — run: pip install agentcostin[otel]")
+        logger.error(
+            "prometheus-client not installed — run: pip install agentcostin[otel]"
+        )

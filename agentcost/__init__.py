@@ -11,4 +11,5 @@ __version__ = "0.5.0"
 def auto_instrument(project: str = "default", persist: bool = True) -> dict[str, bool]:
     """Auto-detect and patch installed LLM libraries for cost tracking."""
     from .sdk.integrations.auto import auto_instrument as _auto
+
     return _auto(project=project, persist=persist)

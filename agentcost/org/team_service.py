@@ -4,6 +4,7 @@ TeamService — Team member management within an organization.
 Handles listing members, updating roles, removing users, and user profiles.
 All operations are scoped to the caller's org unless they're platform_admin.
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -111,13 +112,18 @@ class TeamService:
             return {"error": "User not found in this organization"}
 
         # Prevent removing the last admin
-        if member["role"] in ("org_admin", "platform_admin") and new_role not in ("org_admin", "platform_admin"):
+        if member["role"] in ("org_admin", "platform_admin") and new_role not in (
+            "org_admin",
+            "platform_admin",
+        ):
             admin_count = self._db.fetch_one(
                 "SELECT COUNT(*) as count FROM users WHERE org_id = ? AND role IN ('org_admin', 'platform_admin')",
                 (org_id,),
             )
             if admin_count and admin_count["count"] <= 1:
-                return {"error": "Cannot demote the last admin — org must have at least one admin"}
+                return {
+                    "error": "Cannot demote the last admin — org must have at least one admin"
+                }
 
         # Do the update
         now = datetime.utcnow().isoformat()
@@ -150,7 +156,10 @@ class TeamService:
             f"UPDATE users SET {set_clause}, updated_at = ? WHERE id = ?",
             params,
         )
-        row = self._db.fetch_one("SELECT id, email, name, role, avatar_url FROM users WHERE id = ?", (user_id,))
+        row = self._db.fetch_one(
+            "SELECT id, email, name, role, avatar_url FROM users WHERE id = ?",
+            (user_id,),
+        )
         return dict(row) if row else None
 
     # ── Remove Member ────────────────────────────────────────────
@@ -184,8 +193,14 @@ class TeamService:
             if admin_count and admin_count["count"] <= 1:
                 return {"error": "Cannot remove the last admin"}
 
-        self._db.execute("DELETE FROM users WHERE id = ? AND org_id = ?", (target_user_id, org_id))
-        return {"status": "removed", "user_id": target_user_id, "email": member["email"]}
+        self._db.execute(
+            "DELETE FROM users WHERE id = ? AND org_id = ?", (target_user_id, org_id)
+        )
+        return {
+            "status": "removed",
+            "user_id": target_user_id,
+            "email": member["email"],
+        }
 
     # ── Leave Org ────────────────────────────────────────────────
 
@@ -204,7 +219,11 @@ class TeamService:
                 (org_id,),
             )
             if admin_count and admin_count["count"] <= 1:
-                return {"error": "Cannot leave — you are the last admin. Transfer admin role first."}
+                return {
+                    "error": "Cannot leave — you are the last admin. Transfer admin role first."
+                }
 
-        self._db.execute("DELETE FROM users WHERE id = ? AND org_id = ?", (user_id, org_id))
+        self._db.execute(
+            "DELETE FROM users WHERE id = ? AND org_id = ?", (user_id, org_id)
+        )
         return {"status": "left", "org_id": org_id}

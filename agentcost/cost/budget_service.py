@@ -13,6 +13,7 @@ The budget check is designed to be called by the SDK/trace ingestion
 layer BEFORE recording an LLM call. If the budget would be exceeded,
 the call can be blocked or flagged for approval.
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -22,7 +23,6 @@ from ..data.connection import get_db
 
 
 class BudgetService:
-
     def __init__(self, db=None):
         self._db = db or get_db()
 
@@ -48,14 +48,31 @@ class BudgetService:
             self._db.execute(
                 "UPDATE budgets SET daily_limit = ?, monthly_limit = ?, total_limit = ?, "
                 "alert_threshold = ?, updated_at = ? WHERE project = ? AND org_id = ?",
-                (daily_limit, monthly_limit, total_limit, alert_threshold, now, project, org_id),
+                (
+                    daily_limit,
+                    monthly_limit,
+                    total_limit,
+                    alert_threshold,
+                    now,
+                    project,
+                    org_id,
+                ),
             )
         else:
             self._db.execute(
                 "INSERT INTO budgets (project, daily_limit, monthly_limit, total_limit, "
                 "alert_threshold, created_at, updated_at, org_id) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (project, daily_limit, monthly_limit, total_limit, alert_threshold, now, now, org_id),
+                (
+                    project,
+                    daily_limit,
+                    monthly_limit,
+                    total_limit,
+                    alert_threshold,
+                    now,
+                    now,
+                    org_id,
+                ),
             )
         return self.get_budget(org_id, project)
 
@@ -185,8 +202,7 @@ class BudgetService:
             (org_id,),
         )
         unbudgeted = [
-            dict(r) for r in unbudgeted_rows
-            if r["project"] not in budgeted_projects
+            dict(r) for r in unbudgeted_rows if r["project"] not in budgeted_projects
         ]
 
         return {
@@ -194,7 +210,9 @@ class BudgetService:
             "total_monthly_budget": round(total_budget, 4),
             "total_monthly_spend": round(total_spend, 4),
             "total_org_spend": round(org_spend, 4),
-            "budget_utilization_pct": round(total_spend / total_budget * 100, 1) if total_budget > 0 else None,
+            "budget_utilization_pct": round(total_spend / total_budget * 100, 1)
+            if total_budget > 0
+            else None,
             "budgeted_projects": len(budgets),
             "unbudgeted_projects": unbudgeted,
             "projects": budgets,
@@ -206,7 +224,9 @@ class BudgetService:
         """Calculate current spend for a project across time windows."""
         now = datetime.utcnow()
         today_start = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
-        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0).isoformat()
+        month_start = now.replace(
+            day=1, hour=0, minute=0, second=0, microsecond=0
+        ).isoformat()
 
         # Total spend
         total = self._db.fetch_one(
@@ -244,17 +264,21 @@ class BudgetService:
             if limit_val and spend_val is not None:
                 pct = spend_val / limit_val
                 if pct >= 1.0:
-                    alerts.append({
-                        "type": f"{limit_type}_exceeded",
-                        "pct": round(pct * 100, 1),
-                        "spend": round(spend_val, 6),
-                        "limit": limit_val,
-                    })
+                    alerts.append(
+                        {
+                            "type": f"{limit_type}_exceeded",
+                            "pct": round(pct * 100, 1),
+                            "spend": round(spend_val, 6),
+                            "limit": limit_val,
+                        }
+                    )
                 elif pct >= threshold:
-                    alerts.append({
-                        "type": f"{limit_type}_warning",
-                        "pct": round(pct * 100, 1),
-                        "spend": round(spend_val, 6),
-                        "limit": limit_val,
-                    })
+                    alerts.append(
+                        {
+                            "type": f"{limit_type}_warning",
+                            "pct": round(pct * 100, 1),
+                            "spend": round(spend_val, 6),
+                            "limit": limit_val,
+                        }
+                    )
         return alerts

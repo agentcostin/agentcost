@@ -16,6 +16,7 @@ Usage:
     tracker.flush()   # force send
     tracker.stop()    # clean shutdown
 """
+
 from __future__ import annotations
 
 import atexit
@@ -94,7 +95,9 @@ class RemoteTracker:
             self._buffer.clear()
 
         if not self.endpoint:
-            logger.warning("No AGENTCOST_SERVER_URL configured — dropping %d events", len(batch))
+            logger.warning(
+                "No AGENTCOST_SERVER_URL configured — dropping %d events", len(batch)
+            )
             return
 
         self._send_batch(batch)

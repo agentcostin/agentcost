@@ -12,6 +12,7 @@ Usage:
     result = crew.kickoff()
     print(callbacks.summary())
 """
+
 from __future__ import annotations
 import time
 import logging
@@ -38,6 +39,7 @@ class AgentCostCrewCallbacks:
         # Try to get the tracker
         try:
             from ...sdk.trace import get_tracker
+
             self._tracker = get_tracker(project)
         except Exception:
             self._tracker = None
@@ -55,10 +57,18 @@ class AgentCostCrewCallbacks:
         """Called before an LLM call."""
         self._call_start = time.time()
 
-    def on_llm_end(self, model: str = "unknown", input_tokens: int = 0,
-                    output_tokens: int = 0, cost: float = 0, **kwargs) -> None:
+    def on_llm_end(
+        self,
+        model: str = "unknown",
+        input_tokens: int = 0,
+        output_tokens: int = 0,
+        cost: float = 0,
+        **kwargs,
+    ) -> None:
         """Called after an LLM call completes."""
-        latency = int((time.time() - self._call_start) * 1000) if self._call_start else 0
+        latency = (
+            int((time.time() - self._call_start) * 1000) if self._call_start else 0
+        )
         event = {
             "agent": self._current_agent,
             "task": self._current_task,
@@ -83,16 +93,18 @@ class AgentCostCrewCallbacks:
             agent_name = step_output.name
 
         self._current_agent = agent_name
-        self._events.append({
-            "agent": agent_name,
-            "task": self._current_task,
-            "model": "crewai-step",
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "cost": 0,
-            "latency_ms": 0,
-            "step": True,
-        })
+        self._events.append(
+            {
+                "agent": agent_name,
+                "task": self._current_task,
+                "model": "crewai-step",
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "cost": 0,
+                "latency_ms": 0,
+                "step": True,
+            }
+        )
 
     def summary(self) -> dict:
         """Cost summary grouped by agent."""
@@ -154,18 +166,27 @@ class AgentCostAutoGenHandler:
         self._events.append(event)
         return message  # Pass through
 
-    def on_llm_call(self, agent: str, model: str, input_tokens: int,
-                     output_tokens: int, cost: float, latency_ms: int = 0) -> None:
+    def on_llm_call(
+        self,
+        agent: str,
+        model: str,
+        input_tokens: int,
+        output_tokens: int,
+        cost: float,
+        latency_ms: int = 0,
+    ) -> None:
         """Manually log an LLM call from an AutoGen agent."""
-        self._events.append({
-            "agent": agent,
-            "model": model,
-            "input_tokens": input_tokens,
-            "output_tokens": output_tokens,
-            "cost": cost,
-            "latency_ms": latency_ms,
-            "conversation_id": self._conversation_id,
-        })
+        self._events.append(
+            {
+                "agent": agent,
+                "model": model,
+                "input_tokens": input_tokens,
+                "output_tokens": output_tokens,
+                "cost": cost,
+                "latency_ms": latency_ms,
+                "conversation_id": self._conversation_id,
+            }
+        )
 
     def summary(self) -> dict:
         by_agent: dict[str, dict] = {}

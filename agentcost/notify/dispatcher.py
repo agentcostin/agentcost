@@ -9,6 +9,7 @@ real integration with SMTP/PD API keys in production).
 The dispatcher is called by other services (budget alerts, policy violations,
 approval requests) to fan out notifications to all matching channels.
 """
+
 from __future__ import annotations
 
 import json
@@ -21,7 +22,6 @@ logger = logging.getLogger("agentcost.notify.dispatcher")
 
 
 class Dispatcher:
-
     def __init__(self, db=None):
         self._db = db or get_db()
 
@@ -37,6 +37,7 @@ class Dispatcher:
             {"dispatched": N, "results": [...]}
         """
         from .channel_service import ChannelService
+
         svc = ChannelService(self._db)
         channels = svc.get_channels_for_event(org_id, event_type)
 
@@ -54,12 +55,14 @@ class Dispatcher:
         results = []
         for ch in channels:
             result = self.send_to_channel(ch, event)
-            results.append({
-                "channel_id": ch["id"],
-                "channel_name": ch["name"],
-                "channel_type": ch["channel_type"],
-                **result,
-            })
+            results.append(
+                {
+                    "channel_id": ch["id"],
+                    "channel_name": ch["name"],
+                    "channel_type": ch["channel_type"],
+                    **result,
+                }
+            )
 
         sent = sum(1 for r in results if r.get("success"))
         logger.info("Dispatched %s: %d/%d channels", event_type, sent, len(channels))
@@ -115,6 +118,7 @@ class Dispatcher:
         # Actual HTTP call
         try:
             import urllib.request
+
             req = urllib.request.Request(
                 webhook_url,
                 data=json.dumps(payload).encode("utf-8"),
@@ -126,7 +130,11 @@ class Dispatcher:
         except Exception as e:
             logger.warning("Slack webhook failed: %s", e)
             # In dev/test, just log and succeed
-            return {"success": True, "mode": "logged", "note": f"Slack POST queued: {str(e)[:100]}"}
+            return {
+                "success": True,
+                "mode": "logged",
+                "note": f"Slack POST queued: {str(e)[:100]}",
+            }
 
     def _send_webhook(self, config: dict, event: dict) -> dict:
         """Send to a generic webhook URL."""
@@ -140,6 +148,7 @@ class Dispatcher:
 
         try:
             import urllib.request
+
             req = urllib.request.Request(
                 url,
                 data=json.dumps(event).encode("utf-8"),
@@ -150,7 +159,11 @@ class Dispatcher:
                 return {"success": 200 <= resp.status < 300, "status_code": resp.status}
         except Exception as e:
             logger.warning("Webhook failed: %s", e)
-            return {"success": True, "mode": "logged", "note": f"Webhook queued: {str(e)[:100]}"}
+            return {
+                "success": True,
+                "mode": "logged",
+                "note": f"Webhook queued: {str(e)[:100]}",
+            }
 
     def _send_email(self, config: dict, event: dict) -> dict:
         """Send email notification (stub — logs instead of sending).
@@ -166,9 +179,16 @@ class Dispatcher:
 
         logger.info(
             "EMAIL [stub] to=%s subject='%s' body='%s'",
-            recipients, subject, body[:200],
+            recipients,
+            subject,
+            body[:200],
         )
-        return {"success": True, "mode": "stub", "recipients": recipients, "subject": subject}
+        return {
+            "success": True,
+            "mode": "stub",
+            "recipients": recipients,
+            "subject": subject,
+        }
 
     def _send_pagerduty(self, config: dict, event: dict) -> dict:
         """Send PagerDuty event (stub — logs instead of sending).
@@ -184,9 +204,16 @@ class Dispatcher:
 
         logger.info(
             "PAGERDUTY [stub] routing_key=%s severity=%s summary='%s'",
-            routing_key[:8] + "...", severity, summary[:200],
+            routing_key[:8] + "...",
+            severity,
+            summary[:200],
         )
-        return {"success": True, "mode": "stub", "severity": severity, "summary": summary[:200]}
+        return {
+            "success": True,
+            "mode": "stub",
+            "severity": severity,
+            "summary": summary[:200],
+        }
 
     # ── Helpers ──────────────────────────────────────────────────
 

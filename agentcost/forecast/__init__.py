@@ -15,6 +15,7 @@ Usage:
     # {'method': 'linear', 'forecasts': [...], 'total_predicted': 425.0,
     #  'daily_average': 14.17, 'trend': 'increasing', 'confidence': 0.85}
 """
+
 from __future__ import annotations
 import math
 from datetime import datetime, timedelta
@@ -25,6 +26,7 @@ from typing import Dict, List, Optional, Tuple
 @dataclass
 class DailySpend:
     """Single day's cost data."""
+
     date: str
     cost: float
     calls: int = 0
@@ -34,6 +36,7 @@ class DailySpend:
 @dataclass
 class Forecast:
     """Forecast result."""
+
     method: str
     forecasts: List[Dict]  # [{date, predicted_cost}, ...]
     total_predicted: float
@@ -121,7 +124,9 @@ class CostForecaster:
         elif method == "ensemble":
             return self._ensemble_forecast(days_ahead)
         else:
-            raise ValueError(f"Unknown method: {method}. Use 'linear', 'ema', or 'ensemble'")
+            raise ValueError(
+                f"Unknown method: {method}. Use 'linear', 'ema', or 'ensemble'"
+            )
 
     def predict_budget_exhaustion(self, budget_limit: float) -> Optional[dict]:
         """
@@ -243,7 +248,7 @@ class CostForecaster:
         current = ema
         dampen = 0.95  # Trend dampens over time
         for d in range(1, days_ahead + 1):
-            predicted = max(0, current + trend_rate * (dampen ** d))
+            predicted = max(0, current + trend_rate * (dampen**d))
             fc_date = (last_date + timedelta(days=d)).strftime("%Y-%m-%d")
             forecasts.append({"date": fc_date, "predicted_cost": round(predicted, 4)})
 
@@ -298,10 +303,12 @@ class CostForecaster:
                 w_lin * linear.forecasts[i]["predicted_cost"]
                 + w_ema * ema.forecasts[i]["predicted_cost"]
             )
-            forecasts.append({
-                "date": linear.forecasts[i]["date"],
-                "predicted_cost": round(max(0, blended), 4),
-            })
+            forecasts.append(
+                {
+                    "date": linear.forecasts[i]["date"],
+                    "predicted_cost": round(max(0, blended), 4),
+                }
+            )
 
         total = sum(f["predicted_cost"] for f in forecasts)
         daily_avg = total / days_ahead if days_ahead > 0 else 0
@@ -346,7 +353,13 @@ class CostForecaster:
 
     def _empty_forecast(self, days_ahead: int, method: str) -> Forecast:
         return Forecast(
-            method=method, forecasts=[], total_predicted=0,
-            daily_average=0, trend="unknown", trend_pct=0,
-            confidence=0, current_daily_avg=0, data_points=self.data_points,
+            method=method,
+            forecasts=[],
+            total_predicted=0,
+            daily_average=0,
+            trend="unknown",
+            trend_pct=0,
+            confidence=0,
+            current_daily_avg=0,
+            data_points=self.data_points,
         )

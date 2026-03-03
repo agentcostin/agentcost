@@ -9,6 +9,7 @@ Lifecycle:
   pending → denied   (manager denies with reason)
   pending → expired  (auto-expires after TTL, default 24h)
 """
+
 from __future__ import annotations
 
 import json
@@ -20,7 +21,6 @@ from ..data.connection import get_db
 
 
 class ApprovalService:
-
     def __init__(self, db=None):
         self._db = db or get_db()
 
@@ -57,14 +57,29 @@ class ApprovalService:
             "(id, org_id, requester_type, requester_id, request_type, context, "
             "estimated_cost, status, expires_at, created_at) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (req_id, org_id, requester_type, requester_id, request_type,
-             context_json, estimated_cost, "pending", expires_at, now.isoformat()),
+            (
+                req_id,
+                org_id,
+                requester_type,
+                requester_id,
+                request_type,
+                context_json,
+                estimated_cost,
+                "pending",
+                expires_at,
+                now.isoformat(),
+            ),
         )
         return {
-            "id": req_id, "org_id": org_id, "requester_type": requester_type,
-            "requester_id": requester_id, "request_type": request_type,
-            "context": context, "estimated_cost": estimated_cost,
-            "status": "pending", "expires_at": expires_at,
+            "id": req_id,
+            "org_id": org_id,
+            "requester_type": requester_type,
+            "requester_id": requester_id,
+            "request_type": request_type,
+            "context": context,
+            "estimated_cost": estimated_cost,
+            "status": "pending",
+            "expires_at": expires_at,
         }
 
     # ── Read ─────────────────────────────────────────────────────

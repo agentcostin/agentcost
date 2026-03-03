@@ -49,7 +49,10 @@ MODEL_PRICING: dict[str, dict[str, float]] = {
     "groq/llama-3.1-70b-versatile": {"input": 0.59, "output": 0.79},
     "groq/llama-3.1-8b-instant": {"input": 0.05, "output": 0.08},
     # Together AI
-    "together_ai/meta-llama/Llama-3.1-70B-Instruct-Turbo": {"input": 0.54, "output": 0.54},
+    "together_ai/meta-llama/Llama-3.1-70B-Instruct-Turbo": {
+        "input": 0.54,
+        "output": 0.54,
+    },
     # Ollama / Local models — $0 API cost (compute is your own hardware)
     # Users can override with custom pricing via AGENTCOST_OLLAMA_PRICING env
     "llama3.2": {"input": 0.00, "output": 0.00},
@@ -75,6 +78,7 @@ MODEL_PRICING: dict[str, dict[str, float]] = {
 
 # ── Data classes ─────────────────────────────────────────────────────────────
 
+
 @dataclass
 class LLMCallResult:
     content: str
@@ -89,6 +93,7 @@ class LLMCallResult:
 @dataclass
 class UsageAccumulator:
     """Tracks cumulative usage across multiple calls."""
+
     total_input_tokens: int = 0
     total_output_tokens: int = 0
     total_cost: float = 0.0
@@ -100,13 +105,15 @@ class UsageAccumulator:
         self.total_output_tokens += result.output_tokens
         self.total_cost += result.cost
         self.total_calls += 1
-        self.calls.append({
-            "model": result.model,
-            "input_tokens": result.input_tokens,
-            "output_tokens": result.output_tokens,
-            "cost": result.cost,
-            "latency_ms": result.latency_ms,
-        })
+        self.calls.append(
+            {
+                "model": result.model,
+                "input_tokens": result.input_tokens,
+                "output_tokens": result.output_tokens,
+                "cost": result.cost,
+                "latency_ms": result.latency_ms,
+            }
+        )
 
     def reset(self):
         self.total_input_tokens = 0
@@ -118,6 +125,7 @@ class UsageAccumulator:
 
 # ── Pricing helpers ──────────────────────────────────────────────────────────
 
+
 def get_pricing(model: str) -> dict[str, float]:
     """Look up pricing for a model, with fuzzy matching."""
     # Check custom Ollama pricing from env: AGENTCOST_OLLAMA_PRICING="0.01,0.02" (input,output per 1M)
@@ -125,7 +133,10 @@ def get_pricing(model: str) -> dict[str, float]:
     if _ollama_override and _is_ollama_model(model):
         try:
             parts = _ollama_override.split(",")
-            return {"input": float(parts[0]), "output": float(parts[1]) if len(parts) > 1 else float(parts[0])}
+            return {
+                "input": float(parts[0]),
+                "output": float(parts[1]) if len(parts) > 1 else float(parts[0]),
+            }
         except (ValueError, IndexError):
             pass
 
@@ -133,12 +144,25 @@ def get_pricing(model: str) -> dict[str, float]:
         return MODEL_PRICING[model]
     # Strip common LiteLLM prefixes for matching
     stripped = model
-    for prefix in ("openai/", "anthropic/", "groq/", "together_ai/",
-                    "mistral/", "bedrock/", "vertex_ai/", "azure/",
-                    "ollama/", "huggingface/", "replicate/", "cohere/",
-                    "deepseek/", "fireworks_ai/", "anyscale/"):
+    for prefix in (
+        "openai/",
+        "anthropic/",
+        "groq/",
+        "together_ai/",
+        "mistral/",
+        "bedrock/",
+        "vertex_ai/",
+        "azure/",
+        "ollama/",
+        "huggingface/",
+        "replicate/",
+        "cohere/",
+        "deepseek/",
+        "fireworks_ai/",
+        "anyscale/",
+    ):
         if stripped.startswith(prefix):
-            stripped = stripped[len(prefix):]
+            stripped = stripped[len(prefix) :]
             break
     if stripped in MODEL_PRICING:
         return MODEL_PRICING[stripped]
@@ -158,22 +182,39 @@ def get_pricing(model: str) -> dict[str, float]:
 
 def _is_ollama_model(model: str) -> bool:
     """Heuristic: detect models that are likely served by Ollama (local, no cloud prefix)."""
-    cloud_prefixes = ("gpt-", "claude-", "gemini-", "o1", "o3",
-                      "openai/", "anthropic/", "groq/", "together",
-                      "mistral/", "bedrock/", "vertex_ai/", "azure/")
+    cloud_prefixes = (
+        "gpt-",
+        "claude-",
+        "gemini-",
+        "o1",
+        "o3",
+        "openai/",
+        "anthropic/",
+        "groq/",
+        "together",
+        "mistral/",
+        "bedrock/",
+        "vertex_ai/",
+        "azure/",
+    )
     m = model.lower()
     return not any(m.startswith(p) for p in cloud_prefixes)
 
 
 def calculate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
     pricing = get_pricing(model)
-    return (input_tokens * pricing["input"] + output_tokens * pricing["output"]) / 1_000_000
+    return (
+        input_tokens * pricing["input"] + output_tokens * pricing["output"]
+    ) / 1_000_000
 
 
-def _try_litellm_cost(model: str, input_tokens: int, output_tokens: int) -> float | None:
+def _try_litellm_cost(
+    model: str, input_tokens: int, output_tokens: int
+) -> float | None:
     """Try to use LiteLLM's built-in cost calculation (has 300+ models)."""
     try:
         import litellm
+
         cost = litellm.completion_cost(
             model=model,
             prompt=str(input_tokens),
@@ -187,6 +228,7 @@ def _try_litellm_cost(model: str, input_tokens: int, output_tokens: int) -> floa
 
 
 # ── Provider ─────────────────────────────────────────────────────────────────
+
 
 class TrackedProvider:
     """
@@ -246,6 +288,7 @@ class TrackedProvider:
         # ── Ollama (local LLM via OpenAI-compatible API) ─────────────
         if provider == "ollama":
             import openai
+
             ollama_url = base_url or os.environ.get(
                 "OLLAMA_HOST", "http://10.166.73.108:11434"
             )
@@ -261,17 +304,20 @@ class TrackedProvider:
 
         elif provider == "anthropic":
             import anthropic
+
             kwargs_a: dict[str, Any] = {
                 "api_key": api_key or os.environ.get("ANTHROPIC_API_KEY"),
             }
             if not verify_ssl:
                 import httpx as _httpx
+
                 kwargs_a["http_client"] = _httpx.Client(verify=False)
             self._client = anthropic.Anthropic(**kwargs_a)
 
         elif provider == "litellm":
             try:
                 import litellm
+
                 self._litellm = litellm
                 litellm.suppress_debug_info = True
                 litellm.drop_params = True  # auto-drop unsupported params per model
@@ -283,13 +329,12 @@ class TrackedProvider:
                     self._set_litellm_key(model, api_key)
                 self._client = None
             except ImportError:
-                raise ImportError(
-                    "litellm not installed. Run: pip install litellm"
-                )
+                raise ImportError("litellm not installed. Run: pip install litellm")
 
         elif provider == "proxy":
             import openai
             import httpx as _httpx
+
             proxy_url = base_url or os.environ.get(
                 "LITELLM_PROXY_URL", "http://localhost:4000"
             )
@@ -310,6 +355,7 @@ class TrackedProvider:
             )
             try:
                 import litellm
+
                 self._litellm = litellm
                 litellm.drop_params = True
             except ImportError:
@@ -318,6 +364,7 @@ class TrackedProvider:
         else:
             # OpenAI / OpenAI-compatible
             import openai
+
             kwargs: dict[str, Any] = {}
             if api_key:
                 kwargs["api_key"] = api_key
@@ -325,6 +372,7 @@ class TrackedProvider:
                 kwargs["base_url"] = base_url
             if not verify_ssl:
                 import httpx as _httpx
+
                 kwargs["http_client"] = _httpx.Client(verify=False)
             self._client = openai.OpenAI(**kwargs)
 
@@ -459,8 +507,11 @@ class TrackedProvider:
                 except Exception as param_err:
                     # Retry dropping unsupported params
                     err_lower = str(param_err).lower()
-                    if "temperature" in err_lower or "unsupported" in err_lower \
-                            or "max_tokens" in err_lower:
+                    if (
+                        "temperature" in err_lower
+                        or "unsupported" in err_lower
+                        or "max_tokens" in err_lower
+                    ):
                         kwargs_oai.pop("temperature", None)
                         if "max_tokens" in kwargs_oai:
                             val = kwargs_oai.pop("max_tokens")
@@ -471,7 +522,7 @@ class TrackedProvider:
             except Exception as e:
                 str(e)
                 # Extract useful info from OpenAI error responses
-                if hasattr(e, 'status_code'):
+                if hasattr(e, "status_code"):
                     code = e.status_code
                     if code == 401:
                         raise ConnectionError(
@@ -506,7 +557,12 @@ class TrackedProvider:
 
         # Reasoning models (gpt-5, o1, o3) may return empty content if all tokens
         # went to internal reasoning. Try to extract from alternative fields.
-        if not content and is_reasoning and hasattr(response, 'choices') and response.choices:
+        if (
+            not content
+            and is_reasoning
+            and hasattr(response, "choices")
+            and response.choices
+        ):
             msg = response.choices[0].message
             # Check common alternative fields used by proxies/APIs
             for attr in ("reasoning_content", "reasoning", "refusal"):

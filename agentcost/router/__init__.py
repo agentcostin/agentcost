@@ -23,6 +23,7 @@ Usage:
     # Fallback chain
     model = router.route(min_quality=0.75, fallback="gpt-4o")
 """
+
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
@@ -33,6 +34,7 @@ import random
 @dataclass
 class ModelProfile:
     """Performance profile for a model."""
+
     name: str
     cost_per_1k_tokens: float  # cost per 1K total tokens
     quality_score: float  # 0-1 quality from benchmarks
@@ -50,7 +52,7 @@ class ModelProfile:
     def cost_efficiency(self) -> float:
         """Quality per dollar (higher is better)."""
         if self.cost_per_1k_tokens == 0:
-            return float('inf') if self.quality_score > 0 else 0
+            return float("inf") if self.quality_score > 0 else 0
         return self.quality_score / self.cost_per_1k_tokens
 
     def to_dict(self) -> dict:
@@ -59,7 +61,9 @@ class ModelProfile:
             "cost_per_1k_tokens": self.cost_per_1k_tokens,
             "quality_score": round(self.quality_score, 3),
             "latency_p50_ms": self.latency_p50_ms,
-            "cost_efficiency": round(self.cost_efficiency, 2) if self.cost_efficiency != float('inf') else "∞",
+            "cost_efficiency": round(self.cost_efficiency, 2)
+            if self.cost_efficiency != float("inf")
+            else "∞",
             "available": self.available,
             "error_rate": round(self.error_rate, 3),
             "tags": self.tags,
@@ -69,6 +73,7 @@ class ModelProfile:
 @dataclass
 class RoutingDecision:
     """Result of a routing decision."""
+
     model: str
     reason: str
     alternatives: List[str]
@@ -100,9 +105,14 @@ class ModelRouter:
         self._models: Dict[str, ModelProfile] = {}
         self._routing_log: List[dict] = []
 
-    def add_model(self, name: str, cost_per_1k: float = 0.0,
-                  quality: float = 0.5, latency_p50: float = 500,
-                  **kwargs) -> ModelProfile:
+    def add_model(
+        self,
+        name: str,
+        cost_per_1k: float = 0.0,
+        quality: float = 0.5,
+        latency_p50: float = 500,
+        **kwargs,
+    ) -> ModelProfile:
         """Register a model with its performance profile."""
         profile = ModelProfile(
             name=name,
@@ -140,11 +150,18 @@ class ModelRouter:
     def routing_log(self) -> List[dict]:
         return list(self._routing_log[-100:])
 
-    def route(self, min_quality: float = 0.0, max_latency_ms: float = None,
-              max_cost_per_1k: float = None, strategy: str = "cheapest",
-              require_tags: List[str] = None, require_json: bool = False,
-              require_vision: bool = False, require_tools: bool = False,
-              fallback: str = None) -> RoutingDecision:
+    def route(
+        self,
+        min_quality: float = 0.0,
+        max_latency_ms: float = None,
+        max_cost_per_1k: float = None,
+        strategy: str = "cheapest",
+        require_tags: List[str] = None,
+        require_json: bool = False,
+        require_vision: bool = False,
+        require_tools: bool = False,
+        fallback: str = None,
+    ) -> RoutingDecision:
         """
         Route to optimal model based on constraints.
 
@@ -217,14 +234,16 @@ class ModelRouter:
         # Calculate savings vs best quality model
         best_quality = max(self._models.values(), key=lambda m: m.quality_score)
         if best_quality.cost_per_1k_tokens > 0:
-            savings = (1 - selected.cost_per_1k_tokens / best_quality.cost_per_1k_tokens) * 100
+            savings = (
+                1 - selected.cost_per_1k_tokens / best_quality.cost_per_1k_tokens
+            ) * 100
         else:
             savings = 0
 
         decision = RoutingDecision(
             model=selected.name,
             reason=f"Selected by '{strategy}' strategy (quality={selected.quality_score:.2f}, "
-                   f"cost=${selected.cost_per_1k_tokens:.4f}/1K)",
+            f"cost=${selected.cost_per_1k_tokens:.4f}/1K)",
             alternatives=alternatives,
             constraints_applied=constraints,
             cost_savings_vs_best=max(0, savings),
@@ -242,69 +261,103 @@ class ModelRouter:
         models = list(self._models.values())
 
         if len(models) < 2:
-            return [{"type": "info", "message": "Add more models to get routing recommendations"}]
+            return [
+                {
+                    "type": "info",
+                    "message": "Add more models to get routing recommendations",
+                }
+            ]
 
         # Find models with similar quality but different costs
         sorted_by_quality = sorted(models, key=lambda m: -m.quality_score)
         for i in range(len(sorted_by_quality) - 1):
             expensive = sorted_by_quality[i]
-            for cheaper in sorted_by_quality[i + 1:]:
+            for cheaper in sorted_by_quality[i + 1 :]:
                 quality_diff = expensive.quality_score - cheaper.quality_score
                 if quality_diff < 0.05 and expensive.cost_per_1k_tokens > 0:
-                    cost_ratio = cheaper.cost_per_1k_tokens / expensive.cost_per_1k_tokens
+                    cost_ratio = (
+                        cheaper.cost_per_1k_tokens / expensive.cost_per_1k_tokens
+                    )
                     if cost_ratio < 0.5:
                         savings_pct = (1 - cost_ratio) * 100
-                        recs.append({
-                            "type": "switch_model",
-                            "message": f"Switch from {expensive.name} to {cheaper.name}: "
-                                       f"similar quality ({cheaper.quality_score:.2f} vs "
-                                       f"{expensive.quality_score:.2f}) but {savings_pct:.0f}% cheaper",
-                            "from_model": expensive.name,
-                            "to_model": cheaper.name,
-                            "savings_pct": round(savings_pct, 1),
-                            "quality_impact": round(-quality_diff, 3),
-                        })
+                        recs.append(
+                            {
+                                "type": "switch_model",
+                                "message": f"Switch from {expensive.name} to {cheaper.name}: "
+                                f"similar quality ({cheaper.quality_score:.2f} vs "
+                                f"{expensive.quality_score:.2f}) but {savings_pct:.0f}% cheaper",
+                                "from_model": expensive.name,
+                                "to_model": cheaper.name,
+                                "savings_pct": round(savings_pct, 1),
+                                "quality_impact": round(-quality_diff, 3),
+                            }
+                        )
 
         # High error rate warnings
         for m in models:
             if m.error_rate > 0.1:
-                recs.append({
-                    "type": "high_error_rate",
-                    "message": f"{m.name} has {m.error_rate*100:.0f}% error rate — "
-                               f"consider disabling or investigating",
-                    "model": m.name,
-                    "error_rate": m.error_rate,
-                })
+                recs.append(
+                    {
+                        "type": "high_error_rate",
+                        "message": f"{m.name} has {m.error_rate * 100:.0f}% error rate — "
+                        f"consider disabling or investigating",
+                        "model": m.name,
+                        "error_rate": m.error_rate,
+                    }
+                )
 
         # Free model suggestions
-        free_models = [m for m in models if m.cost_per_1k_tokens == 0 and m.quality_score > 0.6]
+        free_models = [
+            m for m in models if m.cost_per_1k_tokens == 0 and m.quality_score > 0.6
+        ]
         paid_models = [m for m in models if m.cost_per_1k_tokens > 0]
         for free in free_models:
             for paid in paid_models:
                 if free.quality_score >= paid.quality_score * 0.9:
-                    recs.append({
-                        "type": "use_free",
-                        "message": f"Use free model {free.name} instead of {paid.name}: "
-                                   f"{free.quality_score:.2f} vs {paid.quality_score:.2f} quality "
-                                   f"at $0 cost",
-                        "free_model": free.name,
-                        "paid_model": paid.name,
-                    })
+                    recs.append(
+                        {
+                            "type": "use_free",
+                            "message": f"Use free model {free.name} instead of {paid.name}: "
+                            f"{free.quality_score:.2f} vs {paid.quality_score:.2f} quality "
+                            f"at $0 cost",
+                            "free_model": free.name,
+                            "paid_model": paid.name,
+                        }
+                    )
 
-        return recs if recs else [{"type": "info", "message": "Current model selection looks optimized"}]
+        return (
+            recs
+            if recs
+            else [
+                {"type": "info", "message": "Current model selection looks optimized"}
+            ]
+        )
 
     def comparison_table(self) -> List[dict]:
         """Get all models as a sorted comparison table."""
         return sorted(
             [m.to_dict() for m in self._models.values()],
-            key=lambda m: -(m["cost_efficiency"] if isinstance(m["cost_efficiency"], (int, float)) else float('inf')),
+            key=lambda m: (
+                -(
+                    m["cost_efficiency"]
+                    if isinstance(m["cost_efficiency"], (int, float))
+                    else float("inf")
+                )
+            ),
         )
 
     # ── Internal ─────────────────────────────────────────────────────────
 
-    def _filter_candidates(self, min_quality, max_latency_ms, max_cost_per_1k,
-                           require_tags, require_json, require_vision,
-                           require_tools) -> List[ModelProfile]:
+    def _filter_candidates(
+        self,
+        min_quality,
+        max_latency_ms,
+        max_cost_per_1k,
+        require_tags,
+        require_json,
+        require_vision,
+        require_tools,
+    ) -> List[ModelProfile]:
         candidates = []
         for m in self._models.values():
             if not m.available:
@@ -328,12 +381,14 @@ class ModelRouter:
         return candidates
 
     def _log_routing(self, decision: RoutingDecision):
-        self._routing_log.append({
-            "timestamp": time.time(),
-            "model": decision.model,
-            "reason": decision.reason,
-            "strategy": decision.constraints_applied.get("strategy"),
-        })
+        self._routing_log.append(
+            {
+                "timestamp": time.time(),
+                "model": decision.model,
+                "reason": decision.reason,
+                "strategy": decision.constraints_applied.get("strategy"),
+            }
+        )
         # Keep last 100 entries
         if len(self._routing_log) > 100:
             self._routing_log = self._routing_log[-100:]

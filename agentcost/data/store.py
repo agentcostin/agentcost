@@ -4,6 +4,7 @@ Benchmark Store — Persistence for benchmark results.
 Stores per-task results, per-run summaries, and model leaderboard data.
 Refactored to use DatabaseAdapter (supports both SQLite and PostgreSQL).
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -127,11 +128,22 @@ class BenchmarkStore:
                 duration_seconds, roi, work_output, timestamp
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
-                result.run_id, result.task_id, result.model, result.sector,
-                result.occupation, result.quality_score, result.max_payment,
-                result.actual_payment, result.input_tokens, result.output_tokens,
-                result.llm_cost, result.eval_cost, result.total_cost,
-                result.duration_seconds, result.roi, result.work_output,
+                result.run_id,
+                result.task_id,
+                result.model,
+                result.sector,
+                result.occupation,
+                result.quality_score,
+                result.max_payment,
+                result.actual_payment,
+                result.input_tokens,
+                result.output_tokens,
+                result.llm_cost,
+                result.eval_cost,
+                result.total_cost,
+                result.duration_seconds,
+                result.roi,
+                result.work_output,
                 result.timestamp,
             ),
         )
@@ -156,12 +168,21 @@ class BenchmarkStore:
                     total_duration=EXCLUDED.total_duration, started_at=EXCLUDED.started_at,
                     finished_at=EXCLUDED.finished_at""",
                 (
-                    summary.run_id, summary.model, summary.total_tasks,
-                    summary.completed_tasks, summary.avg_quality, summary.total_income,
-                    summary.total_cost, summary.net_profit, summary.profit_margin,
-                    summary.avg_roi, summary.total_input_tokens,
-                    summary.total_output_tokens, summary.total_duration,
-                    summary.started_at, summary.finished_at,
+                    summary.run_id,
+                    summary.model,
+                    summary.total_tasks,
+                    summary.completed_tasks,
+                    summary.avg_quality,
+                    summary.total_income,
+                    summary.total_cost,
+                    summary.net_profit,
+                    summary.profit_margin,
+                    summary.avg_roi,
+                    summary.total_input_tokens,
+                    summary.total_output_tokens,
+                    summary.total_duration,
+                    summary.started_at,
+                    summary.finished_at,
                 ),
             )
         else:
@@ -174,12 +195,21 @@ class BenchmarkStore:
                     total_duration, started_at, finished_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
-                    summary.run_id, summary.model, summary.total_tasks,
-                    summary.completed_tasks, summary.avg_quality, summary.total_income,
-                    summary.total_cost, summary.net_profit, summary.profit_margin,
-                    summary.avg_roi, summary.total_input_tokens,
-                    summary.total_output_tokens, summary.total_duration,
-                    summary.started_at, summary.finished_at,
+                    summary.run_id,
+                    summary.model,
+                    summary.total_tasks,
+                    summary.completed_tasks,
+                    summary.avg_quality,
+                    summary.total_income,
+                    summary.total_cost,
+                    summary.net_profit,
+                    summary.profit_margin,
+                    summary.avg_roi,
+                    summary.total_input_tokens,
+                    summary.total_output_tokens,
+                    summary.total_duration,
+                    summary.started_at,
+                    summary.finished_at,
                 ),
             )
 
@@ -187,7 +217,8 @@ class BenchmarkStore:
 
     def get_run_results(self, run_id: str) -> list[dict]:
         return [
-            dict(r) for r in self.db.fetch_all(
+            dict(r)
+            for r in self.db.fetch_all(
                 "SELECT * FROM task_results WHERE run_id = ? ORDER BY timestamp",
                 (run_id,),
             )
@@ -195,7 +226,8 @@ class BenchmarkStore:
 
     def get_all_summaries(self, limit: int = 50) -> list[dict]:
         return [
-            dict(r) for r in self.db.fetch_all(
+            dict(r)
+            for r in self.db.fetch_all(
                 "SELECT * FROM run_summaries ORDER BY finished_at DESC LIMIT ?",
                 (limit,),
             )
@@ -204,7 +236,8 @@ class BenchmarkStore:
     def get_model_leaderboard(self) -> list[dict]:
         """Aggregate stats per model across all runs."""
         return [
-            dict(r) for r in self.db.fetch_all("""
+            dict(r)
+            for r in self.db.fetch_all("""
                 SELECT
                     model,
                     COUNT(*) as total_runs,

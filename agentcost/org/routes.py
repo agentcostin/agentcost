@@ -32,6 +32,7 @@ Mount in the main app:
     from agentcost.org.routes import org_router
     app.include_router(org_router)
 """
+
 from __future__ import annotations
 
 import logging
@@ -50,6 +51,7 @@ org_router = APIRouter(prefix="/org", tags=["organization"])
 
 # ── Pydantic models for request bodies ───────────────────────────────────────
 
+
 class OrgUpdate(BaseModel):
     name: Optional[str] = None
     slug: Optional[str] = None
@@ -57,12 +59,15 @@ class OrgUpdate(BaseModel):
     sso_provider: Optional[str] = None
     sso_config: Optional[dict] = None
 
+
 class InviteCreate(BaseModel):
     email: str
     role: str = "org_member"
 
+
 class RoleUpdate(BaseModel):
     role: str
+
 
 class ProfileUpdate(BaseModel):
     name: Optional[str] = None
@@ -71,26 +76,35 @@ class ProfileUpdate(BaseModel):
 
 # ── Service factories ────────────────────────────────────────────────────────
 
+
 def _org_svc():
     from .org_service import OrgService
+
     return OrgService()
+
 
 def _team_svc():
     from .team_service import TeamService
+
     return TeamService()
+
 
 def _invite_svc():
     from .invite_service import InviteService
+
     return InviteService()
+
 
 def _audit_svc():
     from .audit_service import AuditService
+
     return AuditService()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ORGANIZATION ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @org_router.get("")
 async def get_org(user: AuthContext = Depends(get_current_user)):
@@ -117,7 +131,9 @@ async def update_org(
     if not updated:
         raise HTTPException(404, "Organization not found")
 
-    audit.log_org_event(user.org_id, user.user_id, "update", body.model_dump(exclude_none=True))
+    audit.log_org_event(
+        user.org_id, user.user_id, "update", body.model_dump(exclude_none=True)
+    )
     return updated
 
 
@@ -144,13 +160,16 @@ async def create_org(
 
     org = svc.create_org(name=name, slug=slug, created_by_email=user.email)
 
-    audit.log_org_event(org["id"], user.user_id, "create", {"name": name, "slug": org["slug"]})
+    audit.log_org_event(
+        org["id"], user.user_id, "create", {"name": name, "slug": org["slug"]}
+    )
     return org
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # TEAM ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @org_router.get("/members")
 async def list_members(
@@ -162,7 +181,9 @@ async def list_members(
 ):
     """List members in your organization."""
     svc = _team_svc()
-    members = svc.list_members(user.org_id, role_filter=role, search=search, limit=limit, offset=offset)
+    members = svc.list_members(
+        user.org_id, role_filter=role, search=search, limit=limit, offset=offset
+    )
     count = svc.get_member_count(user.org_id)
     return {"members": members, "total": count}
 
@@ -248,8 +269,11 @@ async def leave_org(user: AuthContext = Depends(get_current_user)):
         raise HTTPException(400, result["error"])
 
     audit.log(
-        event_type="member.leave", org_id=user.org_id, actor_id=user.user_id,
-        action="delete", details={"email": user.email},
+        event_type="member.leave",
+        org_id=user.org_id,
+        actor_id=user.user_id,
+        action="delete",
+        details={"email": user.email},
     )
     return result
 
@@ -257,6 +281,7 @@ async def leave_org(user: AuthContext = Depends(get_current_user)):
 # ─────────────────────────────────────────────────────────────────────────────
 # INVITE ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @org_router.post("/invites")
 async def create_invite(
@@ -315,8 +340,10 @@ async def accept_invite(
 
     if result.get("org_id"):
         audit.log(
-            event_type="member.invite_accepted", org_id=result["org_id"],
-            actor_id=user.user_id, action="create",
+            event_type="member.invite_accepted",
+            org_id=result["org_id"],
+            actor_id=user.user_id,
+            action="create",
             details={"email": user.email, "role": result.get("role")},
         )
     return result
@@ -352,6 +379,7 @@ async def resend_invite(
 # AUDIT LOG ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @org_router.get("/audit")
 async def query_audit_log(
     event_type: Optional[str] = None,
@@ -365,8 +393,13 @@ async def query_audit_log(
     """Query the audit log. Requires org_admin."""
     svc = _audit_svc()
     entries = svc.get_log(
-        org_id=user.org_id, event_type=event_type, actor_id=actor_id,
-        resource_type=resource_type, since=since, limit=limit, offset=offset,
+        org_id=user.org_id,
+        event_type=event_type,
+        actor_id=actor_id,
+        resource_type=resource_type,
+        since=since,
+        limit=limit,
+        offset=offset,
     )
     total = svc.get_entry_count(user.org_id)
     return {"entries": entries, "total": total, "limit": limit, "offset": offset}
@@ -392,6 +425,7 @@ async def audit_stats(
 
     # Event type breakdown
     from ..data.connection import get_db
+
     db = get_db()
     rows = db.fetch_all(
         "SELECT event_type, COUNT(*) as count FROM audit_log "
@@ -408,6 +442,7 @@ async def audit_stats(
 # ─────────────────────────────────────────────────────────────────────────────
 # HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def _resolve_user_id(user: AuthContext) -> str:
     """Resolve the DB user ID from the auth context.
@@ -448,10 +483,23 @@ def _resolve_user_id(user: AuthContext) -> str:
                 "INSERT INTO users (id, email, name, org_id, role, sso_provider_id, "
                 "last_login_at, created_at, updated_at) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (user_id, user.email, user.claims.name, org_id, role,
-                 user.claims.sub, now, now, now),
+                (
+                    user_id,
+                    user.email,
+                    user.claims.name,
+                    org_id,
+                    role,
+                    user.claims.sub,
+                    now,
+                    now,
+                    now,
+                ),
             )
-            logger.info("Auto-provisioned user via _resolve_user_id: %s (org=%s)", user.email, org_id)
+            logger.info(
+                "Auto-provisioned user via _resolve_user_id: %s (org=%s)",
+                user.email,
+                org_id,
+            )
             return user_id
         except Exception as e:
             logger.error("Failed to auto-provision user in _resolve_user_id: %s", e)

@@ -16,6 +16,7 @@ Usage:
     detector.ingest(event)  # feed trace events
     alerts = detector.check()  # returns list of AnomalyAlert
 """
+
 from __future__ import annotations
 import math
 import time
@@ -44,14 +45,15 @@ class Severity(str, Enum):
 @dataclass
 class AnomalyAlert:
     """An anomaly detected in the trace data."""
+
     type: AnomalyType
     severity: Severity
     project: str
     model: str
     message: str
-    value: float           # the observed value
-    baseline: float        # the expected baseline
-    z_score: float         # how many std devs away
+    value: float  # the observed value
+    baseline: float  # the expected baseline
+    z_score: float  # how many std devs away
     timestamp: str = ""
     metadata: dict = field(default_factory=dict)
 
@@ -71,6 +73,7 @@ class AnomalyAlert:
 
 
 # ── Rolling Statistics ────────────────────────────────────────────────────────
+
 
 class RollingStats:
     """Maintains rolling mean and std dev for a metric."""
@@ -116,6 +119,7 @@ class RollingStats:
 
 # ── Anomaly Detector ──────────────────────────────────────────────────────────
 
+
 class AnomalyDetector:
     """
     Detects anomalies in LLM trace events using rolling statistics.
@@ -144,9 +148,15 @@ class AnomalyDetector:
         self.on_anomaly = on_anomaly
 
         # Per (project, model) rolling stats
-        self._cost_stats: dict[str, RollingStats] = defaultdict(lambda: RollingStats(window_size))
-        self._latency_stats: dict[str, RollingStats] = defaultdict(lambda: RollingStats(window_size))
-        self._output_token_stats: dict[str, RollingStats] = defaultdict(lambda: RollingStats(window_size))
+        self._cost_stats: dict[str, RollingStats] = defaultdict(
+            lambda: RollingStats(window_size)
+        )
+        self._latency_stats: dict[str, RollingStats] = defaultdict(
+            lambda: RollingStats(window_size)
+        )
+        self._output_token_stats: dict[str, RollingStats] = defaultdict(
+            lambda: RollingStats(window_size)
+        )
 
         # Error tracking per (project, model)
         self._recent_statuses: dict[str, list[str]] = defaultdict(list)
@@ -203,15 +213,22 @@ class AnomalyDetector:
         if cost > 0 and cost_stats.count >= self.min_samples:
             z = cost_stats.z_score(cost)
             if z > self.sensitivity:
-                severity = Severity.CRITICAL if z > self.sensitivity * 2 else Severity.WARNING
+                severity = (
+                    Severity.CRITICAL if z > self.sensitivity * 2 else Severity.WARNING
+                )
                 alert = AnomalyAlert(
                     type=AnomalyType.COST_SPIKE,
                     severity=severity,
-                    project=project, model=model,
+                    project=project,
+                    model=model,
                     message=f"Cost ${cost:.4f} is {z:.1f}σ above average ${cost_stats.mean:.4f}",
-                    value=cost, baseline=cost_stats.mean, z_score=z,
+                    value=cost,
+                    baseline=cost_stats.mean,
+                    z_score=z,
                     timestamp=ts,
-                    metadata={"multiplier": round(cost / max(cost_stats.mean, 1e-9), 1)},
+                    metadata={
+                        "multiplier": round(cost / max(cost_stats.mean, 1e-9), 1)
+                    },
                 )
                 alerts.append(alert)
 
@@ -219,13 +236,18 @@ class AnomalyDetector:
         if latency_ms > 0 and latency_stats.count >= self.min_samples:
             z = latency_stats.z_score(latency_ms)
             if z > self.sensitivity:
-                severity = Severity.CRITICAL if z > self.sensitivity * 2 else Severity.WARNING
+                severity = (
+                    Severity.CRITICAL if z > self.sensitivity * 2 else Severity.WARNING
+                )
                 alert = AnomalyAlert(
                     type=AnomalyType.LATENCY_ANOMALY,
                     severity=severity,
-                    project=project, model=model,
+                    project=project,
+                    model=model,
                     message=f"Latency {latency_ms}ms is {z:.1f}σ above average {latency_stats.mean:.0f}ms",
-                    value=latency_ms, baseline=latency_stats.mean, z_score=z,
+                    value=latency_ms,
+                    baseline=latency_stats.mean,
+                    z_score=z,
                     timestamp=ts,
                 )
                 alerts.append(alert)
@@ -236,13 +258,18 @@ class AnomalyDetector:
             if z > self.sensitivity:
                 multiplier = output_tokens / max(token_stats.mean, 1)
                 if multiplier >= 5:  # Only flag if 5x+ the norm
-                    severity = Severity.CRITICAL if multiplier >= 10 else Severity.WARNING
+                    severity = (
+                        Severity.CRITICAL if multiplier >= 10 else Severity.WARNING
+                    )
                     alert = AnomalyAlert(
                         type=AnomalyType.TOKEN_EXPLOSION,
                         severity=severity,
-                        project=project, model=model,
+                        project=project,
+                        model=model,
                         message=f"Output tokens {output_tokens} is {multiplier:.0f}× the average {token_stats.mean:.0f}",
-                        value=output_tokens, baseline=token_stats.mean, z_score=z,
+                        value=output_tokens,
+                        baseline=token_stats.mean,
+                        z_score=z,
                         timestamp=ts,
                         metadata={"multiplier": round(multiplier, 1)},
                     )
@@ -256,10 +283,15 @@ class AnomalyDetector:
             if error_rate >= self.error_rate_threshold:
                 alert = AnomalyAlert(
                     type=AnomalyType.ERROR_BURST,
-                    severity=Severity.CRITICAL if error_rate > 0.5 else Severity.WARNING,
-                    project=project, model=model,
+                    severity=Severity.CRITICAL
+                    if error_rate > 0.5
+                    else Severity.WARNING,
+                    project=project,
+                    model=model,
                     message=f"Error rate {error_rate:.0%} ({error_count}/{len(recent)} recent calls)",
-                    value=error_rate, baseline=self.error_rate_threshold, z_score=0,
+                    value=error_rate,
+                    baseline=self.error_rate_threshold,
+                    z_score=0,
                     timestamp=ts,
                     metadata={"error_count": error_count, "window_size": len(recent)},
                 )
@@ -302,13 +334,21 @@ class AnomalyDetector:
         """Get current baseline statistics for a project/model."""
         key = self._key(project, model)
         return {
-            "cost": {"mean": self._cost_stats[key].mean, "std": self._cost_stats[key].std,
-                     "samples": self._cost_stats[key].count},
-            "latency_ms": {"mean": self._latency_stats[key].mean, "std": self._latency_stats[key].std,
-                           "samples": self._latency_stats[key].count},
-            "output_tokens": {"mean": self._output_token_stats[key].mean,
-                              "std": self._output_token_stats[key].std,
-                              "samples": self._output_token_stats[key].count},
+            "cost": {
+                "mean": self._cost_stats[key].mean,
+                "std": self._cost_stats[key].std,
+                "samples": self._cost_stats[key].count,
+            },
+            "latency_ms": {
+                "mean": self._latency_stats[key].mean,
+                "std": self._latency_stats[key].std,
+                "samples": self._latency_stats[key].count,
+            },
+            "output_tokens": {
+                "mean": self._output_token_stats[key].mean,
+                "std": self._output_token_stats[key].std,
+                "samples": self._output_token_stats[key].count,
+            },
         }
 
     def reset(self, project: str = None, model: str = None) -> None:
@@ -338,6 +378,7 @@ class AnomalyDetector:
 
 # ── Convenience: attach to CostTracker ────────────────────────────────────────
 
+
 def attach_anomaly_detection(
     project: str = "default",
     sensitivity: float = 2.5,
@@ -351,8 +392,11 @@ def attach_anomaly_detection(
         detector = attach_anomaly_detection(project="my-project", sensitivity=2.5)
     """
     from ..sdk.trace import get_tracker
+
     tracker = get_tracker(project)
     detector = AnomalyDetector(sensitivity=sensitivity, on_anomaly=on_anomaly)
     tracker.on_trace(lambda event: detector.ingest(event))
-    logger.info(f"Anomaly detection attached to project={project} (sensitivity={sensitivity}σ)")
+    logger.info(
+        f"Anomaly detection attached to project={project} (sensitivity={sensitivity}σ)"
+    )
     return detector

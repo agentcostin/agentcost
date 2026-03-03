@@ -20,6 +20,7 @@ Usage in routes:
     async def admin_only(user: AuthContext = Depends(require_role(Role.ORG_ADMIN))):
         return {"admin": user.email}
 """
+
 from __future__ import annotations
 
 import logging
@@ -42,6 +43,7 @@ _bearer_scheme = HTTPBearer(auto_error=False)
 
 # ── Org isolation filter ────────────────────────────────────────────────────
 
+
 def org_filter_sql(auth: AuthContext, alias: str = "") -> tuple[str, list]:
     """Generate SQL WHERE clause for multi-tenant org isolation.
 
@@ -63,6 +65,7 @@ def org_filter_sql(auth: AuthContext, alias: str = "") -> tuple[str, list]:
 
 # ── Core dependency: resolve auth context ───────────────────────────────────
 
+
 async def get_current_user(
     request: Request,
     bearer: Optional[HTTPAuthorizationCredentials] = Depends(_bearer_scheme),
@@ -82,6 +85,7 @@ async def get_current_user(
     if bearer and bearer.credentials:
         try:
             from .jwt_provider import validate_jwt
+
             claims = validate_jwt(bearer.credentials, config)
             return AuthContext(claims=claims, method=AuthMethod.OIDC)
         except Exception as e:
@@ -93,6 +97,7 @@ async def get_current_user(
     api_key = request.headers.get(config.api_key_header)
     if api_key:
         from .api_key import validate_api_key
+
         ctx = validate_api_key(api_key)
         if ctx:
             return ctx
@@ -131,6 +136,7 @@ async def get_optional_user(
 
 # ── Role-based access control ───────────────────────────────────────────────
 
+
 def require_role(minimum_role: Role) -> Callable:
     """Dependency factory: require the user to have at least the given role.
 
@@ -139,6 +145,7 @@ def require_role(minimum_role: Role) -> Callable:
         async def admin(user: AuthContext = Depends(require_role(Role.ORG_ADMIN))):
             ...
     """
+
     async def _check(
         user: AuthContext = Depends(get_current_user),
     ) -> AuthContext:
@@ -148,6 +155,7 @@ def require_role(minimum_role: Role) -> Callable:
                 detail=f"Requires role '{minimum_role.value}' or higher. Your role: '{user.role.value}'",
             )
         return user
+
     return _check
 
 
@@ -156,6 +164,7 @@ def require_org_match(target_org_id: str) -> Callable:
 
     Platform admins bypass this check.
     """
+
     async def _check(
         user: AuthContext = Depends(get_current_user),
     ) -> AuthContext:
@@ -167,10 +176,12 @@ def require_org_match(target_org_id: str) -> Callable:
                 detail="You don't have access to this organization's resources.",
             )
         return user
+
     return _check
 
 
 # ── Session validation (simple signed cookie) ──────────────────────────────
+
 
 def _validate_session(token: str, config) -> Optional[AuthContext]:
     """Validate a session cookie.
@@ -181,6 +192,7 @@ def _validate_session(token: str, config) -> Optional[AuthContext]:
     """
     try:
         import jwt as pyjwt
+
         payload = pyjwt.decode(
             token,
             key=config.session_secret,

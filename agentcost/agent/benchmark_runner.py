@@ -57,13 +57,20 @@ class BenchmarkRunner:
 
         self.task_manager = TaskManager(tasks_path)
         self.provider = TrackedProvider(
-            model=model, api_key=api_key, provider=provider_name,
-            base_url=base_url, verify_ssl=verify_ssl,
+            model=model,
+            api_key=api_key,
+            provider=provider_name,
+            base_url=base_url,
+            verify_ssl=verify_ssl,
         )
         # For the evaluator: reuse provider config if set to proxy/ollama, otherwise default to openai
-        _eval_provider = eval_provider or (provider_name if provider_name in ("proxy", "ollama") else "openai")
+        _eval_provider = eval_provider or (
+            provider_name if provider_name in ("proxy", "ollama") else "openai"
+        )
         _eval_key = eval_api_key or api_key
-        _eval_url = eval_base_url or (base_url if provider_name in ("proxy", "ollama") else None)
+        _eval_url = eval_base_url or (
+            base_url if provider_name in ("proxy", "ollama") else None
+        )
         self.evaluator = QualityEvaluator(
             eval_model=eval_model,
             api_key=_eval_key,
@@ -89,16 +96,21 @@ class BenchmarkRunner:
         total = len(tasks)
 
         if verbose:
-            print(f"\n{'='*64}")
+            print(f"\n{'=' * 64}")
             print("  AgentCost Benchmark")
             print(f"  Model: {self.model}")
-            print(f"  Provider: {self.provider.provider_name}"
-                  + (f" → {self.provider.base_url}" if self.provider.base_url else ""))
+            print(
+                f"  Provider: {self.provider.provider_name}"
+                + (f" → {self.provider.base_url}" if self.provider.base_url else "")
+            )
             if not self.provider.verify_ssl:
                 print("  SSL Verify: OFF (corporate gateway mode)")
-            print(f"  Tasks: {total}" + (f" (sector: {self.sector})" if self.sector else ""))
+            print(
+                f"  Tasks: {total}"
+                + (f" (sector: {self.sector})" if self.sector else "")
+            )
             print(f"  Run ID: {self.run_id}")
-            print(f"{'='*64}")
+            print(f"{'=' * 64}")
 
             # ── Preflight: test connectivity with a tiny call ────────
             print(f"\n  🔗 Testing connection to {self.model}...", end=" ", flush=True)
@@ -110,15 +122,21 @@ class BenchmarkRunner:
                     max_tokens=10,
                 )
                 if test_result.content and len(test_result.content.strip()) > 0:
-                    print(f"✅ Connected ({test_result.latency_ms:.0f}ms, "
-                          f"${test_result.cost:.6f})")
+                    print(
+                        f"✅ Connected ({test_result.latency_ms:.0f}ms, "
+                        f"${test_result.cost:.6f})"
+                    )
                 else:
                     # Got a response but content is empty — common with reasoning models
                     if test_result.output_tokens > 0:
-                        print(f"✅ Connected ({test_result.latency_ms:.0f}ms, "
-                              f"{test_result.output_tokens} output tokens)")
-                        print("  ℹ️  Response had tokens but empty content — "
-                              "normal for reasoning models (gpt-5, o1, o3)")
+                        print(
+                            f"✅ Connected ({test_result.latency_ms:.0f}ms, "
+                            f"{test_result.output_tokens} output tokens)"
+                        )
+                        print(
+                            "  ℹ️  Response had tokens but empty content — "
+                            "normal for reasoning models (gpt-5, o1, o3)"
+                        )
                     else:
                         print("⚠️  Got empty response — model may not be available")
                 self.provider.reset_usage()  # Don't count the test call
@@ -129,14 +147,30 @@ class BenchmarkRunner:
                 if "401" in err or "auth" in err.lower():
                     print("  💡 Your API key or virtual key is invalid.")
                 elif "404" in err or "not found" in err.lower():
-                    print(f"  💡 Model '{self.model}' not found. Check the model name on your proxy.")
-                elif "ssl" in err.lower() or "certificate" in err.lower() or "verify" in err.lower():
-                    print("  💡 SSL certificate error. Your gateway likely uses an internal CA.")
+                    print(
+                        f"  💡 Model '{self.model}' not found. Check the model name on your proxy."
+                    )
+                elif (
+                    "ssl" in err.lower()
+                    or "certificate" in err.lower()
+                    or "verify" in err.lower()
+                ):
+                    print(
+                        "  💡 SSL certificate error. Your gateway likely uses an internal CA."
+                    )
                     print("     Fix: add --no-verify-ssl to your command.")
                 elif "connect" in err.lower() or "refused" in err.lower():
-                    print("  💡 Cannot reach the API. Check your --base-url or network.")
-                    if self.provider.verify_ssl and self.provider.base_url and "https" in (self.provider.base_url or ""):
-                        print("     If using a corporate gateway, try adding --no-verify-ssl")
+                    print(
+                        "  💡 Cannot reach the API. Check your --base-url or network."
+                    )
+                    if (
+                        self.provider.verify_ssl
+                        and self.provider.base_url
+                        and "https" in (self.provider.base_url or "")
+                    ):
+                        print(
+                            "     If using a corporate gateway, try adding --no-verify-ssl"
+                        )
                 print("\n  Aborting benchmark. Fix the issue above and retry.\n")
                 return []
 
@@ -160,11 +194,19 @@ class BenchmarkRunner:
                     # Already printed error above in _execute_task
                     pass
                 else:
-                    emoji = "✅" if result.quality_score >= 0.7 else "⚠️" if result.quality_score >= 0.4 else "❌"
-                    print(f"         {emoji} Quality: {result.quality_score:.2f} | "
-                          f"Earned: ${result.actual_payment:.2f} | "
-                          f"Cost: ${result.total_cost:.4f} | "
-                          f"ROI: {result.roi:.0f}x")
+                    emoji = (
+                        "✅"
+                        if result.quality_score >= 0.7
+                        else "⚠️"
+                        if result.quality_score >= 0.4
+                        else "❌"
+                    )
+                    print(
+                        f"         {emoji} Quality: {result.quality_score:.2f} | "
+                        f"Earned: ${result.actual_payment:.2f} | "
+                        f"Cost: ${result.total_cost:.4f} | "
+                        f"ROI: {result.roi:.0f}x"
+                    )
                 print()
 
         self.finished_at = datetime.now().isoformat()
@@ -180,7 +222,9 @@ class BenchmarkRunner:
                     print("     • Invalid API key / virtual key")
                     print("     • Proxy not reachable or misconfigured")
                     print("     • Rate limit or quota exceeded")
-                    print("\n  Try: python -m agentcost benchmark --model <model> --tasks 1 --provider proxy --base-url <url>")
+                    print(
+                        "\n  Try: python -m agentcost benchmark --model <model> --tasks 1 --provider proxy --base-url <url>"
+                    )
                 print()
             self._print_summary(summary)
 
@@ -218,9 +262,12 @@ class BenchmarkRunner:
 
             # Log trace event so it appears in the dashboard
             self._log_trace(
-                model=self.model, input_tokens=llm_result.input_tokens,
-                output_tokens=llm_result.output_tokens, cost=llm_result.cost,
-                latency_ms=llm_result.latency_ms, status="success",
+                model=self.model,
+                input_tokens=llm_result.input_tokens,
+                output_tokens=llm_result.output_tokens,
+                cost=llm_result.cost,
+                latency_ms=llm_result.latency_ms,
+                status="success",
                 project=f"benchmark-{self.run_id}",
                 agent_id=task.occupation,
             )
@@ -231,10 +278,18 @@ class BenchmarkRunner:
                     if output_tokens > 0 and input_tokens > 0:
                         # Model produced tokens but content is empty — reasoning model behavior
                         print(f"         ⚠️  {error_msg}")
-                        print(f"            Tokens used: {input_tokens} in / {output_tokens} out")
-                        print("            💡 This model may be a reasoning model (o1/o3/gpt-5) that")
-                        print("               used all tokens for internal reasoning. The response")
-                        print("               had output tokens but empty visible content.")
+                        print(
+                            f"            Tokens used: {input_tokens} in / {output_tokens} out"
+                        )
+                        print(
+                            "            💡 This model may be a reasoning model (o1/o3/gpt-5) that"
+                        )
+                        print(
+                            "               used all tokens for internal reasoning. The response"
+                        )
+                        print(
+                            "               had output tokens but empty visible content."
+                        )
                     else:
                         print(f"         ⚠️  {error_msg}")
 
@@ -247,8 +302,13 @@ class BenchmarkRunner:
 
             # Log error trace
             self._log_trace(
-                model=self.model, input_tokens=0, output_tokens=0, cost=0,
-                latency_ms=0, status="error", error=error_msg[:500],
+                model=self.model,
+                input_tokens=0,
+                output_tokens=0,
+                cost=0,
+                latency_ms=0,
+                status="error",
+                error=error_msg[:500],
                 project=f"benchmark-{self.run_id}",
                 agent_id=task.occupation,
             )
@@ -262,12 +322,20 @@ class BenchmarkRunner:
                 print(f"         🔴 LLM ERROR: {err_str}")
 
                 # Common fixes
-                if "401" in err_str or "auth" in err_str.lower() or "api key" in err_str.lower():
+                if (
+                    "401" in err_str
+                    or "auth" in err_str.lower()
+                    or "api key" in err_str.lower()
+                ):
                     print("         💡 Check your API key / virtual key is valid")
                 elif "404" in err_str or "not found" in err_str.lower():
-                    print(f"         💡 Model '{self.model}' may not exist on your proxy. Check model name.")
+                    print(
+                        f"         💡 Model '{self.model}' may not exist on your proxy. Check model name."
+                    )
                 elif "connect" in err_str.lower() or "refused" in err_str.lower():
-                    print("         💡 Cannot reach the API/proxy. Check --base-url or LITELLM_PROXY_URL")
+                    print(
+                        "         💡 Cannot reach the API/proxy. Check --base-url or LITELLM_PROXY_URL"
+                    )
                 elif "timeout" in err_str.lower():
                     print("         💡 Request timed out. The model may be overloaded.")
 
@@ -277,7 +345,9 @@ class BenchmarkRunner:
             eval_cost = 0.0
             reasoning = f"Skipped — LLM error: {error_msg[:100]}"
         else:
-            quality_score, eval_cost, reasoning = self.evaluator.evaluate(task, work_output)
+            quality_score, eval_cost, reasoning = self.evaluator.evaluate(
+                task, work_output
+            )
 
         # Calculate payment
         actual_payment = quality_score * task.max_payment
@@ -305,9 +375,18 @@ class BenchmarkRunner:
             timestamp=datetime.now().isoformat(),
         )
 
-    def _log_trace(self, model: str, input_tokens: int, output_tokens: int,
-                   cost: float, latency_ms: float, status: str,
-                   project: str, agent_id: str = None, error: str = None):
+    def _log_trace(
+        self,
+        model: str,
+        input_tokens: int,
+        output_tokens: int,
+        cost: float,
+        latency_ms: float,
+        status: str,
+        project: str,
+        agent_id: str = None,
+        error: str = None,
+    ):
         """Log an LLM call as a trace event so it appears in the dashboard.
 
         Writes to:
@@ -341,6 +420,7 @@ class BenchmarkRunner:
             try:
                 import urllib.request
                 import json
+
                 payload = json.dumps(event.to_dict()).encode()
                 req = urllib.request.Request(
                     f"{server_url.rstrip('/')}/api/trace",
@@ -361,7 +441,9 @@ class BenchmarkRunner:
         total_cost = sum(x.total_cost for x in r)
         net = total_income - total_cost
         margin = (net / total_cost * 100) if total_cost > 0 else 0
-        avg_q = sum(x.quality_score for x in completed) / len(completed) if completed else 0
+        avg_q = (
+            sum(x.quality_score for x in completed) / len(completed) if completed else 0
+        )
         avg_roi = sum(x.roi for x in completed) / len(completed) if completed else 0
 
         return RunSummary(
@@ -383,12 +465,18 @@ class BenchmarkRunner:
         )
 
     def _print_summary(self, s: RunSummary):
-        print(f"\n{'='*64}")
+        print(f"\n{'=' * 64}")
         print(f"  BENCHMARK RESULTS — {self.model}")
-        print(f"{'='*64}")
+        print(f"{'=' * 64}")
         print(f"  Run ID:          {s.run_id}")
-        print(f"  Tasks:           {s.completed_tasks}/{s.total_tasks} completed"
-              + (f" ({s.total_tasks - s.completed_tasks} failed)" if s.completed_tasks < s.total_tasks else ""))
+        print(
+            f"  Tasks:           {s.completed_tasks}/{s.total_tasks} completed"
+            + (
+                f" ({s.total_tasks - s.completed_tasks} failed)"
+                if s.completed_tasks < s.total_tasks
+                else ""
+            )
+        )
         print(f"  Avg Quality:     {s.avg_quality:.3f}")
         print("")
         print("  💰 Economics:")
@@ -402,4 +490,4 @@ class BenchmarkRunner:
         print(f"     Input Tokens:    {s.total_input_tokens:,}")
         print(f"     Output Tokens:   {s.total_output_tokens:,}")
         print(f"     Total Duration:  {s.total_duration:.1f}s")
-        print(f"{'='*64}\n")
+        print(f"{'=' * 64}\n")

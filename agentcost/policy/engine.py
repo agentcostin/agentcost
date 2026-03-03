@@ -25,6 +25,7 @@ Supported operators:
   - contains: substring match
   - matches: regex match
 """
+
 from __future__ import annotations
 
 import re
@@ -81,7 +82,10 @@ class PolicyEngine:
                 action = policy.get("action", "deny")
                 logger.info(
                     "Policy matched: %s (id=%s, action=%s) for org=%s",
-                    policy["name"], policy["id"], action, org_id,
+                    policy["name"],
+                    policy["id"],
+                    action,
+                    org_id,
                 )
                 return {
                     "decision": action,
@@ -120,14 +124,16 @@ class PolicyEngine:
             conditions = policy.get("conditions", [])
             condition_results = self._match_all_detailed(conditions, ctx)
             if all(r["matched"] for r in condition_results):
-                matches.append({
-                    "id": policy["id"],
-                    "name": policy["name"],
-                    "priority": policy["priority"],
-                    "action": policy["action"],
-                    "message": policy.get("message", ""),
-                    "conditions_detail": condition_results,
-                })
+                matches.append(
+                    {
+                        "id": policy["id"],
+                        "name": policy["name"],
+                        "priority": policy["priority"],
+                        "action": policy["action"],
+                        "message": policy.get("message", ""),
+                        "conditions_detail": condition_results,
+                    }
+                )
 
         winning = matches[0] if matches else None
         return {
@@ -160,7 +166,9 @@ class PolicyEngine:
         try:
             return self._compare(actual, operator, expected)
         except Exception as e:
-            logger.warning("Condition eval error: field=%s op=%s err=%s", field, operator, e)
+            logger.warning(
+                "Condition eval error: field=%s op=%s err=%s", field, operator, e
+            )
             return False
 
     def _compare(self, actual: Any, operator: str, expected: Any) -> bool:
@@ -199,11 +207,13 @@ class PolicyEngine:
         for c in conditions:
             field = c.get("field", "")
             matched = self._match_one(c, ctx)
-            results.append({
-                "field": field,
-                "operator": c.get("operator", "eq"),
-                "expected": c.get("value"),
-                "actual": ctx.get(field),
-                "matched": matched,
-            })
+            results.append(
+                {
+                    "field": field,
+                    "operator": c.get("operator", "eq"),
+                    "expected": c.get("value"),
+                    "actual": ctx.get(field),
+                    "matched": matched,
+                }
+            )
         return results

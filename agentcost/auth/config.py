@@ -6,6 +6,7 @@ Reads from environment variables with sensible defaults for local dev
 
 Production deployments override via env vars or .env file.
 """
+
 from __future__ import annotations
 
 import os
@@ -21,8 +22,8 @@ class AuthConfig:
     enabled: bool = True  # Set False to disable auth entirely (dev mode)
 
     # ── Keycloak connection ─────────────────────────────────────
-    keycloak_url: str = "http://localhost:8080"          # Internal (container-to-container)
-    keycloak_public_url: str = ""                         # Browser-facing (empty = same as keycloak_url)
+    keycloak_url: str = "http://localhost:8080"  # Internal (container-to-container)
+    keycloak_public_url: str = ""  # Browser-facing (empty = same as keycloak_url)
     realm: str = "agentcost"
 
     # ── OIDC (API backend) ──────────────────────────────────────
@@ -103,10 +104,20 @@ def get_auth_config() -> AuthConfig:
         keycloak_public_url=os.environ.get("KEYCLOAK_PUBLIC_URL", ""),
         realm=os.environ.get("KEYCLOAK_REALM", "agentcost"),
         oidc_client_id=os.environ.get("KEYCLOAK_CLIENT_ID", "agentcost-api"),
-        oidc_client_secret=os.environ.get("KEYCLOAK_CLIENT_SECRET", "agentcost-api-dev-secret"),
-        saml_entity_id=os.environ.get("SAML_ENTITY_ID", "https://agentcost.local/saml/metadata"),
-        saml_acs_url=os.environ.get("SAML_ACS_URL", "http://localhost:8100/auth/saml/acs"),
-        saml_slo_url=os.environ.get("SAML_SLO_URL", "http://localhost:8100/auth/saml/slo"),
-        session_secret=os.environ.get("SESSION_SECRET", "change-me-in-production-please"),
+        oidc_client_secret=os.environ.get(
+            "KEYCLOAK_CLIENT_SECRET", "agentcost-api-dev-secret"
+        ),
+        saml_entity_id=os.environ.get(
+            "SAML_ENTITY_ID", "https://agentcost.local/saml/metadata"
+        ),
+        saml_acs_url=os.environ.get(
+            "SAML_ACS_URL", "http://localhost:8100/auth/saml/acs"
+        ),
+        saml_slo_url=os.environ.get(
+            "SAML_SLO_URL", "http://localhost:8100/auth/saml/slo"
+        ),
+        session_secret=os.environ.get(
+            "SESSION_SECRET", "change-me-in-production-please"
+        ),
         api_key_header=os.environ.get("API_KEY_HEADER", "X-AgentCost-Key"),
     )

@@ -18,6 +18,7 @@ Migrations are SQL files in this directory named NNN_description.sql.
 Each migration must INSERT into schema_version with its version number.
 The runner skips migrations whose version is already in schema_version.
 """
+
 from __future__ import annotations
 
 import glob
@@ -28,6 +29,7 @@ import sys
 # Load .env from project root (agentcost-phase2/.env)
 try:
     from dotenv import load_dotenv
+
     _migrate_dir = os.path.dirname(os.path.abspath(__file__))
     _root = os.path.normpath(os.path.join(_migrate_dir, "..", "..", ".."))
     load_dotenv(os.path.join(_root, ".env"))
@@ -88,7 +90,8 @@ def migrate(dsn: str, target: int | None = None, verbose: bool = True):
         print(f"   Available migrations: {len(migrations)}\n")
 
     pending = [
-        (ver, name, path) for ver, name, path in migrations
+        (ver, name, path)
+        for ver, name, path in migrations
         if ver not in applied and (target is None or ver <= target)
     ]
 
@@ -144,6 +147,7 @@ def status(dsn: str):
 
 
 # ── CLI entry point ──────────────────────────────────────────────────────────
+
 
 def main():
     import argparse

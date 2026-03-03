@@ -14,6 +14,7 @@ When langchain is not installed, uses `object` as base so the module
 is still importable for testing — but won't pass LangChain's isinstance
 check at runtime (which is expected).
 """
+
 import time
 import uuid
 from datetime import datetime
@@ -34,6 +35,7 @@ except ImportError:
 
 
 # ── Helper functions ──────────────────────────────────────────────────────────
+
 
 def _extract_model(serialized: Dict, kwargs: Dict) -> str:
     """Extract model name from LangChain callback args."""
@@ -70,6 +72,7 @@ def _extract_tokens(response) -> tuple:
 
 # ── Callback Handler ──────────────────────────────────────────────────────────
 
+
 class AgentCostCallback(_Base):
     """
     LangChain callback handler for automatic cost tracking.
@@ -79,8 +82,13 @@ class AgentCostCallback(_Base):
     chat model APIs.
     """
 
-    def __init__(self, project: str = "default", persist: bool = True,
-                 agent_id: str = None, **kwargs):
+    def __init__(
+        self,
+        project: str = "default",
+        persist: bool = True,
+        agent_id: str = None,
+        **kwargs,
+    ):
         if _Base is not object:
             super().__init__(**kwargs)
         self.project = project
@@ -90,16 +98,18 @@ class AgentCostCallback(_Base):
 
     # ── LLM start (completions API) ──────────────────────────────────────
 
-    def on_llm_start(self, serialized: Dict, prompts: List[str], *,
-                     run_id=None, **kwargs) -> None:
+    def on_llm_start(
+        self, serialized: Dict, prompts: List[str], *, run_id=None, **kwargs
+    ) -> None:
         rid = str(run_id) if run_id else uuid.uuid4().hex[:12]
         model = _extract_model(serialized, kwargs)
         self._pending[rid] = {"model": model, "start": time.time()}
 
     # ── Chat model start ─────────────────────────────────────────────────
 
-    def on_chat_model_start(self, serialized: Dict, messages: List, *,
-                            run_id=None, **kwargs) -> None:
+    def on_chat_model_start(
+        self, serialized: Dict, messages: List, *, run_id=None, **kwargs
+    ) -> None:
         rid = str(run_id) if run_id else uuid.uuid4().hex[:12]
         model = _extract_model(serialized, kwargs)
         self._pending[rid] = {"model": model, "start": time.time()}
@@ -117,9 +127,15 @@ class AgentCostCallback(_Base):
         it, ot = _extract_tokens(response)
 
         ev = TraceEvent(
-            trace_id=rid[:12], project=self.project, model=model,
-            provider="langchain", input_tokens=it, output_tokens=ot,
-            cost=_calc(model, it, ot), latency_ms=latency, status="success",
+            trace_id=rid[:12],
+            project=self.project,
+            model=model,
+            provider="langchain",
+            input_tokens=it,
+            output_tokens=ot,
+            cost=_calc(model, it, ot),
+            latency_ms=latency,
+            status="success",
             timestamp=datetime.now().isoformat(),
             agent_id=self.agent_id,
         )
@@ -137,10 +153,17 @@ class AgentCostCallback(_Base):
 
         latency = (time.time() - p["start"]) * 1000
         ev = TraceEvent(
-            trace_id=rid[:12], project=self.project, model=p["model"],
-            provider="langchain", input_tokens=0, output_tokens=0,
-            cost=0, latency_ms=latency, status="error",
-            error=str(error)[:500], timestamp=datetime.now().isoformat(),
+            trace_id=rid[:12],
+            project=self.project,
+            model=p["model"],
+            provider="langchain",
+            input_tokens=0,
+            output_tokens=0,
+            cost=0,
+            latency_ms=latency,
+            status="error",
+            error=str(error)[:500],
+            timestamp=datetime.now().isoformat(),
             agent_id=self.agent_id,
         )
         get_tracker(self.project).record(ev)

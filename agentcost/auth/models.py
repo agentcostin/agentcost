@@ -4,6 +4,7 @@ Auth Models — Data structures for authentication context.
 These are plain dataclasses (no ORM dependency) so they can be used
 across the API layer, middleware, and tests without importing FastAPI.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -13,15 +14,17 @@ from typing import Optional
 
 class AuthMethod(str, Enum):
     """How the user/agent authenticated."""
-    OIDC = "oidc"           # JWT from Keycloak OIDC flow
-    SAML = "saml"           # SAML assertion → session
-    API_KEY = "api_key"     # SDK / agent API key
-    SESSION = "session"     # Cookie-based session (post SAML/OIDC)
-    ANONYMOUS = "anonymous" # Auth disabled or public endpoint
+
+    OIDC = "oidc"  # JWT from Keycloak OIDC flow
+    SAML = "saml"  # SAML assertion → session
+    API_KEY = "api_key"  # SDK / agent API key
+    SESSION = "session"  # Cookie-based session (post SAML/OIDC)
+    ANONYMOUS = "anonymous"  # Auth disabled or public endpoint
 
 
 class Role(str, Enum):
     """Platform roles — maps to Keycloak realm roles."""
+
     PLATFORM_ADMIN = "platform_admin"
     ORG_ADMIN = "org_admin"
     ORG_MANAGER = "org_manager"
@@ -68,17 +71,18 @@ class TokenClaims:
       - roles: realm-level role list
       - Standard OIDC: sub, email, name, preferred_username
     """
-    sub: str                              # Keycloak user UUID
+
+    sub: str  # Keycloak user UUID
     email: str = ""
     name: str = ""
     preferred_username: str = ""
     org_id: str = "default"
     org_slug: str = "default"
     roles: list[str] = field(default_factory=list)
-    iss: str = ""                         # Token issuer URL
-    aud: str | list[str] = ""             # Audience
-    exp: int = 0                          # Expiry (epoch)
-    iat: int = 0                          # Issued at (epoch)
+    iss: str = ""  # Token issuer URL
+    aud: str | list[str] = ""  # Audience
+    exp: int = 0  # Expiry (epoch)
+    iat: int = 0  # Issued at (epoch)
 
     @property
     def highest_role(self) -> Role:
@@ -115,6 +119,7 @@ class TokenClaims:
 
         SAML attributes come as lists; we take the first value.
         """
+
         def _first(key: str, default: str = "") -> str:
             val = attributes.get(key, [default])
             return val[0] if isinstance(val, list) else val
@@ -137,10 +142,11 @@ class AuthContext:
     Combines token claims with runtime metadata (auth method, API key ID).
     This is what route handlers receive via Depends(get_current_user).
     """
+
     claims: TokenClaims
     method: AuthMethod = AuthMethod.ANONYMOUS
-    api_key_id: Optional[str] = None      # Set when auth method is API_KEY
-    session_id: Optional[str] = None      # Set when using cookie session
+    api_key_id: Optional[str] = None  # Set when auth method is API_KEY
+    session_id: Optional[str] = None  # Set when using cookie session
 
     # ── Convenience accessors ────────────────────────────────────
 

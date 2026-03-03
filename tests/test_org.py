@@ -3,6 +3,7 @@ Tests for AgentCost Block 2: Multi-Tenant Org Management.
 
 Run: python -m pytest tests/test_org.py -v
 """
+
 import os
 import sys
 import pytest
@@ -12,9 +13,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 # ─── Test OrgService ─────────────────────────────────────────────────────────
 
+
 class TestOrgService:
     def test_slugify(self):
         from agentcost.org.org_service import OrgService
+
         assert OrgService._slugify("My Great Org") == "my-great-org"
         assert OrgService._slugify("Hello   World!!") == "hello-world"
         assert OrgService._slugify("  spaces  ") == "spaces"
@@ -22,9 +25,11 @@ class TestOrgService:
 
 # ─── Test Role Hierarchy in TeamService ──────────────────────────────────────
 
+
 class TestTeamRules:
     def test_cant_assign_higher_role(self):
         from agentcost.auth.models import AuthContext, AuthMethod, TokenClaims, Role
+
         # org_manager trying to assign org_admin
         claims = TokenClaims(sub="mgr-1", org_id="org1", roles=["org_manager"])
         actor = AuthContext(claims=claims, method=AuthMethod.OIDC)
@@ -33,6 +38,7 @@ class TestTeamRules:
 
     def test_platform_admin_can_assign_any_role(self):
         from agentcost.auth.models import AuthContext, AuthMethod, TokenClaims, Role
+
         claims = TokenClaims(sub="pa-1", org_id="org1", roles=["platform_admin"])
         actor = AuthContext(claims=claims, method=AuthMethod.OIDC)
         assert actor.is_platform_admin
@@ -41,10 +47,12 @@ class TestTeamRules:
 
 # ─── Test AuditService Hash Chaining ─────────────────────────────────────────
 
+
 class TestAuditHashChain:
     def test_hash_chain_logic(self):
         """Test hash chain computation matches expected behavior."""
         import hashlib
+
         prev_hash = "GENESIS"
         entry_data = "login|user1|user|org1|||login|null|2026-01-01T00:00:00"
         expected = hashlib.sha256(f"{prev_hash}|{entry_data}".encode()).hexdigest()
@@ -54,6 +62,7 @@ class TestAuditHashChain:
     def test_chain_breaks_on_tamper(self):
         """If an entry is modified, the chain should detect it."""
         import hashlib
+
         # Entry 1
         prev = "GENESIS"
         data1 = "login|u1|user|o1|||login|null|t1"
@@ -78,22 +87,27 @@ class TestAuditHashChain:
 
 # ─── Test InviteService Logic ────────────────────────────────────────────────
 
+
 class TestInviteRules:
     def test_invite_expiry_days(self):
         from agentcost.org.invite_service import INVITE_EXPIRY_DAYS
+
         assert INVITE_EXPIRY_DAYS == 7
 
 
 # ─── FastAPI Integration Tests ───────────────────────────────────────────────
+
 
 class TestOrgAPI:
     @pytest.fixture
     def client_no_auth(self, monkeypatch):
         monkeypatch.setenv("AGENTCOST_AUTH_ENABLED", "false")
         from agentcost.auth.config import get_auth_config
+
         get_auth_config.cache_clear()
         from fastapi.testclient import TestClient
         from agentcost.api.server import app
+
         with TestClient(app) as c:
             yield c
         get_auth_config.cache_clear()

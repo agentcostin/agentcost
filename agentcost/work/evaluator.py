@@ -106,11 +106,15 @@ class QualityEvaluator:
             try:
                 numbers = re.findall(r"0\.\d+", result.content)
                 if numbers:
-                    return float(numbers[0]), result.cost, f"Parsed from text (error: {e})"
+                    return (
+                        float(numbers[0]),
+                        result.cost,
+                        f"Parsed from text (error: {e})",
+                    )
             except Exception:
                 pass
             # Use actual cost from provider (not hardcoded) — $0 for local models
-            fallback_cost = getattr(result, 'cost', 0.0) if 'result' in dir() else 0.0
+            fallback_cost = getattr(result, "cost", 0.0) if "result" in dir() else 0.0
             return 0.5, fallback_cost, f"Evaluation error: {e}"
 
     @property

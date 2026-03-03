@@ -9,6 +9,7 @@ Responsibilities:
 
 This middleware sits between CORS and route handlers.
 """
+
 from __future__ import annotations
 
 import logging
@@ -25,7 +26,7 @@ logger = logging.getLogger("agentcost.auth.middleware")
 # Simple in-memory rate limiter for failed auth attempts
 _fail_counts: dict[str, list[float]] = defaultdict(list)
 _RATE_LIMIT_WINDOW = 300  # 5 minutes
-_RATE_LIMIT_MAX = 20      # max failed attempts per window
+_RATE_LIMIT_MAX = 20  # max failed attempts per window
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -47,9 +48,12 @@ class AuthMiddleware(BaseHTTPMiddleware):
             client_ip = _get_client_ip(request)
             if _is_rate_limited(client_ip):
                 from fastapi.responses import JSONResponse
+
                 return JSONResponse(
                     status_code=429,
-                    content={"detail": "Too many authentication attempts. Try again later."},
+                    content={
+                        "detail": "Too many authentication attempts. Try again later."
+                    },
                 )
 
         # Process request
@@ -72,7 +76,10 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if path.startswith("/auth/") or response.status_code in (401, 403):
             logger.info(
                 "auth path=%s method=%s status=%d duration=%.1fms",
-                path, request.method, response.status_code, duration_ms,
+                path,
+                request.method,
+                response.status_code,
+                duration_ms,
             )
 
         return response

@@ -17,6 +17,7 @@ Enterprise features require BOTH:
   - A valid license key (trial or paid)
   - Enterprise modules installed
 """
+
 from __future__ import annotations
 
 import os
@@ -45,6 +46,7 @@ def _detect_enterprise() -> bool:
     """Check if enterprise modules are importable."""
     try:
         import importlib
+
         importlib.import_module("agentcost.auth.config")
         return True
     except ImportError:
@@ -55,6 +57,7 @@ def _check_license() -> bool:
     """Check if a valid enterprise license key exists."""
     try:
         from .license import get_license
+
         lic = get_license()
         return lic.is_enterprise
     except Exception:
@@ -111,6 +114,7 @@ def is_community() -> bool:
 
 # ── Feature availability checks ─────────────────────────────────────────────
 
+
 def has_auth() -> bool:
     """SSO/SAML authentication available."""
     return is_enterprise()
@@ -153,6 +157,7 @@ def has_event_bus() -> bool:
 
 # ── Summary ──────────────────────────────────────────────────────────────────
 
+
 def edition_info() -> dict:
     """Return edition details for /api/health and CLI."""
     edition = get_edition()
@@ -161,6 +166,7 @@ def edition_info() -> dict:
     license_data = {}
     try:
         from .license import license_info
+
         license_data = license_info()
     except Exception:
         pass

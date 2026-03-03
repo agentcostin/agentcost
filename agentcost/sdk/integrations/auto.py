@@ -7,6 +7,7 @@ Usage:
 
     # Now ALL LLM calls are tracked — no other code changes needed.
 """
+
 from __future__ import annotations
 
 import logging
@@ -90,9 +91,15 @@ def _patch_openai(project: str, persist: bool) -> bool:
                 it = r.usage.prompt_tokens if r.usage else 0
                 ot = r.usage.completion_tokens if r.usage else 0
                 ev = TraceEvent(
-                    trace_id=uuid.uuid4().hex[:12], project=project, model=model,
-                    provider="openai", input_tokens=it, output_tokens=ot,
-                    cost=_calc(model, it, ot), latency_ms=lat, status="success",
+                    trace_id=uuid.uuid4().hex[:12],
+                    project=project,
+                    model=model,
+                    provider="openai",
+                    input_tokens=it,
+                    output_tokens=ot,
+                    cost=_calc(model, it, ot),
+                    latency_ms=lat,
+                    status="success",
                     timestamp=datetime.now().isoformat(),
                 )
                 tracker.record(ev)
@@ -102,9 +109,16 @@ def _patch_openai(project: str, persist: bool) -> bool:
             except Exception as e:
                 lat = (time.time() - start) * 1000
                 ev = TraceEvent(
-                    trace_id=uuid.uuid4().hex[:12], project=project, model=model,
-                    provider="openai", input_tokens=0, output_tokens=0, cost=0,
-                    latency_ms=lat, status="error", error=str(e)[:500],
+                    trace_id=uuid.uuid4().hex[:12],
+                    project=project,
+                    model=model,
+                    provider="openai",
+                    input_tokens=0,
+                    output_tokens=0,
+                    cost=0,
+                    latency_ms=lat,
+                    status="error",
+                    error=str(e)[:500],
                     timestamp=datetime.now().isoformat(),
                 )
                 tracker.record(ev)
@@ -113,7 +127,9 @@ def _patch_openai(project: str, persist: bool) -> bool:
                 raise
 
         patched_create._agentcost_patched = True
-        _original_refs["openai.resources.chat.completions.Completions.create"] = orig_create
+        _original_refs["openai.resources.chat.completions.Completions.create"] = (
+            orig_create
+        )
         Completions.create = patched_create
         logger.info("Patched openai.Completions.create")
         return True
@@ -149,9 +165,15 @@ def _patch_anthropic(project: str, persist: bool) -> bool:
                 it = r.usage.input_tokens
                 ot = r.usage.output_tokens
                 ev = TraceEvent(
-                    trace_id=uuid.uuid4().hex[:12], project=project, model=model,
-                    provider="anthropic", input_tokens=it, output_tokens=ot,
-                    cost=_calc(model, it, ot), latency_ms=lat, status="success",
+                    trace_id=uuid.uuid4().hex[:12],
+                    project=project,
+                    model=model,
+                    provider="anthropic",
+                    input_tokens=it,
+                    output_tokens=ot,
+                    cost=_calc(model, it, ot),
+                    latency_ms=lat,
+                    status="success",
                     timestamp=datetime.now().isoformat(),
                 )
                 tracker.record(ev)
@@ -161,9 +183,16 @@ def _patch_anthropic(project: str, persist: bool) -> bool:
             except Exception as e:
                 lat = (time.time() - start) * 1000
                 ev = TraceEvent(
-                    trace_id=uuid.uuid4().hex[:12], project=project, model=model,
-                    provider="anthropic", input_tokens=0, output_tokens=0, cost=0,
-                    latency_ms=lat, status="error", error=str(e)[:500],
+                    trace_id=uuid.uuid4().hex[:12],
+                    project=project,
+                    model=model,
+                    provider="anthropic",
+                    input_tokens=0,
+                    output_tokens=0,
+                    cost=0,
+                    latency_ms=lat,
+                    status="error",
+                    error=str(e)[:500],
                     timestamp=datetime.now().isoformat(),
                 )
                 tracker.record(ev)
@@ -194,7 +223,9 @@ def _hook_langchain(project: str, persist: bool) -> bool:
         if hasattr(mgr, "configure"):
             # LangChain >=0.1 approach
             pass
-        logger.info("LangChain handler registered (use callbacks=[handler] in your chains)")
+        logger.info(
+            "LangChain handler registered (use callbacks=[handler] in your chains)"
+        )
         return True
     except ImportError:
         return False

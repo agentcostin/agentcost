@@ -13,6 +13,7 @@ Config format varies by channel_type:
 Events field: comma-separated event types or "*" for all.
   Examples: "budget.exceeded,policy.violation" or "*"
 """
+
 from __future__ import annotations
 
 import json
@@ -27,7 +28,6 @@ VALID_CHANNEL_TYPES = {"slack", "email", "webhook", "pagerduty"}
 
 
 class ChannelService:
-
     def __init__(self, db=None):
         self._db = db or get_db()
 
@@ -43,7 +43,9 @@ class ChannelService:
         enabled: bool = True,
     ) -> dict:
         if channel_type not in VALID_CHANNEL_TYPES:
-            return {"error": f"Invalid channel_type: {channel_type}. Must be one of {VALID_CHANNEL_TYPES}"}
+            return {
+                "error": f"Invalid channel_type: {channel_type}. Must be one of {VALID_CHANNEL_TYPES}"
+            }
 
         ch_id = str(uuid.uuid4())
         now = datetime.utcnow().isoformat()
@@ -55,15 +57,21 @@ class ChannelService:
             (ch_id, org_id, channel_type, name, config_json, events, enabled, now),
         )
         return {
-            "id": ch_id, "org_id": org_id, "channel_type": channel_type,
-            "name": name, "config": config, "events": events, "enabled": enabled,
+            "id": ch_id,
+            "org_id": org_id,
+            "channel_type": channel_type,
+            "name": name,
+            "config": config,
+            "events": events,
+            "enabled": enabled,
         }
 
     # ── Read ─────────────────────────────────────────────────────
 
     def get(self, ch_id: str, org_id: str) -> Optional[dict]:
         row = self._db.fetch_one(
-            "SELECT * FROM notification_channels WHERE id = ? AND org_id = ?", (ch_id, org_id)
+            "SELECT * FROM notification_channels WHERE id = ? AND org_id = ?",
+            (ch_id, org_id),
         )
         return self._parse_row(row) if row else None
 
@@ -97,7 +105,10 @@ class ChannelService:
 
         if "config" in updates and isinstance(updates["config"], dict):
             updates["config"] = json.dumps(updates["config"])
-        if "channel_type" in updates and updates["channel_type"] not in VALID_CHANNEL_TYPES:
+        if (
+            "channel_type" in updates
+            and updates["channel_type"] not in VALID_CHANNEL_TYPES
+        ):
             return {"error": f"Invalid channel_type: {updates['channel_type']}"}
 
         set_clause = ", ".join(f"{k} = ?" for k in updates)
@@ -115,7 +126,8 @@ class ChannelService:
 
     def delete(self, ch_id: str, org_id: str) -> dict:
         self._db.execute(
-            "DELETE FROM notification_channels WHERE id = ? AND org_id = ?", (ch_id, org_id)
+            "DELETE FROM notification_channels WHERE id = ? AND org_id = ?",
+            (ch_id, org_id),
         )
         return {"status": "deleted", "id": ch_id}
 
@@ -128,6 +140,7 @@ class ChannelService:
             return {"error": "Channel not found"}
 
         from .dispatcher import Dispatcher
+
         dispatcher = Dispatcher(self._db)
         test_event = {
             "event_type": "test",
@@ -136,7 +149,11 @@ class ChannelService:
             "timestamp": datetime.utcnow().isoformat(),
         }
         result = dispatcher.send_to_channel(ch, test_event)
-        return {"channel_id": ch_id, "channel_type": ch["channel_type"], "result": result}
+        return {
+            "channel_id": ch_id,
+            "channel_type": ch["channel_type"],
+            "result": result,
+        }
 
     # ── Helpers ──────────────────────────────────────────────────
 

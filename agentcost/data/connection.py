@@ -18,6 +18,7 @@ Usage:
     from agentcost.data.connection import get_db
     db = get_db()
 """
+
 from __future__ import annotations
 
 import os
@@ -51,6 +52,7 @@ def get_db() -> DatabaseAdapter:
 
     if pg_url:
         from .postgres_adapter import PostgresAdapter
+
         _db = PostgresAdapter(
             dsn=pg_url,
             min_connections=int(os.environ.get("AGENTCOST_PG_MIN_CONN", "2")),
@@ -58,6 +60,7 @@ def get_db() -> DatabaseAdapter:
         )
     else:
         from .sqlite_adapter import SQLiteAdapter
+
         _db = SQLiteAdapter(db_path=_default_sqlite_path())
 
     return _db

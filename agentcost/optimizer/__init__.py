@@ -12,6 +12,7 @@ Usage:
     for rec in report.recommendations:
         print(f"[{rec['priority']}] {rec['message']} — Save ~${rec['estimated_savings']:.2f}/mo")
 """
+
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
@@ -22,6 +23,7 @@ import math
 @dataclass
 class OptimizationReport:
     """Complete optimization analysis."""
+
     total_cost: float
     total_calls: int
     total_tokens: int
@@ -46,10 +48,22 @@ class OptimizationReport:
 
 # Model cost tiers for comparison
 MODEL_TIERS = {
-    "premium": {"models": ["gpt-4o", "claude-3-5-sonnet", "claude-3-opus"], "cost_range": "$$$$"},
-    "standard": {"models": ["gpt-4o-mini", "claude-3-5-haiku", "claude-3-haiku"], "cost_range": "$$"},
-    "economy": {"models": ["llama3:8b", "llama3:70b", "mistral", "gemma2"], "cost_range": "$"},
-    "free": {"models": ["llama3:8b", "mistral", "gemma2", "phi3"], "cost_range": "free"},
+    "premium": {
+        "models": ["gpt-4o", "claude-3-5-sonnet", "claude-3-opus"],
+        "cost_range": "$$$$",
+    },
+    "standard": {
+        "models": ["gpt-4o-mini", "claude-3-5-haiku", "claude-3-haiku"],
+        "cost_range": "$$",
+    },
+    "economy": {
+        "models": ["llama3:8b", "llama3:70b", "mistral", "gemma2"],
+        "cost_range": "$",
+    },
+    "free": {
+        "models": ["llama3:8b", "mistral", "gemma2", "phi3"],
+        "cost_range": "free",
+    },
 }
 
 # Cheaper alternatives mapping
@@ -104,10 +118,16 @@ class CostOptimizer:
         """Run full optimization analysis and return report."""
         if not self._traces:
             return OptimizationReport(
-                total_cost=0, total_calls=0, total_tokens=0,
-                recommendations=[{"priority": "info", "message": "No traces to analyze"}],
-                model_breakdown={}, efficiency_score=0,
-                potential_savings_pct=0, potential_savings_usd=0,
+                total_cost=0,
+                total_calls=0,
+                total_tokens=0,
+                recommendations=[
+                    {"priority": "info", "message": "No traces to analyze"}
+                ],
+                model_breakdown={},
+                efficiency_score=0,
+                potential_savings_pct=0,
+                potential_savings_usd=0,
             )
 
         # Aggregate stats
@@ -142,7 +162,9 @@ class CostOptimizer:
 
         # Sort by priority
         priority_order = {"high": 0, "medium": 1, "low": 2, "info": 3}
-        recommendations.sort(key=lambda r: priority_order.get(r.get("priority", "info"), 3))
+        recommendations.sort(
+            key=lambda r: priority_order.get(r.get("priority", "info"), 3)
+        )
 
         # Efficiency score (0-100)
         total_cost = stats["total_cost"]
@@ -167,11 +189,18 @@ class CostOptimizer:
         total_calls = 0
         total_tokens = 0
         total_errors = 0
-        by_model: Dict[str, dict] = defaultdict(lambda: {
-            "cost": 0, "calls": 0, "input_tokens": 0, "output_tokens": 0,
-            "errors": 0, "avg_latency": 0, "latencies": [],
-            "prompts_seen": set(),
-        })
+        by_model: Dict[str, dict] = defaultdict(
+            lambda: {
+                "cost": 0,
+                "calls": 0,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "errors": 0,
+                "avg_latency": 0,
+                "latencies": [],
+                "prompts_seen": set(),
+            }
+        )
 
         for t in self._traces:
             cost = float(t.get("cost", 0))
@@ -208,7 +237,11 @@ class CostOptimizer:
             m["unique_prompts"] = len(m.pop("prompts_seen"))
             m["error_rate"] = m["errors"] / m["calls"] if m["calls"] > 0 else 0
             m["cost_per_call"] = m["cost"] / m["calls"] if m["calls"] > 0 else 0
-            m["tokens_per_call"] = (m["input_tokens"] + m["output_tokens"]) / m["calls"] if m["calls"] > 0 else 0
+            m["tokens_per_call"] = (
+                (m["input_tokens"] + m["output_tokens"]) / m["calls"]
+                if m["calls"] > 0
+                else 0
+            )
 
         return {
             "total_cost": total_cost,
@@ -230,16 +263,18 @@ class CostOptimizer:
             if alternatives and m["cost"] > 0:
                 est_savings = m["cost"] * 0.6  # Typical 60% savings on downgrade
                 savings += est_savings
-                recs.append({
-                    "type": "model_downgrade",
-                    "priority": "high" if m["cost"] > 1.0 else "medium",
-                    "message": f"Consider switching from {model} to {alternatives[0]} "
-                               f"for non-critical tasks ({m['calls']} calls, ${m['cost']:.4f} spent)",
-                    "model": model,
-                    "alternatives": alternatives,
-                    "estimated_savings": round(est_savings, 4),
-                    "current_cost": round(m["cost"], 4),
-                })
+                recs.append(
+                    {
+                        "type": "model_downgrade",
+                        "priority": "high" if m["cost"] > 1.0 else "medium",
+                        "message": f"Consider switching from {model} to {alternatives[0]} "
+                        f"for non-critical tasks ({m['calls']} calls, ${m['cost']:.4f} spent)",
+                        "model": model,
+                        "alternatives": alternatives,
+                        "estimated_savings": round(est_savings, 4),
+                        "current_cost": round(m["cost"], 4),
+                    }
+                )
         return savings, recs
 
     def _check_caching_opportunity(self, stats: dict) -> tuple:
@@ -255,15 +290,17 @@ class CostOptimizer:
                     est_cache_hit = 0.3  # Conservative 30% cache hit rate estimate
                     est_savings = m["cost"] * est_cache_hit
                     savings += est_savings
-                    recs.append({
-                        "type": "enable_caching",
-                        "priority": "medium",
-                        "message": f"Enable response caching for {model} — "
-                                   f"{m['calls']} calls could benefit from gateway cache",
-                        "model": model,
-                        "estimated_savings": round(est_savings, 4),
-                        "calls": m["calls"],
-                    })
+                    recs.append(
+                        {
+                            "type": "enable_caching",
+                            "priority": "medium",
+                            "message": f"Enable response caching for {model} — "
+                            f"{m['calls']} calls could benefit from gateway cache",
+                            "model": model,
+                            "estimated_savings": round(est_savings, 4),
+                            "calls": m["calls"],
+                        }
+                    )
         return savings, recs
 
     def _check_token_waste(self, stats: dict) -> tuple:
@@ -278,30 +315,34 @@ class CostOptimizer:
                     m["output_tokens"] - m["input_tokens"] * 2
                     est_savings = m["cost"] * 0.2  # ~20% savings by constraining output
                     savings += est_savings
-                    recs.append({
-                        "type": "reduce_output",
-                        "priority": "medium",
-                        "message": f"{model}: output tokens are {ratio:.1f}x input tokens — "
-                                   f"consider adding max_tokens or more specific prompts",
-                        "model": model,
-                        "output_ratio": round(ratio, 1),
-                        "estimated_savings": round(est_savings, 4),
-                    })
+                    recs.append(
+                        {
+                            "type": "reduce_output",
+                            "priority": "medium",
+                            "message": f"{model}: output tokens are {ratio:.1f}x input tokens — "
+                            f"consider adding max_tokens or more specific prompts",
+                            "model": model,
+                            "output_ratio": round(ratio, 1),
+                            "estimated_savings": round(est_savings, 4),
+                        }
+                    )
 
                 # Check for very large prompts
                 avg_input = m["input_tokens"] / m["calls"]
                 if avg_input > 4000:
                     est_savings_prompt = m["cost"] * 0.15
                     savings += est_savings_prompt
-                    recs.append({
-                        "type": "reduce_prompt",
-                        "priority": "low",
-                        "message": f"{model}: average input is {avg_input:.0f} tokens/call — "
-                                   f"consider prompt compression or summarization",
-                        "model": model,
-                        "avg_input_tokens": round(avg_input),
-                        "estimated_savings": round(est_savings_prompt, 4),
-                    })
+                    recs.append(
+                        {
+                            "type": "reduce_prompt",
+                            "priority": "low",
+                            "message": f"{model}: average input is {avg_input:.0f} tokens/call — "
+                            f"consider prompt compression or summarization",
+                            "model": model,
+                            "avg_input_tokens": round(avg_input),
+                            "estimated_savings": round(est_savings_prompt, 4),
+                        }
+                    )
         return savings, recs
 
     def _check_error_waste(self, stats: dict) -> tuple:
@@ -311,15 +352,17 @@ class CostOptimizer:
         if stats["error_rate"] > 0.05:
             error_cost = stats["total_cost"] * stats["error_rate"]
             savings += error_cost
-            recs.append({
-                "type": "reduce_errors",
-                "priority": "high",
-                "message": f"Error rate is {stats['error_rate']*100:.1f}% — "
-                           f"~${error_cost:.4f} wasted on failed calls. "
-                           f"Check provider status and implement retries",
-                "error_rate": round(stats["error_rate"], 3),
-                "estimated_savings": round(error_cost, 4),
-            })
+            recs.append(
+                {
+                    "type": "reduce_errors",
+                    "priority": "high",
+                    "message": f"Error rate is {stats['error_rate'] * 100:.1f}% — "
+                    f"~${error_cost:.4f} wasted on failed calls. "
+                    f"Check provider status and implement retries",
+                    "error_rate": round(stats["error_rate"], 3),
+                    "estimated_savings": round(error_cost, 4),
+                }
+            )
         return savings, recs
 
     def _check_batching_opportunity(self, stats: dict) -> tuple:
@@ -330,27 +373,31 @@ class CostOptimizer:
             if m["calls"] > 50 and "gpt" in model.lower():
                 est_savings = m["cost"] * 0.5  # Batch API is 50% off
                 savings += est_savings
-                recs.append({
-                    "type": "use_batch_api",
-                    "priority": "medium",
-                    "message": f"{model} has {m['calls']} calls — consider OpenAI Batch API "
-                               f"for non-realtime tasks (50% cost reduction)",
-                    "model": model,
-                    "estimated_savings": round(est_savings, 4),
-                    "calls": m["calls"],
-                })
+                recs.append(
+                    {
+                        "type": "use_batch_api",
+                        "priority": "medium",
+                        "message": f"{model} has {m['calls']} calls — consider OpenAI Batch API "
+                        f"for non-realtime tasks (50% cost reduction)",
+                        "model": model,
+                        "estimated_savings": round(est_savings, 4),
+                        "calls": m["calls"],
+                    }
+                )
         return savings, recs
 
     def _check_off_peak(self, stats: dict) -> tuple:
         """Check for off-peak usage opportunities (informational)."""
         recs = []
         if stats["total_calls"] > 100:
-            recs.append({
-                "type": "scheduling",
-                "priority": "low",
-                "message": "With 100+ calls, consider scheduling non-urgent tasks "
-                           "during off-peak hours for better latency",
-                "calls": stats["total_calls"],
-                "estimated_savings": 0,
-            })
+            recs.append(
+                {
+                    "type": "scheduling",
+                    "priority": "low",
+                    "message": "With 100+ calls, consider scheduling non-urgent tasks "
+                    "during off-peak hours for better latency",
+                    "calls": stats["total_calls"],
+                    "estimated_savings": 0,
+                }
+            )
         return 0, recs

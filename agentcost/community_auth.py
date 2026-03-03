@@ -7,6 +7,7 @@ default anonymous user context.
 
 Enterprise edition replaces these with real auth from agentcost.auth.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -19,6 +20,7 @@ from starlette.responses import Response
 
 # ── Models (compatible with enterprise AuthContext) ──────────────────────────
 
+
 class Role(str, Enum):
     ADMIN = "admin"
     MANAGER = "manager"
@@ -29,6 +31,7 @@ class Role(str, Enum):
 @dataclass
 class AuthContext:
     """Minimal auth context for community edition."""
+
     sub: str = "anonymous"
     email: str = "open@agentcost.in"
     name: str = "Local User"
@@ -47,6 +50,7 @@ class AuthContext:
 @dataclass(frozen=True)
 class AuthConfig:
     """Minimal auth config for community edition."""
+
     enabled: bool = False
     session_cookie_name: str = "agentcost_session"
     session_secret: str = "community-mode"
@@ -75,8 +79,10 @@ async def get_optional_user(request: Request) -> AuthContext:
 
 def require_role(*roles: Role):
     """No-op in community mode — always grants access."""
+
     async def _dep(request: Request) -> AuthContext:
         return _default_user
+
     return Depends(_dep)
 
 
@@ -87,6 +93,9 @@ def org_filter_sql(user: AuthContext, table_alias: str = "") -> str:
 
 class AuthMiddleware(BaseHTTPMiddleware):
     """Passthrough middleware for community edition."""
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
         request.state.user = _default_user
         return await call_next(request)

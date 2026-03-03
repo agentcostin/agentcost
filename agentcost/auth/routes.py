@@ -23,6 +23,7 @@ Mount in the main app:
     from agentcost.auth.routes import auth_router
     app.include_router(auth_router)
 """
+
 from __future__ import annotations
 
 import json
@@ -48,6 +49,7 @@ auth_router = APIRouter(prefix="/auth", tags=["authentication"])
 # OIDC ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @auth_router.get("/login")
 async def oidc_login(
     request: Request,
@@ -64,13 +66,15 @@ async def oidc_login(
         redirect_uri = str(request.url_for("oidc_callback"))
         # Fix 0.0.0.0 → localhost for Keycloak redirect URI matching
         redirect_uri = redirect_uri.replace("://0.0.0.0:", "://localhost:")
-    params = urllib.parse.urlencode({
-        "client_id": config.oidc_client_id,
-        "response_type": "code",
-        "scope": "openid email profile",
-        "redirect_uri": redirect_uri,
-        "state": state,
-    })
+    params = urllib.parse.urlencode(
+        {
+            "client_id": config.oidc_client_id,
+            "response_type": "code",
+            "scope": "openid email profile",
+            "redirect_uri": redirect_uri,
+            "state": state,
+        }
+    )
     return RedirectResponse(f"{config.auth_url}?{params}")
 
 
@@ -98,7 +102,9 @@ async def oidc_callback(
     config = get_auth_config()
 
     # Exchange auth code for tokens
-    callback_uri = str(request.url_for("oidc_callback")).replace("://0.0.0.0:", "://localhost:")
+    callback_uri = str(request.url_for("oidc_callback")).replace(
+        "://0.0.0.0:", "://localhost:"
+    )
     print(f"[AUTH DEBUG] token_url={config.token_url}")
     print(f"[AUTH DEBUG] redirect_uri={callback_uri}")
     print(f"[AUTH DEBUG] code={code[:20]}...")
@@ -111,7 +117,10 @@ async def oidc_callback(
     if "error" in token_data:
         print(f"[AUTH DEBUG] Token exchange error: {token_data}")
         logger.error("Token exchange error: %s", token_data)
-        raise HTTPException(400, f"Token validation failed: {token_data.get('error_description', token_data['error'])}")
+        raise HTTPException(
+            400,
+            f"Token validation failed: {token_data.get('error_description', token_data['error'])}",
+        )
 
     access_token = token_data["access_token"]
     token_data.get("refresh_token", "")
@@ -119,6 +128,7 @@ async def oidc_callback(
 
     # Validate the access token to get claims
     from .jwt_provider import validate_jwt
+
     try:
         claims = validate_jwt(access_token, config)
         print(f"[AUTH DEBUG] JWT validated: sub={claims.sub} org={claims.org_id}")
@@ -203,6 +213,7 @@ async def logout(request: Request, response: Response):
 # SAML ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @auth_router.get("/saml/metadata", response_class=HTMLResponse)
 async def saml_metadata():
     """Return SAML SP metadata XML.
@@ -211,6 +222,7 @@ async def saml_metadata():
     (Okta, Azure AD, Ping, etc.) to configure the SAML trust.
     """
     from .saml_provider import get_sp_metadata
+
     metadata = get_sp_metadata()
     return Response(content=metadata, media_type="application/xml")
 
@@ -248,7 +260,9 @@ async def saml_acs(request: Request):
         raise HTTPException(400, "Missing SAMLResponse in POST body")
 
     # Build request data for python3-saml
-    request_data = _build_saml_request_data(request, post_data={"SAMLResponse": saml_response})
+    request_data = _build_saml_request_data(
+        request, post_data={"SAMLResponse": saml_response}
+    )
 
     claims, errors = process_saml_response(request_data)
 
@@ -297,6 +311,7 @@ async def saml_slo(request: Request, response: Response):
 # ─────────────────────────────────────────────────────────────────────────────
 # USER / ORG ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @auth_router.get("/me")
 async def me(user: AuthContext = Depends(get_current_user)):
@@ -353,15 +368,18 @@ async def auth_health():
 # INTERNAL HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def _exchange_code(code: str, redirect_uri: str, config: AuthConfig) -> dict:
     """Exchange an OIDC auth code for tokens at Keycloak's token endpoint."""
-    data = urllib.parse.urlencode({
-        "grant_type": "authorization_code",
-        "client_id": config.oidc_client_id,
-        "client_secret": config.oidc_client_secret,
-        "code": code,
-        "redirect_uri": redirect_uri,
-    }).encode("utf-8")
+    data = urllib.parse.urlencode(
+        {
+            "grant_type": "authorization_code",
+            "client_id": config.oidc_client_id,
+            "client_secret": config.oidc_client_secret,
+            "code": code,
+            "redirect_uri": redirect_uri,
+        }
+    ).encode("utf-8")
 
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
@@ -384,12 +402,14 @@ def _exchange_code(code: str, redirect_uri: str, config: AuthConfig) -> dict:
 
 def _refresh_token(refresh_token: str, config: AuthConfig) -> dict:
     """Refresh an access token using a refresh token."""
-    data = urllib.parse.urlencode({
-        "grant_type": "refresh_token",
-        "client_id": config.oidc_client_id,
-        "client_secret": config.oidc_client_secret,
-        "refresh_token": refresh_token,
-    }).encode("utf-8")
+    data = urllib.parse.urlencode(
+        {
+            "grant_type": "refresh_token",
+            "client_id": config.oidc_client_id,
+            "client_secret": config.oidc_client_secret,
+            "refresh_token": refresh_token,
+        }
+    ).encode("utf-8")
 
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
@@ -409,7 +429,9 @@ def _refresh_token(refresh_token: str, config: AuthConfig) -> dict:
         return {"error": "refresh_failed", "error_description": body}
 
 
-def _build_saml_request_data(request: Request, post_data: Optional[dict] = None) -> dict:
+def _build_saml_request_data(
+    request: Request, post_data: Optional[dict] = None
+) -> dict:
     """Build the request dict that python3-saml expects."""
     return {
         "http_host": request.headers.get("host", "localhost:8100"),
@@ -468,10 +490,24 @@ async def _auto_provision(claims: TokenClaims) -> None:
                         "INSERT INTO users (id, email, name, org_id, role, sso_provider_id, "
                         "last_login_at, created_at, updated_at) "
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        (user_id, claims.email, claims.name, org_id,
-                         role, claims.sub, now, now, now),
+                        (
+                            user_id,
+                            claims.email,
+                            claims.name,
+                            org_id,
+                            role,
+                            claims.sub,
+                            now,
+                            now,
+                            now,
+                        ),
                     )
-                    logger.info("Auto-provisioned user: %s (org=%s role=%s)", claims.email, org_id, role)
+                    logger.info(
+                        "Auto-provisioned user: %s (org=%s role=%s)",
+                        claims.email,
+                        org_id,
+                        role,
+                    )
                 else:
                     # Update last login
                     db.execute(

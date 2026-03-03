@@ -26,6 +26,7 @@ Endpoints:
     POST   /policy/approvals/{id}/deny    → Deny request
     GET    /policy/approvals/stats       → Approval stats
 """
+
 from __future__ import annotations
 
 import logging
@@ -44,6 +45,7 @@ policy_router = APIRouter(prefix="/policy", tags=["policy"])
 
 # ── Request Models ───────────────────────────────────────────────────────────
 
+
 class PolicyCreate(BaseModel):
     name: str
     conditions: list[dict]
@@ -52,6 +54,7 @@ class PolicyCreate(BaseModel):
     message: str = ""
     priority: int = 100
     enabled: bool = True
+
 
 class PolicyUpdate(BaseModel):
     name: Optional[str] = None
@@ -62,8 +65,10 @@ class PolicyUpdate(BaseModel):
     priority: Optional[int] = None
     enabled: Optional[bool] = None
 
+
 class PolicyToggle(BaseModel):
     enabled: bool
+
 
 class EvaluateRequest(BaseModel):
     model: Optional[str] = None
@@ -73,6 +78,7 @@ class EvaluateRequest(BaseModel):
     estimated_cost: Optional[float] = None
     estimated_tokens: Optional[int] = None
 
+
 class ApprovalCreate(BaseModel):
     requester_id: str
     requester_type: str = "agent"
@@ -81,8 +87,10 @@ class ApprovalCreate(BaseModel):
     estimated_cost: Optional[float] = None
     expires_hours: int = 24
 
+
 class ApprovalDecision(BaseModel):
     unlock_amount: Optional[float] = None
+
 
 class ApprovalDeny(BaseModel):
     reason: str = ""
@@ -90,21 +98,30 @@ class ApprovalDeny(BaseModel):
 
 # ── Service factories ────────────────────────────────────────────────────────
 
+
 def _policy_svc():
     from .policy_service import PolicyService
+
     return PolicyService()
+
 
 def _engine():
     from .engine import PolicyEngine
+
     return PolicyEngine()
+
 
 def _approval_svc():
     from .approval_service import ApprovalService
+
     return ApprovalService()
+
 
 def _audit_svc():
     from ..org.audit_service import AuditService
+
     return AuditService()
+
 
 def _resolve_user_id(user: AuthContext) -> str:
     """Resolve the DB user ID from the auth context (same pattern as org routes)."""
@@ -131,8 +148,17 @@ def _resolve_user_id(user: AuthContext) -> str:
                 "INSERT INTO users (id, email, name, org_id, role, sso_provider_id, "
                 "last_login_at, created_at, updated_at) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (user_id, user.email, user.claims.name, org_id, role,
-                 user.claims.sub, now, now, now),
+                (
+                    user_id,
+                    user.email,
+                    user.claims.name,
+                    org_id,
+                    role,
+                    user.claims.sub,
+                    now,
+                    now,
+                    now,
+                ),
             )
             return user_id
         except Exception:
@@ -143,6 +169,7 @@ def _resolve_user_id(user: AuthContext) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 # POLICY ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @policy_router.post("/policies")
 async def create_policy(
@@ -155,17 +182,26 @@ async def create_policy(
     actor_id = _resolve_user_id(user)
 
     result = svc.create(
-        org_id=user.org_id, name=body.name, conditions=body.conditions,
-        action=body.action, description=body.description, message=body.message,
-        priority=body.priority, enabled=body.enabled, created_by=actor_id,
+        org_id=user.org_id,
+        name=body.name,
+        conditions=body.conditions,
+        action=body.action,
+        description=body.description,
+        message=body.message,
+        priority=body.priority,
+        enabled=body.enabled,
+        created_by=actor_id,
     )
     if "error" in result:
         raise HTTPException(400, result["error"])
 
     audit.log(
-        event_type="policy.create", org_id=user.org_id,
-        actor_id=actor_id, resource_type="policy",
-        resource_id=result.get("id", ""), action="create",
+        event_type="policy.create",
+        org_id=user.org_id,
+        actor_id=actor_id,
+        resource_type="policy",
+        resource_id=result.get("id", ""),
+        action="create",
         details={"name": body.name, "action": body.action, "priority": body.priority},
     )
     return result
@@ -211,9 +247,12 @@ async def update_policy(
         raise HTTPException(400, result["error"])
 
     audit.log(
-        event_type="policy.update", org_id=user.org_id,
-        actor_id=_resolve_user_id(user), resource_type="policy",
-        resource_id=policy_id, action="update",
+        event_type="policy.update",
+        org_id=user.org_id,
+        actor_id=_resolve_user_id(user),
+        resource_type="policy",
+        resource_id=policy_id,
+        action="update",
         details=body.model_dump(exclude_none=True),
     )
     return result
@@ -243,9 +282,12 @@ async def delete_policy(
     audit = _audit_svc()
     result = svc.delete(policy_id, user.org_id)
     audit.log(
-        event_type="policy.delete", org_id=user.org_id,
-        actor_id=_resolve_user_id(user), resource_type="policy",
-        resource_id=policy_id, action="delete",
+        event_type="policy.delete",
+        org_id=user.org_id,
+        actor_id=_resolve_user_id(user),
+        resource_type="policy",
+        resource_id=policy_id,
+        action="delete",
     )
     return result
 
@@ -253,6 +295,7 @@ async def delete_policy(
 # ─────────────────────────────────────────────────────────────────────────────
 # TEMPLATE ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @policy_router.get("/templates")
 async def list_templates(user: AuthContext = Depends(get_current_user)):
@@ -276,9 +319,12 @@ async def create_from_template(
         raise HTTPException(400, result["error"])
 
     audit.log(
-        event_type="policy.create", org_id=user.org_id,
-        actor_id=actor_id, resource_type="policy",
-        resource_id=result.get("id", ""), action="create",
+        event_type="policy.create",
+        org_id=user.org_id,
+        actor_id=actor_id,
+        resource_type="policy",
+        resource_id=result.get("id", ""),
+        action="create",
         details={"template": template_name, "name": result.get("name")},
     )
     return result
@@ -287,6 +333,7 @@ async def create_from_template(
 # ─────────────────────────────────────────────────────────────────────────────
 # EVALUATION ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @policy_router.post("/evaluate")
 async def evaluate_request(
@@ -321,6 +368,7 @@ async def dry_run(
 # APPROVAL ENDPOINTS
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @policy_router.post("/approvals")
 async def create_approval(
     body: ApprovalCreate,
@@ -329,9 +377,12 @@ async def create_approval(
     """Create an approval request (typically triggered by policy engine)."""
     svc = _approval_svc()
     return svc.create(
-        org_id=user.org_id, requester_id=body.requester_id,
-        requester_type=body.requester_type, request_type=body.request_type,
-        context=body.context, estimated_cost=body.estimated_cost,
+        org_id=user.org_id,
+        requester_id=body.requester_id,
+        requester_type=body.requester_type,
+        request_type=body.request_type,
+        context=body.context,
+        estimated_cost=body.estimated_cost,
         expires_hours=body.expires_hours,
     )
 
@@ -340,13 +391,19 @@ async def create_approval(
 async def list_approvals(
     status: Optional[str] = None,
     request_type: Optional[str] = None,
-    limit: int = 50, offset: int = 0,
+    limit: int = 50,
+    offset: int = 0,
     user: AuthContext = Depends(require_role(Role.ORG_ADMIN)),
 ):
     """List approval requests. Requires org_admin."""
     svc = _approval_svc()
-    return svc.list(user.org_id, status=status, request_type=request_type,
-                    limit=limit, offset=offset)
+    return svc.list(
+        user.org_id,
+        status=status,
+        request_type=request_type,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @policy_router.get("/approvals/stats")
@@ -382,15 +439,19 @@ async def approve_request(
     audit = _audit_svc()
     actor_id = _resolve_user_id(user)
 
-    result = svc.approve(req_id, user.org_id, decided_by=actor_id,
-                         unlock_amount=body.unlock_amount)
+    result = svc.approve(
+        req_id, user.org_id, decided_by=actor_id, unlock_amount=body.unlock_amount
+    )
     if "error" in result:
         raise HTTPException(400, result["error"])
 
     audit.log(
-        event_type="approval.decide", org_id=user.org_id,
-        actor_id=actor_id, resource_type="approval",
-        resource_id=req_id, action="approve",
+        event_type="approval.decide",
+        org_id=user.org_id,
+        actor_id=actor_id,
+        resource_type="approval",
+        resource_id=req_id,
+        action="approve",
         details={"unlock_amount": body.unlock_amount},
     )
     return result
@@ -412,9 +473,12 @@ async def deny_request(
         raise HTTPException(400, result["error"])
 
     audit.log(
-        event_type="approval.decide", org_id=user.org_id,
-        actor_id=actor_id, resource_type="approval",
-        resource_id=req_id, action="deny",
+        event_type="approval.decide",
+        org_id=user.org_id,
+        actor_id=actor_id,
+        resource_type="approval",
+        resource_id=req_id,
+        action="deny",
         details={"reason": body.reason},
     )
     return result

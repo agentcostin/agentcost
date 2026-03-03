@@ -11,6 +11,7 @@ Scorecards aggregate monthly agent performance from trace_events:
 Scorecards are generated on-demand for any period and cached in the
 agent_scorecards table with a UNIQUE(org_id, agent_id, period) constraint.
 """
+
 from __future__ import annotations
 
 import json
@@ -22,13 +23,14 @@ from ..data.connection import get_db
 
 
 class ScorecardService:
-
     def __init__(self, db=None):
         self._db = db or get_db()
 
     # ── Generate ─────────────────────────────────────────────────
 
-    def generate(self, org_id: str, agent_id: str, period: Optional[str] = None) -> dict:
+    def generate(
+        self, org_id: str, agent_id: str, period: Optional[str] = None
+    ) -> dict:
         """Generate or refresh a scorecard for an agent for a given period.
 
         Args:
@@ -64,8 +66,11 @@ class ScorecardService:
 
         if not stats or stats["total_tasks"] == 0:
             return {
-                "agent_id": agent_id, "period": period, "org_id": org_id,
-                "total_tasks": 0, "message": "No data for this agent in this period",
+                "agent_id": agent_id,
+                "period": period,
+                "org_id": org_id,
+                "total_tasks": 0,
+                "message": "No data for this agent in this period",
             }
 
         s = dict(stats)
@@ -102,8 +107,19 @@ class ScorecardService:
                 "total_cost = ?, total_tasks = ?, error_rate = ?, grade = ?, "
                 "recommendations = ?, created_at = ? "
                 "WHERE org_id = ? AND agent_id = ? AND period = ?",
-                (quality_score, cost_efficiency, total_cost, total, error_rate,
-                 grade, recs_json, now, org_id, agent_id, period),
+                (
+                    quality_score,
+                    cost_efficiency,
+                    total_cost,
+                    total,
+                    error_rate,
+                    grade,
+                    recs_json,
+                    now,
+                    org_id,
+                    agent_id,
+                    period,
+                ),
             )
             sc_id = existing["id"]
         else:
@@ -112,15 +128,34 @@ class ScorecardService:
                 "cost_efficiency, total_cost, total_tasks, error_rate, grade, "
                 "recommendations, created_at) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (sc_id, org_id, agent_id, period, quality_score, cost_efficiency,
-                 total_cost, total, error_rate, grade, recs_json, now),
+                (
+                    sc_id,
+                    org_id,
+                    agent_id,
+                    period,
+                    quality_score,
+                    cost_efficiency,
+                    total_cost,
+                    total,
+                    error_rate,
+                    grade,
+                    recs_json,
+                    now,
+                ),
             )
 
         return {
-            "id": sc_id, "org_id": org_id, "agent_id": agent_id, "period": period,
-            "quality_score": quality_score, "cost_efficiency": cost_efficiency,
-            "total_cost": total_cost, "total_tasks": total, "error_rate": error_rate,
-            "grade": grade, "recommendations": recommendations,
+            "id": sc_id,
+            "org_id": org_id,
+            "agent_id": agent_id,
+            "period": period,
+            "quality_score": quality_score,
+            "cost_efficiency": cost_efficiency,
+            "total_cost": total_cost,
+            "total_tasks": total,
+            "error_rate": error_rate,
+            "grade": grade,
+            "recommendations": recommendations,
         }
 
     # ── Read ─────────────────────────────────────────────────────
@@ -163,7 +198,9 @@ class ScorecardService:
 
     # ── Compare ──────────────────────────────────────────────────
 
-    def compare(self, org_id: str, agent_ids: list[str], period: Optional[str] = None) -> dict:
+    def compare(
+        self, org_id: str, agent_ids: list[str], period: Optional[str] = None
+    ) -> dict:
         """Compare multiple agents side-by-side for a period."""
         if not period:
             period = datetime.utcnow().strftime("%Y-%m")
@@ -181,13 +218,21 @@ class ScorecardService:
         return {
             "period": period,
             "agents": scorecards,
-            "best_quality": max(scorecards, key=lambda x: x.get("quality_score", 0)).get("agent_id") if scorecards else None,
+            "best_quality": max(
+                scorecards, key=lambda x: x.get("quality_score", 0)
+            ).get("agent_id")
+            if scorecards
+            else None,
             "most_efficient": min(
                 [s for s in scorecards if s.get("cost_efficiency", 0) > 0],
                 key=lambda x: x.get("cost_efficiency", float("inf")),
                 default={},
             ).get("agent_id"),
-            "lowest_error": min(scorecards, key=lambda x: x.get("error_rate", 1)).get("agent_id") if scorecards else None,
+            "lowest_error": min(scorecards, key=lambda x: x.get("error_rate", 1)).get(
+                "agent_id"
+            )
+            if scorecards
+            else None,
         }
 
     # ── Generate All ─────────────────────────────────────────────
@@ -249,31 +294,50 @@ class ScorecardService:
             return "F"
 
     def _generate_recommendations(
-        self, quality: float, error_rate: float, cost_eff: float,
-        total_cost: float, total_tasks: int, stats: dict,
+        self,
+        quality: float,
+        error_rate: float,
+        cost_eff: float,
+        total_cost: float,
+        total_tasks: int,
+        stats: dict,
     ) -> list[str]:
         """Auto-generate optimization suggestions based on metrics."""
         recs = []
 
         if error_rate > 0.1:
-            recs.append(f"High error rate ({error_rate:.1%}). Review error logs and add retry logic or fallback models.")
+            recs.append(
+                f"High error rate ({error_rate:.1%}). Review error logs and add retry logic or fallback models."
+            )
         if error_rate > 0.25:
-            recs.append("Critical: >25% error rate. Consider pausing this agent for investigation.")
+            recs.append(
+                "Critical: >25% error rate. Consider pausing this agent for investigation."
+            )
 
         if cost_eff > 0.5:
-            recs.append(f"High cost per task (${cost_eff:.4f}). Consider switching to a cheaper model for routine tasks.")
+            recs.append(
+                f"High cost per task (${cost_eff:.4f}). Consider switching to a cheaper model for routine tasks."
+            )
         if cost_eff > 0.1:
-            recs.append("Evaluate whether this agent can use a smaller/faster model without quality loss.")
+            recs.append(
+                "Evaluate whether this agent can use a smaller/faster model without quality loss."
+            )
 
         if quality < 70:
-            recs.append(f"Quality score below threshold ({quality:.0f}%). Review prompt engineering and output validation.")
+            recs.append(
+                f"Quality score below threshold ({quality:.0f}%). Review prompt engineering and output validation."
+            )
 
         if total_cost > 100:
-            recs.append(f"Total spend ${total_cost:.2f} is significant. Set a budget alert if not already configured.")
+            recs.append(
+                f"Total spend ${total_cost:.2f} is significant. Set a budget alert if not already configured."
+            )
 
         models_used = stats.get("models_used", 0)
         if models_used and models_used > 3:
-            recs.append(f"Using {models_used} different models. Consider standardizing to reduce complexity.")
+            recs.append(
+                f"Using {models_used} different models. Consider standardizing to reduce complexity."
+            )
 
         if not recs:
             recs.append("Agent is performing well. No immediate optimization needed.")

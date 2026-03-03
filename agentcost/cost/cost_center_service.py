@@ -6,6 +6,7 @@ Cost centers map to departments/teams in the customer's org (e.g., "Engineering"
 integration. Chargeback reports aggregate actual spend from trace_events via
 cost_allocations rules.
 """
+
 from __future__ import annotations
 
 import uuid
@@ -16,7 +17,6 @@ from ..data.connection import get_db
 
 
 class CostCenterService:
-
     def __init__(self, db=None):
         self._db = db or get_db()
 
@@ -37,8 +37,14 @@ class CostCenterService:
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (cc_id, org_id, name, code, manager_email, monthly_budget, now, now),
         )
-        return {"id": cc_id, "org_id": org_id, "name": name, "code": code,
-                "manager_email": manager_email, "monthly_budget": monthly_budget}
+        return {
+            "id": cc_id,
+            "org_id": org_id,
+            "name": name,
+            "code": code,
+            "manager_email": manager_email,
+            "monthly_budget": monthly_budget,
+        }
 
     # ── Read ─────────────────────────────────────────────────────
 
@@ -142,28 +148,34 @@ class CostCenterService:
             cc = center_map.get(cc_id, {})
             monthly_budget = cc.get("monthly_budget")
             allocated = round(row["allocated_cost"], 6)
-            report.append({
-                "cost_center_id": cc_id,
-                "cost_center_name": cc.get("name", "Unknown"),
-                "code": cc.get("code", ""),
-                "allocated_cost": allocated,
-                "trace_count": row["trace_count"],
-                "monthly_budget": monthly_budget,
-                "budget_pct": round(allocated / monthly_budget * 100, 1) if monthly_budget else None,
-            })
+            report.append(
+                {
+                    "cost_center_id": cc_id,
+                    "cost_center_name": cc.get("name", "Unknown"),
+                    "code": cc.get("code", ""),
+                    "allocated_cost": allocated,
+                    "trace_count": row["trace_count"],
+                    "monthly_budget": monthly_budget,
+                    "budget_pct": round(allocated / monthly_budget * 100, 1)
+                    if monthly_budget
+                    else None,
+                }
+            )
 
         # Add centers with zero spend
         for cc_id, cc in center_map.items():
             if cc_id not in allocated_ids:
-                report.append({
-                    "cost_center_id": cc_id,
-                    "cost_center_name": cc["name"],
-                    "code": cc.get("code", ""),
-                    "allocated_cost": 0.0,
-                    "trace_count": 0,
-                    "monthly_budget": cc.get("monthly_budget"),
-                    "budget_pct": 0.0 if cc.get("monthly_budget") else None,
-                })
+                report.append(
+                    {
+                        "cost_center_id": cc_id,
+                        "cost_center_name": cc["name"],
+                        "code": cc.get("code", ""),
+                        "allocated_cost": 0.0,
+                        "trace_count": 0,
+                        "monthly_budget": cc.get("monthly_budget"),
+                        "budget_pct": 0.0 if cc.get("monthly_budget") else None,
+                    }
+                )
 
         # Get unallocated spend
         unallocated_row = self._db.fetch_one(
@@ -176,20 +188,22 @@ class CostCenterService:
                   AND (t.agent_id IS NULL OR t.agent_id NOT IN (
                       SELECT DISTINCT agent_id FROM cost_allocations WHERE org_id = ? AND agent_id IS NOT NULL
                   ))
-                  {time_filter.replace('t.timestamp', 't.timestamp')}""",
+                  {time_filter.replace("t.timestamp", "t.timestamp")}""",
             [org_id, org_id, org_id] + time_params[1:],
         )
         if unallocated_row:
             ur = dict(unallocated_row)
             if ur["unallocated_cost"] > 0 or ur["trace_count"] > 0:
-                report.append({
-                    "cost_center_id": None,
-                    "cost_center_name": "Unallocated",
-                    "code": "",
-                    "allocated_cost": round(ur["unallocated_cost"], 6),
-                    "trace_count": ur["trace_count"],
-                    "monthly_budget": None,
-                    "budget_pct": None,
-                })
+                report.append(
+                    {
+                        "cost_center_id": None,
+                        "cost_center_name": "Unallocated",
+                        "code": "",
+                        "allocated_cost": round(ur["unallocated_cost"], 6),
+                        "trace_count": ur["trace_count"],
+                        "monthly_budget": None,
+                        "budget_pct": None,
+                    }
+                )
 
         return sorted(report, key=lambda x: x["allocated_cost"], reverse=True)

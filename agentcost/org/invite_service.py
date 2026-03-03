@@ -7,6 +7,7 @@ Lifecycle: create → pending → accepted/expired/revoked
   - Invites expire after a configurable period (default 7 days)
   - Duplicate invites to same email are rejected
 """
+
 from __future__ import annotations
 
 import uuid
@@ -65,7 +66,15 @@ class InviteService:
         self._db.execute(
             "INSERT INTO invites (id, org_id, email, role, invited_by, status, expires_at, created_at) "
             "VALUES (?, ?, ?, ?, ?, 'pending', ?, ?)",
-            (invite_id, org_id, email, role, invited_by, expires_at.isoformat(), now.isoformat()),
+            (
+                invite_id,
+                org_id,
+                email,
+                role,
+                invited_by,
+                expires_at.isoformat(),
+                now.isoformat(),
+            ),
         )
 
         return {
@@ -103,7 +112,11 @@ class InviteService:
             # Auto-expire if past expiry date
             if invite["status"] == "pending" and invite.get("expires_at"):
                 try:
-                    exp = datetime.fromisoformat(invite["expires_at"].replace("Z", "+00:00").replace("+00:00", ""))
+                    exp = datetime.fromisoformat(
+                        invite["expires_at"]
+                        .replace("Z", "+00:00")
+                        .replace("+00:00", "")
+                    )
                     if exp < datetime.utcnow():
                         self._expire_invite(invite["id"])
                         invite["status"] = "expired"
@@ -116,9 +129,7 @@ class InviteService:
 
     def get_invite(self, invite_id: str) -> Optional[dict]:
         """Get a specific invite by ID."""
-        row = self._db.fetch_one(
-            "SELECT * FROM invites WHERE id = ?", (invite_id,)
-        )
+        row = self._db.fetch_one("SELECT * FROM invites WHERE id = ?", (invite_id,))
         return dict(row) if row else None
 
     def get_pending_invites_for_email(self, email: str) -> list[dict]:
@@ -134,7 +145,9 @@ class InviteService:
 
     # ── Accept Invite ────────────────────────────────────────────
 
-    def accept_invite(self, invite_id: str, user_email: str, user_name: str = "") -> dict:
+    def accept_invite(
+        self, invite_id: str, user_email: str, user_name: str = ""
+    ) -> dict:
         """Accept an invite — creates a user record in the org.
 
         The accepting user's email must match the invite email.
@@ -149,7 +162,9 @@ class InviteService:
         # Check expiry
         if invite.get("expires_at"):
             try:
-                exp = datetime.fromisoformat(invite["expires_at"].replace("Z", "+00:00").replace("+00:00", ""))
+                exp = datetime.fromisoformat(
+                    invite["expires_at"].replace("Z", "+00:00").replace("+00:00", "")
+                )
                 if exp < datetime.utcnow():
                     self._expire_invite(invite_id)
                     return {"error": "Invite has expired"}
@@ -178,7 +193,15 @@ class InviteService:
         self._db.execute(
             "INSERT INTO users (id, email, name, org_id, role, created_at, updated_at) "
             "VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (user_id, user_email, user_name, invite["org_id"], invite["role"], now, now),
+            (
+                user_id,
+                user_email,
+                user_name,
+                invite["org_id"],
+                invite["role"],
+                now,
+                now,
+            ),
         )
 
         # Mark invite accepted
@@ -222,7 +245,9 @@ class InviteService:
         if invite["org_id"] != org_id:
             return {"error": "Invite does not belong to this organization"}
 
-        new_expiry = (datetime.utcnow() + timedelta(days=INVITE_EXPIRY_DAYS)).isoformat()
+        new_expiry = (
+            datetime.utcnow() + timedelta(days=INVITE_EXPIRY_DAYS)
+        ).isoformat()
 
         # If expired, reset to pending
         self._db.execute(

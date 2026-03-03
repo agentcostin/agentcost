@@ -8,7 +8,9 @@ import os
 import random
 from dataclasses import dataclass
 
-SAMPLE_TASKS_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "sample-data", "tasks.jsonl")
+SAMPLE_TASKS_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "..", "sample-data", "tasks.jsonl"
+)
 
 
 @dataclass
@@ -31,7 +33,9 @@ class TaskManager:
     """Loads and manages the benchmark task dataset."""
 
     def __init__(self, tasks_path: str | None = None):
-        self.tasks_path = tasks_path or os.environ.get("AGENTCOST_TASKS", SAMPLE_TASKS_PATH)
+        self.tasks_path = tasks_path or os.environ.get(
+            "AGENTCOST_TASKS", SAMPLE_TASKS_PATH
+        )
         self.tasks: list[Task] = []
         self._load()
 

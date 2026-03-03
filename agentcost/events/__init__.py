@@ -25,6 +25,7 @@ Usage:
     bus.subscribe("anomaly.detected", callback=my_handler)
     bus.emit("budget.warning", {"project": "prod", "usage_pct": 85})
 """
+
 from __future__ import annotations
 import json
 import time
@@ -41,6 +42,7 @@ logger = logging.getLogger("agentcost.events")
 
 class EventType:
     """Known event types."""
+
     TRACE_CREATED = "trace.created"
     BUDGET_WARNING = "budget.warning"
     BUDGET_EXCEEDED = "budget.exceeded"
@@ -56,6 +58,7 @@ class EventType:
 @dataclass
 class Event:
     """An event on the bus."""
+
     type: str
     data: dict
     timestamp: float = field(default_factory=time.time)
@@ -63,7 +66,9 @@ class Event:
 
     def __post_init__(self):
         if not self.event_id:
-            raw = f"{self.type}:{self.timestamp}:{json.dumps(self.data, sort_keys=True)}"
+            raw = (
+                f"{self.type}:{self.timestamp}:{json.dumps(self.data, sort_keys=True)}"
+            )
             self.event_id = hashlib.md5(raw.encode()).hexdigest()[:12]
 
     def to_dict(self) -> dict:
@@ -82,11 +87,12 @@ class Event:
 @dataclass
 class WebhookSubscription:
     """A webhook subscriber."""
+
     url: str
-    event_types: list[str]       # which events to deliver
-    secret: str = ""             # HMAC secret for signature verification
+    event_types: list[str]  # which events to deliver
+    secret: str = ""  # HMAC secret for signature verification
     max_retries: int = 3
-    retry_delay: float = 5.0     # seconds between retries
+    retry_delay: float = 5.0  # seconds between retries
     active: bool = True
     _failures: int = 0
 
@@ -98,6 +104,7 @@ class WebhookSubscription:
 @dataclass
 class CallbackSubscription:
     """An in-process callback subscriber."""
+
     callback: Callable[[Event], None]
     event_types: list[str]
     name: str = ""
@@ -108,6 +115,7 @@ class CallbackSubscription:
 
 
 # ── Event Bus ─────────────────────────────────────────────────────────────────
+
 
 class EventBus:
     """
@@ -128,8 +136,13 @@ class EventBus:
 
     # ── Subscribe ─────────────────────────────────────────────────────────
 
-    def subscribe_webhook(self, url: str, event_types: list[str] = None,
-                          secret: str = "", max_retries: int = 3) -> str:
+    def subscribe_webhook(
+        self,
+        url: str,
+        event_types: list[str] = None,
+        secret: str = "",
+        max_retries: int = 3,
+    ) -> str:
         """Add a webhook subscriber. Returns subscription ID."""
         sub = WebhookSubscription(
             url=url,
@@ -141,8 +154,12 @@ class EventBus:
         logger.info(f"Webhook subscribed: {sub.id} → {url} for {sub.event_types}")
         return sub.id
 
-    def subscribe_callback(self, callback: Callable[[Event], None],
-                           event_types: list[str] = None, name: str = "") -> str:
+    def subscribe_callback(
+        self,
+        callback: Callable[[Event], None],
+        event_types: list[str] = None,
+        name: str = "",
+    ) -> str:
         """Add an in-process callback subscriber."""
         sub = CallbackSubscription(
             callback=callback,
@@ -237,19 +254,22 @@ class EventBus:
         # Add HMAC signature if secret configured
         if sub.secret:
             import hmac as hmac_mod
+
             sig = hmac_mod.new(sub.secret.encode(), payload, "sha256").hexdigest()
             headers["X-AgentCost-Signature"] = f"sha256={sig}"
 
         for attempt in range(sub.max_retries):
             try:
-                req = urllib.request.Request(sub.url, data=payload, headers=headers, method="POST")
+                req = urllib.request.Request(
+                    sub.url, data=payload, headers=headers, method="POST"
+                )
                 with urllib.request.urlopen(req, timeout=10) as resp:
                     if resp.status < 300:
                         self._total_delivered += 1
                         sub._failures = 0
                         return
             except Exception as e:
-                logger.warning(f"Webhook {sub.id} attempt {attempt+1} failed: {e}")
+                logger.warning(f"Webhook {sub.id} attempt {attempt + 1} failed: {e}")
                 if attempt < sub.max_retries - 1:
                     time.sleep(sub.retry_delay)
 
@@ -272,11 +292,20 @@ class EventBus:
     @property
     def subscriptions(self) -> dict:
         return {
-            "webhooks": [{"id": s.id, "url": s.url, "events": s.event_types,
-                          "active": s.active, "failures": s._failures}
-                         for s in self._webhooks.values()],
-            "callbacks": [{"id": s.id, "name": s.name, "events": s.event_types}
-                          for s in self._callbacks.values()],
+            "webhooks": [
+                {
+                    "id": s.id,
+                    "url": s.url,
+                    "events": s.event_types,
+                    "active": s.active,
+                    "failures": s._failures,
+                }
+                for s in self._webhooks.values()
+            ],
+            "callbacks": [
+                {"id": s.id, "name": s.name, "events": s.event_types}
+                for s in self._callbacks.values()
+            ],
             "sse_streams": len(self._sse_queues),
         }
 
@@ -296,6 +325,7 @@ class EventBus:
 # ── Singleton ─────────────────────────────────────────────────────────────────
 
 _global_bus: Optional[EventBus] = None
+
 
 def get_event_bus() -> EventBus:
     """Get the global event bus singleton."""

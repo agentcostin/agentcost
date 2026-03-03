@@ -17,6 +17,7 @@ Condition format (JSON):
 
 Multiple conditions use AND logic — all must match for the policy to trigger.
 """
+
 from __future__ import annotations
 
 import json
@@ -34,7 +35,11 @@ POLICY_TEMPLATES = {
         "name": "Block Expensive Models",
         "description": "Deny requests to high-cost models (GPT-4, Claude Opus) without approval",
         "conditions": [
-            {"field": "model", "operator": "in", "value": ["gpt-4", "gpt-4o", "claude-3-opus", "claude-opus-4-20250514"]}
+            {
+                "field": "model",
+                "operator": "in",
+                "value": ["gpt-4", "gpt-4o", "claude-3-opus", "claude-opus-4-20250514"],
+            }
         ],
         "action": "require_approval",
         "message": "This model requires manager approval due to high cost.",
@@ -43,9 +48,7 @@ POLICY_TEMPLATES = {
     "daily_cost_cap": {
         "name": "Daily Cost Cap per Agent",
         "description": "Deny requests when estimated cost exceeds $50/day per agent",
-        "conditions": [
-            {"field": "estimated_cost", "operator": "gt", "value": 50.0}
-        ],
+        "conditions": [{"field": "estimated_cost", "operator": "gt", "value": 50.0}],
         "action": "deny",
         "message": "Daily cost cap of $50 exceeded for this agent.",
         "priority": 30,
@@ -64,7 +67,11 @@ POLICY_TEMPLATES = {
         "name": "Block Unknown Providers",
         "description": "Only allow known/approved AI providers",
         "conditions": [
-            {"field": "provider", "operator": "not_in", "value": ["openai", "anthropic", "google", "azure"]}
+            {
+                "field": "provider",
+                "operator": "not_in",
+                "value": ["openai", "anthropic", "google", "azure"],
+            }
         ],
         "action": "deny",
         "message": "This AI provider is not approved for use in this organization.",
@@ -84,7 +91,6 @@ POLICY_TEMPLATES = {
 
 
 class PolicyService:
-
     def __init__(self, db=None):
         self._db = db or get_db()
 
@@ -103,7 +109,9 @@ class PolicyService:
         created_by: str = "",
     ) -> dict:
         if action not in ("allow", "deny", "require_approval", "log_only"):
-            return {"error": f"Invalid action: {action}. Must be allow/deny/require_approval/log_only"}
+            return {
+                "error": f"Invalid action: {action}. Must be allow/deny/require_approval/log_only"
+            }
 
         policy_id = str(uuid.uuid4())
         now = datetime.utcnow().isoformat()
@@ -113,20 +121,42 @@ class PolicyService:
             "INSERT INTO policies (id, org_id, name, description, enabled, priority, "
             "conditions, action, message, created_by, created_at, updated_at) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (policy_id, org_id, name, description, enabled, priority,
-             conditions_json, action, message, created_by or None, now, now),
+            (
+                policy_id,
+                org_id,
+                name,
+                description,
+                enabled,
+                priority,
+                conditions_json,
+                action,
+                message,
+                created_by or None,
+                now,
+                now,
+            ),
         )
         return {
-            "id": policy_id, "org_id": org_id, "name": name, "description": description,
-            "enabled": enabled, "priority": priority, "conditions": conditions,
-            "action": action, "message": message,
+            "id": policy_id,
+            "org_id": org_id,
+            "name": name,
+            "description": description,
+            "enabled": enabled,
+            "priority": priority,
+            "conditions": conditions,
+            "action": action,
+            "message": message,
         }
 
-    def create_from_template(self, org_id: str, template_name: str, created_by: str = "") -> dict:
+    def create_from_template(
+        self, org_id: str, template_name: str, created_by: str = ""
+    ) -> dict:
         """Create a policy from a pre-built template."""
         tmpl = POLICY_TEMPLATES.get(template_name)
         if not tmpl:
-            return {"error": f"Unknown template: {template_name}. Available: {list(POLICY_TEMPLATES.keys())}"}
+            return {
+                "error": f"Unknown template: {template_name}. Available: {list(POLICY_TEMPLATES.keys())}"
+            }
         return self.create(org_id=org_id, created_by=created_by, **tmpl)
 
     # ── Read ─────────────────────────────────────────────────────
@@ -156,18 +186,35 @@ class PolicyService:
     # ── Update ───────────────────────────────────────────────────
 
     def update(self, policy_id: str, org_id: str, **kwargs) -> Optional[dict]:
-        allowed = {"name", "description", "enabled", "priority", "conditions", "action", "message"}
+        allowed = {
+            "name",
+            "description",
+            "enabled",
+            "priority",
+            "conditions",
+            "action",
+            "message",
+        }
         updates = {k: v for k, v in kwargs.items() if k in allowed and v is not None}
         if not updates:
             return self.get(policy_id, org_id)
 
         if "conditions" in updates and isinstance(updates["conditions"], list):
             updates["conditions"] = json.dumps(updates["conditions"])
-        if "action" in updates and updates["action"] not in ("allow", "deny", "require_approval", "log_only"):
+        if "action" in updates and updates["action"] not in (
+            "allow",
+            "deny",
+            "require_approval",
+            "log_only",
+        ):
             return {"error": f"Invalid action: {updates['action']}"}
 
         set_clause = ", ".join(f"{k} = ?" for k in updates)
-        params = list(updates.values()) + [datetime.utcnow().isoformat(), policy_id, org_id]
+        params = list(updates.values()) + [
+            datetime.utcnow().isoformat(),
+            policy_id,
+            org_id,
+        ]
         self._db.execute(
             f"UPDATE policies SET {set_clause}, updated_at = ? WHERE id = ? AND org_id = ?",
             params,

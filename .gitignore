@@ -56,3 +56,5 @@ docker/keycloak/data/
 PUBLISHING.md
 
 community/
+
+docker-compose.yml

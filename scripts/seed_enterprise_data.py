@@ -7,8 +7,10 @@ Seeds: Orgs, Users, Cost Centers, Budgets, Policies, Approvals,
 
 Usage:
     python scripts/seed_enterprise_data.py
-    python scripts/seed_enterprise_data.py --clear   # wipe enterprise tables first
-    python scripts/seed_enterprise_data.py --with-traces --days 14  # also seed traces
+    python scripts/seed_enterprise_data.py --clear              # wipe enterprise tables first
+    python scripts/seed_enterprise_data.py --with-traces --days 14
+    python scripts/seed_enterprise_data.py --db postgres        # explicit postgres (default via env)
+    python scripts/seed_enterprise_data.py --db sqlite          # force SQLite backend
 
 Requires the server to have run at least once (to auto-migrate tables),
 or run after: docker compose up migrate
@@ -16,39 +18,77 @@ or run after: docker compose up migrate
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import random
 import sys
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from agentcost.data.connection import get_db
+
+def _configure_db(db_type: str | None):
+    """
+    Override the DB backend before anything calls get_db().
+
+    --db postgres  → force PostgresAdapter (requires AGENTCOST_DATABASE_URL)
+    --db sqlite    → force SQLiteAdapter   (uses AGENTCOST_DB path or default)
+    (not specified) → let connection.py auto-detect from env as usual
+    """
+    if db_type is None:
+        return  # auto-detect — don't touch the singleton
+
+    from agentcost.data.connection import set_db
+
+    if db_type == "postgres":
+        from agentcost.data.postgres_adapter import PostgresAdapter
+        dsn = os.environ.get(
+            "AGENTCOST_DATABASE_URL",
+            "postgresql://agentcost:agentcost@localhost:5432/agentcost",
+        )
+        set_db(PostgresAdapter(dsn=dsn))
+        print(f"  🗄️  Forced backend: PostgreSQL ({dsn.split('@')[-1]})")
+    else:
+        from agentcost.data.sqlite_adapter import SQLiteAdapter
+        db_path = os.environ.get(
+            "AGENTCOST_DB",
+            os.path.join(os.path.expanduser("~"), ".agentcost", "benchmarks.db"),
+        )
+        set_db(SQLiteAdapter(db_path=db_path))
+        print(f"  🗄️  Forced backend: SQLite ({db_path})")
 
 
 def _ensure_tables():
-    """Apply enterprise schema to SQLite if tables don't exist."""
+    """Apply enterprise schema if tables don't exist (mainly needed for SQLite)."""
     from pathlib import Path
+    from agentcost.data.connection import get_db
+
     db = get_db()
-    # Check if tables exist
     try:
         db.fetch_one("SELECT 1 FROM orgs LIMIT 1")
-        return  # tables exist
+        return  # tables already exist
     except Exception:
         pass
-    # Apply migrations
+
     mig_dir = Path(__file__).parent.parent / "agentcost" / "data" / "migrations"
     for sql_file in sorted(mig_dir.glob("*.sql")):
         sql = sql_file.read_text()
-        sql = sql.replace("TIMESTAMPTZ", "TEXT")
-        sql = sql.replace("JSONB", "TEXT")
-        sql = sql.replace("DOUBLE PRECISION", "REAL")
-        sql = sql.replace("BOOLEAN", "INTEGER")
-        sql = sql.replace("DEFAULT NOW()", "DEFAULT (datetime('now'))")
-        sql = sql.replace("SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT")
-        lines = [line for line in sql.split("\n") if "INSERT INTO schema_version" not in line and "ON CONFLICT" not in line]
-        sql = "\n".join(lines)
+        if not db.is_postgres():
+            # Translate Postgres DDL → SQLite
+            sql = sql.replace("TIMESTAMPTZ", "TEXT")
+            sql = sql.replace("JSONB", "TEXT")
+            sql = sql.replace("DOUBLE PRECISION", "REAL")
+            sql = sql.replace("BOOLEAN", "INTEGER")
+            sql = sql.replace("DEFAULT NOW()", "DEFAULT (datetime('now'))")
+            sql = sql.replace("SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT")
+            lines = [
+                line for line in sql.split("\n")
+                if "INSERT INTO schema_version" not in line
+                and "ON CONFLICT" not in line
+            ]
+            sql = "\n".join(lines)
         try:
             db.executescript(sql)
         except Exception:
@@ -61,15 +101,35 @@ def _id():
 
 
 def _now():
-    return datetime.utcnow().isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def _ago(days=0, hours=0):
-    return (datetime.utcnow() - timedelta(days=days, hours=hours)).isoformat()
+    return (datetime.now(timezone.utc) - timedelta(days=days, hours=hours)).isoformat()
+
+
+def _bool(db, value: bool):
+    """
+    Return DB-correct boolean value.
+
+    PostgreSQL BOOLEAN column → must be Python bool (True / False).
+    SQLite INTEGER column     → 1 / 0  (BOOLEAN is stored as INTEGER in SQLite).
+
+    Root cause of the original crash:
+        psycopg2.errors.DatatypeMismatch: column "enabled" is of type boolean
+        but expression is of type integer
+    The old code passed `1 if enabled else 0` for both backends, which works
+    for SQLite but breaks Postgres.
+    """
+    if db.is_postgres():
+        return bool(value)
+    return 1 if value else 0
 
 
 def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 14):
     _ensure_tables()
+
+    from agentcost.data.connection import get_db
     db = get_db()
 
     # ── Clear if requested ──────────────────────────────────────────────
@@ -87,45 +147,66 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
 
     # ═══════════════════════════════════════════════════════════════════
     # ORGANIZATIONS
+    #
+    # FIX: Use org_id = "default" — this MUST match community_auth.py
+    # which hardcodes `org_id = "default"` on every unauthenticated
+    # request. All policy/approval/scorecard/audit queries filter by
+    # WHERE org_id = ? using the auth context org_id. If the seeded
+    # org uses a random UUID, the dashboard returns zero rows for every
+    # enterprise tab because "default" != <random-uuid>.
+    #
+    # Migration 003_seed_default_org.sql also seeds id='default', which
+    # confirms "default" is the intended org_id for all community installs.
     # ═══════════════════════════════════════════════════════════════════
-    org_id = _id()
-    db.execute(
-        "INSERT INTO orgs (id, name, slug, plan, sso_provider, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-        (org_id, "Acme AI Corp", "acme-ai", "enterprise", "keycloak", _ago(90))
-    )
-    print(f"  🏢 Org: Acme AI Corp ({org_id[:8]}…)")
+    org_id = "default"   # ← FIX: was _id() (random UUID — never matched auth context)
+    try:
+        db.execute(
+            "INSERT INTO orgs (id, name, slug, plan, sso_provider, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+            (org_id, "Acme AI Corp", "acme-ai", "enterprise", "keycloak", _ago(90))
+        )
+    except Exception:
+        # org 'default' already exists (created by migration 003) — just update it
+        db.execute(
+            "UPDATE orgs SET name=?, slug=?, plan=?, sso_provider=? WHERE id=?",
+            ("Acme AI Corp", "acme-ai", "enterprise", "keycloak", org_id)
+        )
+    print(f"  🏢 Org: Acme AI Corp (id='{org_id}')")
 
     # ═══════════════════════════════════════════════════════════════════
     # USERS (Team Members)
     # ═══════════════════════════════════════════════════════════════════
     users = [
-        (_id(), "open@agentcost.in", "Rajneesh Kumar", "admin", _ago(90)),
-        (_id(), "care@agentcost.in", "Demo User", "viewer", _ago(85)),
-        (_id(), "sarah.chen@acme.ai", "Sarah Chen", "manager", _ago(60)),
-        (_id(), "mike.jones@acme.ai", "Mike Jones", "agent_dev", _ago(45)),
-        (_id(), "priya.patel@acme.ai", "Priya Patel", "manager", _ago(30)),
-        (_id(), "alex.kim@acme.ai", "Alex Kim", "agent_dev", _ago(20)),
-        (_id(), "jordan.lee@acme.ai", "Jordan Lee", "viewer", _ago(10)),
+        (_id(), "open@agentcost.in",      "Rajneesh Kumar", "admin",     _ago(90)),
+        (_id(), "care@agentcost.in",       "Demo User",      "viewer",    _ago(85)),
+        (_id(), "sarah.chen@acme.ai",      "Sarah Chen",     "manager",   _ago(60)),
+        (_id(), "mike.jones@acme.ai",      "Mike Jones",     "agent_dev", _ago(45)),
+        (_id(), "priya.patel@acme.ai",     "Priya Patel",    "manager",   _ago(30)),
+        (_id(), "alex.kim@acme.ai",        "Alex Kim",       "agent_dev", _ago(20)),
+        (_id(), "jordan.lee@acme.ai",      "Jordan Lee",     "viewer",    _ago(10)),
     ]
     for uid, email, name, role, created in users:
-        db.execute(
-            "INSERT INTO users (id, email, name, org_id, role, created_at, last_login_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (uid, email, name, org_id, role, created, _ago(0, hours=2))
-        )
+        try:
+            db.execute(
+                "INSERT INTO users (id, email, name, org_id, role, created_at, last_login_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (uid, email, name, org_id, role, created, _ago(0, hours=2))
+            )
+        except Exception:
+            # user with this email already exists — skip
+            pass
     admin_id = users[0][0]
     sarah_id = users[2][0]
-    mike_id = users[3][0]
+    mike_id  = users[3][0]
     priya_id = users[4][0]
-    alex_id = users[5][0]
+    alex_id  = users[5][0]
     print(f"  👥 Users: {len(users)} team members")
 
     # ═══════════════════════════════════════════════════════════════════
     # INVITES
     # ═══════════════════════════════════════════════════════════════════
     invites = [
-        (_id(), "new.hire@acme.ai", "agent_dev", "pending", admin_id),
-        (_id(), "contractor@external.com", "viewer", "pending", sarah_id),
-        (_id(), "past.employee@acme.ai", "viewer", "expired", admin_id),
+        (_id(), "new.hire@acme.ai",        "agent_dev", "pending", admin_id),
+        (_id(), "contractor@external.com",  "viewer",    "pending", sarah_id),
+        (_id(), "past.employee@acme.ai",    "viewer",    "expired", admin_id),
     ]
     for iid, email, role, status, invited_by in invites:
         db.execute(
@@ -137,11 +218,10 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
     # ═══════════════════════════════════════════════════════════════════
     # API KEYS
     # ═══════════════════════════════════════════════════════════════════
-    import hashlib
     keys = [
         (_id(), "ac_live_prod", hashlib.sha256(b"ac_live_prod_key_123").hexdigest(), "Production SDK", "traces.write,traces.read", admin_id),
-        (_id(), "ac_live_stag", hashlib.sha256(b"ac_live_staging_456").hexdigest(), "Staging SDK", "traces.write", mike_id),
-        (_id(), "ac_test_dev1", hashlib.sha256(b"ac_test_dev_key_789").hexdigest(), "Dev Testing", "*", alex_id),
+        (_id(), "ac_live_stag", hashlib.sha256(b"ac_live_staging_456").hexdigest(), "Staging SDK",    "traces.write",             mike_id),
+        (_id(), "ac_test_dev1", hashlib.sha256(b"ac_test_dev_key_789").hexdigest(), "Dev Testing",    "*",                        alex_id),
     ]
     for kid, prefix, khash, name, scopes, created_by in keys:
         db.execute(
@@ -154,20 +234,20 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
     # COST CENTERS
     # ═══════════════════════════════════════════════════════════════════
     cost_centers = [
-        (_id(), "Engineering", "ENG-001", sarah_id, 15000.0),
-        (_id(), "Customer Support", "CS-002", priya_id, 8000.0),
-        (_id(), "Research", "RES-003", sarah_id, 25000.0),
-        (_id(), "Marketing", "MKT-004", priya_id, 5000.0),
-        (_id(), "Data Pipeline", "DATA-005", mike_id, 12000.0),
+        (_id(), "Engineering",     "ENG-001",  sarah_id, 15000.0),
+        (_id(), "Customer Support","CS-002",   priya_id,  8000.0),
+        (_id(), "Research",        "RES-003",  sarah_id, 25000.0),
+        (_id(), "Marketing",       "MKT-004",  priya_id,  5000.0),
+        (_id(), "Data Pipeline",   "DATA-005", mike_id,  12000.0),
     ]
     for ccid, name, code, mgr, budget in cost_centers:
         db.execute(
             "INSERT INTO cost_centers (id, org_id, name, code, manager_email, monthly_budget, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
             (ccid, org_id, name, code, mgr, budget, _ago(60))
         )
-    eng_cc = cost_centers[0][0]
-    cs_cc = cost_centers[1][0]
-    res_cc = cost_centers[2][0]
+    eng_cc  = cost_centers[0][0]
+    cs_cc   = cost_centers[1][0]
+    res_cc  = cost_centers[2][0]
     data_cc = cost_centers[4][0]
     print(f"  💰 Cost Centers: {len(cost_centers)} (total budget: ${sum(c[4] for c in cost_centers):,.0f}/mo)")
 
@@ -175,12 +255,12 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
     # COST ALLOCATIONS (project → cost center)
     # ═══════════════════════════════════════════════════════════════════
     allocations = [
-        (org_id, "default", None, eng_cc, 100.0),
-        (org_id, "customer-support", None, cs_cc, 100.0),
-        (org_id, "data-pipeline", None, data_cc, 100.0),
-        (org_id, "code-review", None, eng_cc, 60.0),
-        (org_id, "code-review", None, res_cc, 40.0),  # split allocation
-        (org_id, "research", None, res_cc, 100.0),
+        (org_id, "default",          None, eng_cc,  100.0),
+        (org_id, "customer-support", None, cs_cc,   100.0),
+        (org_id, "data-pipeline",    None, data_cc, 100.0),
+        (org_id, "code-review",      None, eng_cc,   60.0),
+        (org_id, "code-review",      None, res_cc,   40.0),  # split allocation
+        (org_id, "research",         None, res_cc,  100.0),
     ]
     for oid, proj, agent, ccid, pct in allocations:
         db.execute(
@@ -190,43 +270,60 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
     print(f"  🔗 Allocations: {len(allocations)} rules")
 
     # ═══════════════════════════════════════════════════════════════════
-    # BUDGETS (via BudgetService — uses budgets table from Phase 2)
+    # BUDGETS
+    # FIX: INSERT OR REPLACE is SQLite-only syntax.
+    # For Postgres use INSERT ... ON CONFLICT DO UPDATE (upsert on `project`
+    # which has a UNIQUE constraint per 001_initial.sql).
     # ═══════════════════════════════════════════════════════════════════
     budgets = [
-        (org_id, "default", 50.0, 1000.0),
-        (org_id, "customer-support", 30.0, 600.0),
-        (org_id, "data-pipeline", 80.0, 1500.0),
-        (org_id, "research", 100.0, 2500.0),
-        (org_id, "code-review", 40.0, 800.0),
+        (org_id, "default",          50.0,  1000.0),
+        (org_id, "customer-support", 30.0,   600.0),
+        (org_id, "data-pipeline",    80.0,  1500.0),
+        (org_id, "research",        100.0,  2500.0),
+        (org_id, "code-review",      40.0,   800.0),
     ]
     for oid, proj, daily, monthly in budgets:
         try:
-            db.execute(
-                "INSERT OR REPLACE INTO budgets (org_id, project, daily_limit, monthly_limit, created_at) VALUES (?, ?, ?, ?, ?)",
-                (oid, proj, daily, monthly, _ago(50))
-            )
+            if db.is_postgres():
+                db.execute(
+                    """INSERT INTO budgets (org_id, project, daily_limit, monthly_limit, created_at)
+                       VALUES (?, ?, ?, ?, ?)
+                       ON CONFLICT (project) DO UPDATE
+                         SET daily_limit   = EXCLUDED.daily_limit,
+                             monthly_limit = EXCLUDED.monthly_limit""",
+                    (oid, proj, daily, monthly, _ago(50))
+                )
+            else:
+                db.execute(
+                    "INSERT OR REPLACE INTO budgets (org_id, project, daily_limit, monthly_limit, created_at) VALUES (?, ?, ?, ?, ?)",
+                    (oid, proj, daily, monthly, _ago(50))
+                )
         except Exception:
-            # budgets table might have different schema
-            from agentcost.cost import BudgetService
-            BudgetService().set_budget(org_id=oid, project=proj, daily_limit=daily, monthly_limit=monthly)
+            try:
+                from agentcost.cost import BudgetService
+                BudgetService().set_budget(org_id=oid, project=proj, daily_limit=daily, monthly_limit=monthly)
+            except Exception:
+                pass
     print(f"  📊 Budgets: {len(budgets)} project budgets")
 
     # ═══════════════════════════════════════════════════════════════════
     # POLICIES
+    # FIX: `enabled` is BOOLEAN in Postgres — must pass True/False, not 1/0.
+    #      Use _bool(db, value) which returns the right type per backend.
     # ═══════════════════════════════════════════════════════════════════
     policies = [
         (_id(), "Block Premium Models in Staging", True, 10,
-         json.dumps([{"field": "model", "op": "in", "value": ["gpt-5.2-pro", "claude-opus-4-6"]},
+         json.dumps([{"field": "model",   "op": "in", "value": ["gpt-5.2-pro", "claude-opus-4-6"]},
                      {"field": "project", "op": "eq", "value": "staging"}]),
          "deny", "Premium models are not allowed in staging environment"),
 
         (_id(), "Rate Limit Research Project", True, 20,
          json.dumps([{"field": "project", "op": "eq", "value": "research"},
-                     {"field": "cost", "op": "gt", "value": 0.50}]),
+                     {"field": "cost",    "op": "gt", "value": 0.50}]),
          "require_approval", "High-cost research calls require manager approval"),
 
         (_id(), "Audit All GPT-5.2-Pro Usage", True, 50,
-         json.dumps([{"field": "model", "op": "eq", "value": "gpt-5.2-pro"}]),
+         json.dumps([{"field": "model",   "op": "eq", "value": "gpt-5.2-pro"}]),
          "log_only", "All premium model usage is logged for review"),
 
         (_id(), "Block After Hours (Weekends)", True, 30,
@@ -248,7 +345,9 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
     for pid, name, enabled, priority, conditions, action, message in policies:
         db.execute(
             "INSERT INTO policies (id, org_id, name, enabled, priority, conditions, action, message, created_by, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (pid, org_id, name, 1 if enabled else 0, priority, conditions, action, message, admin_id, _ago(40))
+            (pid, org_id, name,
+             _bool(db, enabled),   # ← FIX: was `1 if enabled else 0` (integer rejected by Postgres BOOLEAN)
+             priority, conditions, action, message, admin_id, _ago(40))
         )
     active = sum(1 for p in policies if p[2])
     print(f"  📜 Policies: {len(policies)} ({active} active, {len(policies)-active} disabled)")
@@ -295,6 +394,7 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
 
     # ═══════════════════════════════════════════════════════════════════
     # NOTIFICATION CHANNELS
+    # FIX: same BOOLEAN issue as policies — use _bool(db, enabled).
     # ═══════════════════════════════════════════════════════════════════
     channels = [
         (_id(), "slack", "Engineering Alerts",
@@ -316,7 +416,9 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
     for cid, ctype, name, config, events, enabled in channels:
         db.execute(
             "INSERT INTO notification_channels (id, org_id, channel_type, name, config, events, enabled, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (cid, org_id, ctype, name, config, events, 1 if enabled else 0, _ago(35))
+            (cid, org_id, ctype, name, config, events,
+             _bool(db, enabled),   # ← FIX: was `1 if enabled else 0` (integer rejected by Postgres BOOLEAN)
+             _ago(35))
         )
     active_ch = sum(1 for c in channels if c[5])
     print(f"  🔔 Channels: {len(channels)} ({active_ch} active)")
@@ -324,40 +426,31 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
     # ═══════════════════════════════════════════════════════════════════
     # AGENT SCORECARDS
     # ═══════════════════════════════════════════════════════════════════
-    agents = ["chatbot", "assistant", "ticket-classifier", "response-drafter",
-              "extractor", "transformer", "reviewer", "analyst"]
+    agents  = ["chatbot", "assistant", "ticket-classifier", "response-drafter",
+               "extractor", "transformer", "reviewer", "analyst"]
     periods = ["2025-12", "2026-01", "2026-02"]
 
-    import random
     random.seed(42)
     sc_count = 0
     for agent in agents:
         for period in periods:
-            quality = round(random.uniform(0.65, 0.98), 3)
-            total_cost = round(random.uniform(50, 2000), 2)
+            quality     = round(random.uniform(0.65, 0.98), 3)
+            total_cost  = round(random.uniform(50, 2000), 2)
             total_tasks = random.randint(100, 5000)
-            cost_eff = round(total_cost / (quality * total_tasks + 1), 4)
-            error_rate = round(random.uniform(0.005, 0.08), 4)
-            uptime = round(random.uniform(0.95, 0.999), 4)
+            cost_eff    = round(total_cost / (quality * total_tasks + 1), 4)
+            error_rate  = round(random.uniform(0.005, 0.08), 4)
+            uptime      = round(random.uniform(0.95, 0.999), 4)
 
-            if quality >= 0.90:
-                grade = "A"
-            elif quality >= 0.80:
-                grade = "B"
-            elif quality >= 0.70:
-                grade = "C"
-            else:
-                grade = "D"
+            if   quality >= 0.90: grade = "A"
+            elif quality >= 0.80: grade = "B"
+            elif quality >= 0.70: grade = "C"
+            else:                 grade = "D"
 
             recs = []
-            if cost_eff > 0.05:
-                recs.append("Consider switching to a cheaper model for routine tasks")
-            if error_rate > 0.03:
-                recs.append("High error rate — review prompt templates")
-            if quality < 0.80:
-                recs.append("Quality below threshold — consider model upgrade")
-            if total_cost > 1000:
-                recs.append("High monthly spend — evaluate caching opportunities")
+            if cost_eff > 0.05:   recs.append("Consider switching to a cheaper model for routine tasks")
+            if error_rate > 0.03: recs.append("High error rate — review prompt templates")
+            if quality < 0.80:    recs.append("Quality below threshold — consider model upgrade")
+            if total_cost > 1000: recs.append("High monthly spend — evaluate caching opportunities")
 
             db.execute(
                 """INSERT INTO agent_scorecards
@@ -373,37 +466,35 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
     # ═══════════════════════════════════════════════════════════════════
     # AUDIT LOG
     # ═══════════════════════════════════════════════════════════════════
-    import hashlib
-
     audit_entries = [
-        ("org.created", admin_id, "user", "org", org_id, "create",
+        ("org.created",        admin_id, "user",   "org",         org_id,         "create",
          json.dumps({"name": "Acme AI Corp", "plan": "enterprise"}), _ago(90)),
-        ("user.invited", admin_id, "user", "user", users[2][0], "create",
+        ("user.invited",       admin_id, "user",   "user",        users[2][0],    "create",
          json.dumps({"email": "sarah.chen@acme.ai", "role": "manager"}), _ago(60)),
-        ("policy.created", admin_id, "user", "policy", policies[0][0], "create",
+        ("policy.created",     admin_id, "user",   "policy",      policies[0][0], "create",
          json.dumps({"name": "Block Premium Models in Staging"}), _ago(40)),
-        ("budget.set", sarah_id, "user", "budget", "default", "update",
+        ("budget.set",         sarah_id, "user",   "budget",      "default",      "update",
          json.dumps({"project": "default", "daily_limit": 50, "monthly_limit": 1000}), _ago(50)),
-        ("cost_center.created", admin_id, "user", "cost_center", eng_cc, "create",
+        ("cost_center.created",admin_id, "user",   "cost_center", eng_cc,         "create",
          json.dumps({"name": "Engineering", "code": "ENG-001", "budget": 15000}), _ago(60)),
-        ("approval.approved", sarah_id, "user", "approval", approvals[0][0], "update",
+        ("approval.approved",  sarah_id, "user",   "approval",    approvals[0][0],"update",
          json.dumps({"requester": mike_id, "amount": 12.50}), _ago(3)),
-        ("approval.denied", sarah_id, "user", "approval", approvals[4][0], "update",
+        ("approval.denied",    sarah_id, "user",   "approval",    approvals[4][0],"update",
          json.dumps({"requester": mike_id, "reason": "Weekend batch job not pre-approved"}), _ago(1)),
-        ("api_key.created", admin_id, "user", "api_key", keys[0][0], "create",
+        ("api_key.created",    admin_id, "user",   "api_key",     keys[0][0],     "create",
          json.dumps({"name": "Production SDK", "scopes": "traces.write,traces.read"}), _ago(30)),
-        ("channel.created", admin_id, "user", "channel", channels[0][0], "create",
+        ("channel.created",    admin_id, "user",   "channel",     channels[0][0], "create",
          json.dumps({"type": "slack", "name": "Engineering Alerts"}), _ago(35)),
-        ("llm_call", mike_id, "agent", "trace", _id(), "execute",
+        ("llm_call",           mike_id,  "agent",  "trace",       _id(),          "execute",
          json.dumps({"model": "gpt-5.2-pro", "cost": 12.50, "project": "research"}), _ago(3)),
-        ("budget.warning", "system", "system", "budget", "default", "alert",
+        ("budget.warning",     "system", "system", "budget",      "default",      "alert",
          json.dumps({"project": "default", "usage_pct": 85, "daily_remaining": 7.50}), _ago(1)),
-        ("anomaly.detected", "system", "system", "trace", _id(), "alert",
+        ("anomaly.detected",   "system", "system", "trace",       _id(),          "alert",
          json.dumps({"type": "cost_spike", "model": "gpt-5.2-pro", "cost": 15.00, "avg_cost": 0.50}), _ago(0, hours=6)),
     ]
 
     prev_hash = "genesis"
-    for i, (etype, actor, atype, rtype, rid, action, details, ts) in enumerate(audit_entries):
+    for etype, actor, atype, rtype, rid, action, details, ts in audit_entries:
         entry_data = f"{prev_hash}|{etype}|{actor}|{action}|{ts}"
         entry_hash = hashlib.sha256(entry_data.encode()).hexdigest()
         db.execute(
@@ -427,17 +518,32 @@ def seed_enterprise(clear: bool = False, with_traces: bool = False, days: int = 
     print(f"\n{'━'*60}")
     print("  ✅ Enterprise data seeded successfully!")
     print(f"{'━'*60}")
-    print("  Org:            Acme AI Corp")
+    print("  Org:            Acme AI Corp  (id='default')")
     print("  Admin login:    open@agentcost.in / admin123")
     print("  User login:     care@agentcost.in / user123")
     print("  Dashboard:      http://localhost:8100")
     print(f"{'━'*60}\n")
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+# ENTRY POINT
+# ═══════════════════════════════════════════════════════════════════════════
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Seed AgentCost enterprise data")
-    parser.add_argument("--clear", action="store_true", help="Clear existing enterprise data first")
+    parser.add_argument("--clear",       action="store_true", help="Clear existing enterprise data first")
     parser.add_argument("--with-traces", action="store_true", help="Also seed trace data")
-    parser.add_argument("--days", type=int, default=14, help="Days of trace history (default: 14)")
+    parser.add_argument("--days",        type=int, default=14, help="Days of trace history (default: 14)")
+    parser.add_argument(
+        "--db",
+        choices=["postgres", "sqlite"],
+        default=None,
+        help="Force DB backend. Default: auto-detect from AGENTCOST_DATABASE_URL env var "
+             "(postgres if set, sqlite otherwise).",
+    )
     args = parser.parse_args()
+
+    # Must be called before seed_enterprise() which calls get_db() internally
+    _configure_db(args.db)
+
     seed_enterprise(clear=args.clear, with_traces=args.with_traces, days=args.days)

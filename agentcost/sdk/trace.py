@@ -16,7 +16,7 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from typing import Any, Callable
 
-from ..providers.tracked import calculate_cost, _try_litellm_cost
+from ..providers.tracked import calculate_cost
 
 
 @dataclass
@@ -140,7 +140,7 @@ def _persist_event(event: TraceEvent):
 
 
 def _calc(model, inp, out):
-    return _try_litellm_cost(model, inp, out) or calculate_cost(model, inp, out)
+    return calculate_cost(model, inp, out)
 
 
 class _TracedCompletions:

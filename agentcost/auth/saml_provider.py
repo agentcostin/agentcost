@@ -3,13 +3,13 @@ SAML 2.0 Service Provider — Enterprise SSO integration.
 
 Handles the SAML SP side of authentication:
   - Generate SP metadata XML
-  - Create AuthnRequest redirects to IdP (Keycloak)
+  - Create AuthnRequest redirects to IdP
   - Parse and validate ACS (Assertion Consumer Service) POST responses
   - Single Logout (SLO)
 
-For local dev, Keycloak acts as both IdP and the bridge to external SAML IdPs.
-In production, each enterprise customer configures their corporate IdP
-(Okta, Azure AD, Ping, etc.) in Keycloak as an identity provider broker.
+Works with any SAML 2.0 compliant IdP:
+  - Okta, Azure AD, Ping Identity, OneLogin, Google Workspace
+  - Self-hosted: Keycloak, Shibboleth, SimpleSAMLphp
 
 Dependencies: python3-saml (OneLogin's SAML toolkit)
   pip install python3-saml
@@ -53,17 +53,17 @@ def _get_saml_settings(
             "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
         },
         "idp": {
-            "entityId": f"{cfg.keycloak_url}/realms/{cfg.realm}",
+            "entityId": cfg.saml_idp_entity_id or cfg.oidc_issuer_url,
             "singleSignOnService": {
-                "url": f"{cfg.keycloak_url}/realms/{cfg.realm}/protocol/saml",
+                "url": cfg.saml_idp_sso_url or f"{cfg.oidc_issuer_url}/protocol/saml",
                 "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
             },
             "singleLogoutService": {
-                "url": f"{cfg.keycloak_url}/realms/{cfg.realm}/protocol/saml",
+                "url": cfg.saml_idp_slo_url or f"{cfg.oidc_issuer_url}/protocol/saml",
                 "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
             },
-            # Keycloak's signing cert — fetched dynamically or configured
-            "x509cert": "",
+            # IdP signing cert — configured or fetched from metadata
+            "x509cert": cfg.saml_idp_cert,
         },
         "security": {
             "nameIdEncrypted": False,
@@ -85,7 +85,7 @@ def _get_saml_settings(
 
 
 def _fetch_idp_metadata(config: Optional[AuthConfig] = None) -> str:
-    """Fetch SAML IdP metadata XML from Keycloak."""
+    """Fetch SAML IdP metadata XML from the configured IdP."""
     import urllib.request
     import ssl
 
@@ -95,7 +95,7 @@ def _fetch_idp_metadata(config: Optional[AuthConfig] = None) -> str:
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
 
-    url = cfg.saml_idp_metadata_url
+    url = cfg.saml_idp_metadata_url_derived
     req = urllib.request.Request(url, headers={"Accept": "application/xml"})
     with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
         return resp.read().decode("utf-8")
@@ -172,7 +172,7 @@ def create_authn_request(
     except ImportError:
         # Fallback: construct redirect URL manually
         cfg = config or get_auth_config()
-        idp_sso_url = f"{cfg.keycloak_url}/realms/{cfg.realm}/protocol/saml"
+        idp_sso_url = cfg.saml_idp_sso_url or f"{cfg.oidc_issuer_url}/protocol/saml"
         logger.warning("python3-saml not installed — using basic SAML redirect")
         return idp_sso_url, {}
 

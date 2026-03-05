@@ -1,12 +1,14 @@
 """
-AgentCost Auth — SSO/SAML Authentication Module (Block 1, Phase 3)
+AgentCost Auth — SSO/SAML Authentication Module
 
-Provides Keycloak-backed authentication with:
-  - OIDC JWT validation for API requests
+Provides provider-agnostic authentication with:
+  - OIDC JWT validation for API requests (any compliant IdP)
   - SAML 2.0 SP endpoints for enterprise SSO
   - Multi-tenant org isolation via JWT claims
   - Role-based access control (RBAC)
   - API key authentication for SDK/agent traffic
+
+Supported providers: Okta, Auth0, Azure AD, Google, Keycloak, Authentik, etc.
 
 Usage:
     from agentcost.auth import get_current_user, require_role

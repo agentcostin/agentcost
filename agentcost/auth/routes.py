@@ -3,25 +3,23 @@ Auth Routes — FastAPI router for all authentication endpoints.
 
 Endpoints:
   OIDC:
-    GET  /auth/login            → Redirect to Keycloak login page
-    GET  /auth/callback         → Handle OIDC auth code callback
-    POST /auth/token            → Exchange auth code for tokens
-    POST /auth/refresh          → Refresh an access token
-    POST /auth/logout           → Logout (revoke session)
+    GET  /auth/login            -> Redirect to IdP login page
+    GET  /auth/callback         -> Handle OIDC auth code callback
+    POST /auth/token            -> Exchange auth code for tokens
+    POST /auth/refresh          -> Refresh an access token
+    POST /auth/logout           -> Logout (revoke session)
 
   SAML:
-    GET  /auth/saml/metadata    → SP metadata XML
-    GET  /auth/saml/login       → Initiate SAML SSO redirect
-    POST /auth/saml/acs         → Assertion Consumer Service
-    GET  /auth/saml/slo         → Single Logout
+    GET  /auth/saml/metadata    -> SP metadata XML
+    GET  /auth/saml/login       -> Initiate SAML SSO redirect
+    POST /auth/saml/acs         -> Assertion Consumer Service
+    GET  /auth/saml/slo         -> Single Logout
 
   User/Org:
-    GET  /auth/me               → Current user info
-    POST /auth/org/provision    → Auto-provision org + user on first login
+    GET  /auth/me               -> Current user info
+    GET  /auth/health           -> OIDC provider health check
 
-Mount in the main app:
-    from agentcost.auth.routes import auth_router
-    app.include_router(auth_router)
+Works with any OIDC/SAML compliant IdP (Okta, Auth0, Azure AD, Keycloak, etc.).
 """
 
 from __future__ import annotations
@@ -56,15 +54,15 @@ async def oidc_login(
     redirect_uri: str = "",
     state: str = "/",
 ):
-    """Redirect the browser to Keycloak's OIDC login page.
+    """Redirect the browser to the OIDC provider's login page.
 
-    After login, Keycloak redirects back to /auth/callback with an auth code.
+    After login, the IdP redirects back to /auth/callback with an auth code.
     """
     config = get_auth_config()
     # Build callback URL dynamically from the current request
     if not redirect_uri:
         redirect_uri = str(request.url_for("oidc_callback"))
-        # Fix 0.0.0.0 → localhost for Keycloak redirect URI matching
+        # Fix 0.0.0.0 → localhost for redirect URI matching
         redirect_uri = redirect_uri.replace("://0.0.0.0:", "://localhost:")
     params = urllib.parse.urlencode(
         {
@@ -86,7 +84,7 @@ async def oidc_callback(
     error: str = "",
     error_description: str = "",
 ):
-    """Handle the OIDC auth code callback from Keycloak.
+    """Handle the OIDC auth code callback from the IdP.
 
     Exchanges the auth code for tokens and sets a session cookie.
     """
@@ -199,7 +197,7 @@ async def refresh(refresh_token: str):
 
 @auth_router.post("/logout")
 async def logout(request: Request, response: Response):
-    """Logout: clear session cookie and optionally revoke tokens at Keycloak."""
+    """Logout: clear session cookie."""
     config = get_auth_config()
 
     # Clear session cookie
@@ -232,7 +230,7 @@ async def saml_login(
     request: Request,
     relay_state: str = "/",
 ):
-    """Initiate SAML SSO — redirect to Keycloak (which may redirect to corporate IdP)."""
+    """Initiate SAML SSO — redirect to the configured IdP."""
     from .saml_provider import create_authn_request
 
     request_data = _build_saml_request_data(request)
@@ -330,37 +328,31 @@ async def me(user: AuthContext = Depends(get_current_user)):
 
 @auth_router.get("/health")
 async def auth_health():
-    """Check if Keycloak is reachable and the realm exists."""
+    """Check if the OIDC provider is reachable via discovery endpoint."""
     config = get_auth_config()
 
     if not config.enabled:
         return {"status": "disabled", "message": "Auth is disabled"}
 
     try:
-        ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
+        from .config import discover_oidc_endpoints
 
-        url = f"{config.keycloak_url}/realms/{config.realm}/.well-known/openid-configuration"
-        req = urllib.request.Request(url)
-        with urllib.request.urlopen(req, timeout=5, context=ctx) as resp:
-            data = json.loads(resp.read())
-            return {
-                "status": "ok",
-                "keycloak": config.keycloak_url,
-                "realm": config.realm,
-                "issuer": data.get("issuer"),
-                "endpoints": {
-                    "authorization": data.get("authorization_endpoint"),
-                    "token": data.get("token_endpoint"),
-                    "jwks": data.get("jwks_uri"),
-                },
-            }
+        data = discover_oidc_endpoints(config.oidc_issuer_url)
+        return {
+            "status": "ok",
+            "issuer": data.get("issuer"),
+            "provider": config.oidc_issuer_url,
+            "endpoints": {
+                "authorization": data.get("authorization_endpoint"),
+                "token": data.get("token_endpoint"),
+                "jwks": data.get("jwks_uri"),
+            },
+        }
     except Exception as e:
         return {
             "status": "error",
             "message": str(e),
-            "keycloak": config.keycloak_url,
+            "provider": config.oidc_issuer_url,
         }
 
 
@@ -370,7 +362,7 @@ async def auth_health():
 
 
 def _exchange_code(code: str, redirect_uri: str, config: AuthConfig) -> dict:
-    """Exchange an OIDC auth code for tokens at Keycloak's token endpoint."""
+    """Exchange an OIDC auth code for tokens at the provider's token endpoint."""
     data = urllib.parse.urlencode(
         {
             "grant_type": "authorization_code",

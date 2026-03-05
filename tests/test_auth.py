@@ -125,8 +125,10 @@ class TestAuthConfig:
     def test_derived_urls(self):
         from agentcost.auth.config import AuthConfig
 
-        cfg = AuthConfig(keycloak_url="https://kc.example.com", realm="test")
-        assert cfg.issuer_url == "https://kc.example.com/realms/test"
+        cfg = AuthConfig(oidc_issuer_url="https://auth.example.com/realms/test")
+        assert cfg.issuer_url == "https://auth.example.com/realms/test"
+        assert "protocol/openid-connect/certs" in cfg.jwks_url
+        assert "protocol/openid-connect/token" in cfg.token_url
 
     def test_config_from_env(self, monkeypatch):
         from agentcost.auth.config import get_auth_config
@@ -134,10 +136,42 @@ class TestAuthConfig:
         get_auth_config.cache_clear()
         monkeypatch.setenv("AGENTCOST_AUTH_ENABLED", "false")
         monkeypatch.setenv("KEYCLOAK_URL", "https://sso.prod.com")
+        monkeypatch.setenv("KEYCLOAK_REALM", "myapp")
         cfg = get_auth_config()
         assert cfg.enabled is False
-        assert cfg.keycloak_url == "https://sso.prod.com"
+        # Legacy KEYCLOAK_* env vars still work
+        assert cfg.oidc_issuer_url == "https://sso.prod.com/realms/myapp"
         get_auth_config.cache_clear()
+
+    def test_oidc_env_takes_priority(self, monkeypatch):
+        from agentcost.auth.config import get_auth_config
+
+        get_auth_config.cache_clear()
+        monkeypatch.setenv("OIDC_ISSUER_URL", "https://okta.example.com")
+        monkeypatch.setenv("KEYCLOAK_URL", "https://kc.old.com")
+        cfg = get_auth_config()
+        # New OIDC_* vars take priority over legacy KEYCLOAK_*
+        assert cfg.oidc_issuer_url == "https://okta.example.com"
+        get_auth_config.cache_clear()
+
+    def test_explicit_endpoint_overrides(self):
+        from agentcost.auth.config import AuthConfig
+
+        cfg = AuthConfig(
+            oidc_issuer_url="https://auth.example.com",
+            oidc_jwks_url="https://custom.example.com/jwks",
+            oidc_token_url="https://custom.example.com/token",
+        )
+        assert cfg.jwks_url == "https://custom.example.com/jwks"
+        assert cfg.token_url == "https://custom.example.com/token"
+        # Non-overridden falls back to issuer-derived
+        assert "auth.example.com" in cfg.auth_url
+
+    def test_discovery_url(self):
+        from agentcost.auth.config import AuthConfig
+
+        cfg = AuthConfig(oidc_issuer_url="https://auth.example.com/realms/test")
+        assert cfg.discovery_url == "https://auth.example.com/realms/test/.well-known/openid-configuration"
 
 
 # ─── Test API Key ────────────────────────────────────────────────────────────

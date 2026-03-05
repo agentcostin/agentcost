@@ -1,0 +1,152 @@
+# AgentCost Reactions — Event-driven automation rules.
+#
+# Inspired by ComposioHQ/agent-orchestrator's reaction system.
+# Each reaction maps a cost event to one or more actions.
+#
+# Structure:
+#   <event-name>:
+#     auto: bool          — execute automatically (true) or just notify (false)
+#     actions: list       — ordered list of actions to execute
+#     condition: dict     — optional conditions that must be met
+#     cooldown: str       — minimum interval between triggers ("5m", "1h", "1d")
+#     escalateAfter: str  — escalate if unresolved after this duration
+#
+# Available actions:
+#   notify              — send to all configured notification channels
+#   log                 — write to audit log
+#   suspend-agent       — set agent status to suspended
+#   resume-agent        — set agent status to active
+#   downgrade-model     — switch to cheaper model tier
+#   block-calls         — reject new LLM calls for this scope
+#   unblock-calls       — resume LLM calls
+#   webhook             — POST to a custom URL
+#   escalate            — re-emit as higher-severity event
+#
+# Conditions (all must match):
+#   usage_pct:    {gte: 80}         — budget usage percentage
+#   cost:         {gte: 10.0}       — total cost in USD
+#   model:        {in: [gpt-4o]}    — model name match
+#   project:      {eq: "prod"}      — project match
+#   error_rate:   {gte: 0.1}        — error rate threshold
+#   provider:     {in: [openai]}    — provider match
+#
+# Cooldown format: "30s", "5m", "1h", "6h", "1d"
+
+reactions:
+
+  # ── Budget Events ─────────────────────────────────────────────
+
+  budget-80:
+    auto: true
+    actions:
+      - notify
+      - log
+    condition:
+      usage_pct: {gte: 80, lt: 100}
+    cooldown: "1h"
+
+  budget-exceeded:
+    auto: true
+    actions:
+      - notify
+      - log
+      - block-calls
+    cooldown: "30m"
+    escalateAfter: "2h"
+
+  budget-critical:
+    auto: true
+    actions:
+      - notify
+      - log
+      - block-calls
+      - suspend-agent
+    condition:
+      usage_pct: {gte: 120}
+    cooldown: "15m"
+
+  # ── Policy Events ─────────────────────────────────────────────
+
+  policy-violation:
+    auto: true
+    actions:
+      - log
+      - notify
+    cooldown: "5m"
+
+  policy-blocked:
+    auto: true
+    actions:
+      - log
+      - notify
+    cooldown: "1m"
+
+  # ── Anomaly Events ────────────────────────────────────────────
+
+  cost-spike:
+    auto: true
+    actions:
+      - notify
+      - log
+    cooldown: "15m"
+    escalateAfter: "1h"
+
+  error-burst:
+    auto: true
+    actions:
+      - notify
+      - log
+    cooldown: "5m"
+
+  token-explosion:
+    auto: true
+    actions:
+      - notify
+      - log
+      - downgrade-model
+    cooldown: "10m"
+
+  latency-anomaly:
+    auto: false
+    actions:
+      - log
+    cooldown: "15m"
+
+  # ── Approval Events ───────────────────────────────────────────
+
+  approval-pending:
+    auto: true
+    actions:
+      - notify
+    cooldown: "0s"
+
+  approval-decided:
+    auto: true
+    actions:
+      - notify
+      - log
+    cooldown: "0s"
+
+  # ── Agent Lifecycle ───────────────────────────────────────────
+
+  agent-suspended:
+    auto: true
+    actions:
+      - notify
+      - log
+    cooldown: "0s"
+
+  agent-resumed:
+    auto: true
+    actions:
+      - notify
+      - log
+    cooldown: "0s"
+
+  # ── Scorecard Events ──────────────────────────────────────────
+
+  scorecard-generated:
+    auto: true
+    actions:
+      - notify
+    cooldown: "1d"

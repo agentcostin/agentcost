@@ -271,9 +271,9 @@ class TestEstimateTokens:
         assert estimate_tokens("") == 0
 
     def test_heuristic_fallback(self):
-        # ~4 chars per token, so 100 chars ≈ 25 tokens
         tokens = estimate_tokens("a" * 100)
-        assert 20 <= tokens <= 30
+        # tiktoken gives ~13 (groups repeated chars), heuristic gives ~25
+        assert 10 <= tokens <= 30
 
     def test_returns_at_least_one(self):
         assert estimate_tokens("Hi") >= 1

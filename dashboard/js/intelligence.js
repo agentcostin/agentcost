@@ -296,3 +296,141 @@ function EstimatorView(){
     </div>}
   </div>;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * MODEL EXPLORER VIEW — Phase 4
+ * Search/filter across 2,610+ models by provider, tier, cost range, context
+ * ═══════════════════════════════════════════════════════════════════════════*/
+function ModelsExplorer(){
+  const tierColors = AgentCost.TIER_COLORS;
+  const providerColors = AgentCost.PROVIDER_COLORS;
+
+  const [query,setQuery]=useState('');
+  const [provider,setProvider]=useState('');
+  const [tier,setTier]=useState('');
+  const [maxInput,setMaxInput]=useState('');
+  const [minContext,setMinContext]=useState('');
+  const [results,setResults]=useState(null);
+  const [loading,setLoading]=useState(false);
+  const [tierSummary,setTierSummary]=useState(null);
+  const [providers,setProviders]=useState([]);
+  const [selected,setSelected]=useState(null);
+
+  // Load initial data
+  useEffect(()=>{
+    doSearch();
+    AgentCost.api('/api/models/tiers?limit_per_tier=5').then(d=>{if(d)setTierSummary(d)});
+    AgentCost.api('/api/models/providers').then(d=>{if(d&&d.providers)setProviders(d.providers)});
+  },[]);
+
+  async function doSearch(){
+    setLoading(true);
+    try{
+      const filters={limit:100};
+      if(provider) filters.provider=provider;
+      if(tier) filters.tier=tier;
+      if(maxInput) filters.max_input=parseFloat(maxInput);
+      if(minContext) filters.min_context=parseInt(minContext);
+      const r = await AgentCost.searchModels(query, filters);
+      if(r) setResults(r);
+    }catch(e){console.error(e)}
+    setLoading(false);
+  }
+
+  useEffect(()=>{const t=setTimeout(doSearch,300);return ()=>clearTimeout(t)},[query,provider,tier,maxInput,minContext]);
+
+  async function selectModel(id){
+    try{
+      const d=await AgentCost.api('/api/models/'+encodeURIComponent(id));
+      if(d&&!d.error) setSelected(d);
+    }catch(e){}
+  }
+
+  const sel={padding:'.35rem .5rem',borderRadius:'var(--radius-sm)',border:'1px solid var(--border)',background:'var(--bg-2)',color:'var(--text-1)',fontSize:'.8rem'};
+
+  return <div>
+    {/* Tier Summary Cards */}
+    {tierSummary && <div className="grid g4" style={{marginBottom:'1rem'}}>
+      {['economy','standard','premium','free'].map(t=>{
+        const count=tierSummary.summary[t]||0;
+        return <div key={t} className="card" style={{padding:'.8rem',textAlign:'center',borderTop:'3px solid '+(tierColors[t]||'var(--border)')}}>
+          <div style={{fontSize:'.65rem',textTransform:'uppercase',letterSpacing:'.05em',color:'var(--text-3)'}}>{t}</div>
+          <div style={{fontSize:'1.6rem',fontWeight:700,color:tierColors[t]||'var(--text-1)'}}>{count}</div>
+          <div style={{fontSize:'.7rem',color:'var(--text-3)'}}>models</div>
+        </div>;
+      })}
+    </div>}
+
+    {/* Search & Filters */}
+    <div className="card" style={{marginBottom:'1rem'}}>
+      <div style={{padding:'1rem'}}>
+        <div style={{display:'flex',gap:'.6rem',flexWrap:'wrap',alignItems:'center'}}>
+          <input type="text" value={query} onChange={e=>setQuery(e.target.value)}
+            placeholder="Search models..." style={{...sel,flex:'1 1 200px',minWidth:'200px'}}/>
+          <select value={provider} onChange={e=>setProvider(e.target.value)} style={sel}>
+            <option value="">All Providers</option>
+            {providers.map(p=><option key={p.name} value={p.name}>{p.name} ({p.model_count})</option>)}
+          </select>
+          <select value={tier} onChange={e=>setTier(e.target.value)} style={sel}>
+            <option value="">All Tiers</option>
+            <option value="economy">Economy</option><option value="standard">Standard</option>
+            <option value="premium">Premium</option><option value="free">Free</option>
+          </select>
+          <input type="number" value={maxInput} onChange={e=>setMaxInput(e.target.value)}
+            placeholder="Max $/1M input" style={{...sel,width:'120px'}}/>
+          <input type="number" value={minContext} onChange={e=>setMinContext(e.target.value)}
+            placeholder="Min context (K)" style={{...sel,width:'120px'}}/>
+        </div>
+        {results && <div style={{fontSize:'.75rem',color:'var(--text-3)',marginTop:'.5rem'}}>
+          {results.total} models found {query&&<span>for "{query}"</span>}
+        </div>}
+      </div>
+    </div>
+
+    {/* Results Table */}
+    <div className="card">
+      <div className="card-header"><h3>Models {results?'('+results.total+')':''}</h3></div>
+      <div style={{padding:'1rem'}}>
+        {loading ? <div className="loading">Searching...</div>
+         : results && results.models.length > 0 ? <table>
+          <thead><tr><th>Model</th><th>Provider</th><th>Input $/1M</th><th>Output $/1M</th><th>Tier</th><th>Context</th></tr></thead>
+          <tbody>{results.models.map((m,i)=>
+            <tr key={i} style={{cursor:'pointer'}} onClick={()=>selectModel(m.id)}>
+              <td style={{fontWeight:500,fontSize:'.82rem'}}>{m.label||m.id}</td>
+              <td><span style={{color:providerColors[m.provider]||'var(--text-2)',fontSize:'.8rem'}}>{m.provider}</span></td>
+              <td style={{fontFamily:'var(--mono)',fontSize:'.82rem'}}>{m.input===0?'Free':'$'+m.input.toFixed(2)}</td>
+              <td style={{fontFamily:'var(--mono)',fontSize:'.82rem'}}>{m.output===0?'Free':'$'+m.output.toFixed(2)}</td>
+              <td><span style={{fontSize:'.65rem',background:tierColors[m.tier]||'var(--text-3)',color:'#fff',padding:'.1rem .35rem',borderRadius:'3px'}}>{m.tier}</span></td>
+              <td style={{fontFamily:'var(--mono)',fontSize:'.8rem'}}>{m.context>=1000?(m.context/1000).toFixed(0)+'M':m.context+'K'}</td>
+            </tr>
+          )}</tbody></table>
+         : <div style={{padding:'2rem',textAlign:'center',color:'var(--text-3)'}}>No models found. Try broadening your search.</div>}
+      </div>
+    </div>
+
+    {/* Model Detail Panel */}
+    {selected && <div className="card" style={{marginTop:'1rem'}}>
+      <div className="card-header">
+        <h3>{selected.id}</h3>
+        <button className="btn sm" onClick={()=>setSelected(null)}>Close</button>
+      </div>
+      <div style={{padding:'1rem'}}>
+        <div className="grid g4">
+          <div className="card" style={{padding:'.8rem',textAlign:'center'}}><div style={{fontSize:'.7rem',color:'var(--text-3)'}}>PROVIDER</div><div style={{fontSize:'1rem',fontWeight:600,color:providerColors[selected.provider]||'var(--text-1)'}}>{selected.provider}</div></div>
+          <div className="card" style={{padding:'.8rem',textAlign:'center'}}><div style={{fontSize:'.7rem',color:'var(--text-3)'}}>TIER</div><div style={{fontSize:'1rem',fontWeight:600}}><span style={{background:tierColors[selected.tier]||'var(--text-3)',color:'#fff',padding:'.15rem .5rem',borderRadius:'4px'}}>{selected.tier}</span></div></div>
+          <div className="card" style={{padding:'.8rem',textAlign:'center'}}><div style={{fontSize:'.7rem',color:'var(--text-3)'}}>MODE</div><div style={{fontSize:'1rem',fontWeight:600}}>{selected.mode}</div></div>
+          <div className="card" style={{padding:'.8rem',textAlign:'center'}}><div style={{fontSize:'.7rem',color:'var(--text-3)'}}>CONTEXT</div><div style={{fontSize:'1rem',fontWeight:600,fontFamily:'var(--mono)'}}>{(selected.max_input_tokens||0).toLocaleString()}</div></div>
+        </div>
+        {selected.pricing_per_1m && <div style={{marginTop:'1rem'}}><table><tbody>
+          <tr><td style={{color:'var(--text-3)'}}>Input per 1M tokens</td><td style={{fontFamily:'var(--mono)',fontWeight:600}}>${selected.pricing_per_1m.input_per_1m.toFixed(4)}</td></tr>
+          <tr><td style={{color:'var(--text-3)'}}>Output per 1M tokens</td><td style={{fontFamily:'var(--mono)',fontWeight:600}}>${selected.pricing_per_1m.output_per_1m.toFixed(4)}</td></tr>
+          {selected.pricing_per_1m.cache_read_per_1m>0&&<tr><td style={{color:'var(--text-3)'}}>Cache read per 1M</td><td style={{fontFamily:'var(--mono)',fontWeight:600}}>${selected.pricing_per_1m.cache_read_per_1m.toFixed(4)}</td></tr>}
+        </tbody></table></div>}
+        <div style={{marginTop:'.8rem',display:'flex',gap:'.5rem'}}>
+          {selected.supports_vision&&<span style={{fontSize:'.65rem',background:'var(--purple)',color:'#fff',padding:'.15rem .4rem',borderRadius:'3px'}}>Vision</span>}
+          {selected.supports_function_calling&&<span style={{fontSize:'.65rem',background:'var(--blue)',color:'#fff',padding:'.15rem .4rem',borderRadius:'3px'}}>Tools</span>}
+        </div>
+      </div>
+    </div>}
+  </div>;
+}

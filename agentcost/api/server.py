@@ -129,6 +129,46 @@ if _ENTERPRISE:
     app.include_router(notify_router)
 
 
+# ── Reaction Engine routes (open-source — available in all editions) ─────────
+
+try:
+    from ..reactions.routes import create_reaction_routes
+
+    _reaction_router = create_reaction_routes()
+    if _reaction_router:
+        app.include_router(_reaction_router)
+except ImportError:
+    pass
+
+
+# ── Model Registry API (open-source — serves vendored pricing to dashboard) ──
+
+try:
+    from ..cost.model_routes import router as model_router
+
+    app.include_router(model_router)
+except ImportError:
+    pass
+
+
+@app.on_event("startup")
+async def _start_reaction_engine():
+    """Start the reaction engine and wire it to the EventBus."""
+    try:
+        from ..reactions import get_reaction_engine
+        from ..plugins import registry
+
+        engine = get_reaction_engine()
+        engine.start()
+
+        # Activate any loaded reactor plugins
+        registry.activate_reactors(engine)
+
+        logger.info("Reaction engine started with %d reactions", len(engine.reactions))
+    except Exception as e:
+        logger.warning("Reaction engine startup skipped: %s", e)
+
+
 # ── Data layer singletons ────────────────────────────────────────────────────
 
 _events: EventStore | None = None

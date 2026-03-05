@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AgentCost — Know What Your AI Actually Costs</title>
-<meta name="description" content="Open-source AI cost governance. Track, control, and optimize LLM spending across OpenAI, Anthropic, Google & open-source models.">
+<meta name="description" content="Open-source AI cost governance. Track, control, and optimize LLM spending across 2,610+ models from 40+ providers.">
 <meta property="og:title" content="AgentCost — AI Cost Governance">
 <meta property="og:description" content="Track, control, and optimize your AI spending. One line of code.">
 <meta property="og:url" content="https://agentcost.in">
@@ -321,7 +321,7 @@ footer { border-top: 1px solid var(--border-light); padding: 2rem 0; transition:
     <div class="hero-inner">
       <div class="hero-tag">Open Source · MIT Licensed · v1.0.0</div>
       <h1>Know what your AI actually costs.</h1>
-      <p class="hero-desc">One line of code gives you complete cost visibility across OpenAI, Anthropic, Google, and open-source models.</p>
+      <p class="hero-desc">One line of code gives you complete cost visibility across 2,610+ models from OpenAI, Anthropic, Google, and 40+ providers — with automatic cost-tier classification, budget gates, and intelligent model routing.</p>
       <div class="hero-actions">
         <a href="https://github.com/agentcostin/agentcost" target="_blank" class="btn-primary">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -369,32 +369,32 @@ response = client.chat.completions.<span class="fn">create</span>(
       <div class="f-card">
         <div class="f-card-icon">📊</div>
         <h3>Real-Time Dashboard</h3>
-        <p>Six views: cost breakdown, forecasts, optimization, analytics, estimation, and model comparison.</p>
+        <p>Seven views: costs, forecasts, optimization, analytics, estimation, model explorer (2,610+ models), and traces.</p>
       </div>
       <div class="f-card">
-        <div class="f-card-icon">📈</div>
-        <h3>Cost Forecasting</h3>
-        <p>Predict next 30 days using linear, EMA, and ensemble methods. Budget exhaustion warnings.</p>
+        <div class="f-card-icon">🧠</div>
+        <h3>Cost Intelligence</h3>
+        <p>Auto-classify prompts by complexity, route to economy/standard/premium tiers, gate budget overruns.</p>
       </div>
       <div class="f-card">
         <div class="f-card-icon">⚡</div>
         <h3>Smart Optimizer</h3>
-        <p>Concrete recommendations based on your actual usage patterns, not benchmarks.</p>
+        <p>Concrete recommendations based on your actual usage patterns. Token efficiency scoring and waste detection.</p>
       </div>
       <div class="f-card">
         <div class="f-card-icon">🧮</div>
         <h3>Pre-Call Estimation</h3>
-        <p>Know the cost before you make the call. 42 models across all major providers.</p>
+        <p>Know the cost before you make the call. 2,610+ models across 40+ providers.</p>
       </div>
       <div class="f-card">
         <div class="f-card-icon">🔌</div>
-        <h3>Framework Integrations</h3>
-        <p>LangChain, CrewAI, AutoGen, LlamaIndex. Plus OpenTelemetry and Prometheus exporters.</p>
+        <h3>8-Slot Plugin System</h3>
+        <p>Notifier, Policy, Exporter, Provider, Tracker, Reactor, Runtime, Agent — every integration point is swappable.</p>
       </div>
       <div class="f-card">
         <div class="f-card-icon">🛡️</div>
         <h3>Enterprise Governance</h3>
-        <p>SSO/SAML, budget enforcement, policy engine, approval workflows, and anomaly detection.</p>
+        <p>SSO with any OIDC/SAML provider, budget enforcement, policy engine, approval workflows, anomaly detection.</p>
       </div>
     </div>
   </div>
@@ -411,6 +411,9 @@ response = client.chat.completions.<span class="fn">create</span>(
         <span class="integ-tag">OpenAI</span>
         <span class="integ-tag">Anthropic</span>
         <span class="integ-tag">Google Gemini</span>
+        <span class="integ-tag">DeepSeek</span>
+        <span class="integ-tag">AWS Bedrock</span>
+        <span class="integ-tag">Azure AI</span>
         <span class="integ-tag">Ollama</span>
         <span class="integ-tag">Groq</span>
         <span class="integ-tag">LangChain</span>
@@ -420,7 +423,7 @@ response = client.chat.completions.<span class="fn">create</span>(
         <span class="integ-tag">OpenTelemetry</span>
         <span class="integ-tag">Prometheus</span>
         <span class="integ-tag">Grafana</span>
-        <span class="integ-tag">Datadog</span>
+        <span class="integ-tag">+40 providers</span>
       </div>
     </div>
   </div>
@@ -480,12 +483,12 @@ response = client.chat.completions.<span class="fn">create</span>(
         <p class="p-desc">Track and optimize AI costs for your projects.</p>
         <ul class="p-list">
           <li><span class="ck">✓</span> Python + TypeScript SDKs</li>
-          <li><span class="ck">✓</span> Real-time dashboard (6 views)</li>
-          <li><span class="ck">✓</span> Cost forecasting &amp; optimizer</li>
-          <li><span class="ck">✓</span> Pre-call estimation (42 models)</li>
-          <li><span class="ck">✓</span> All framework integrations</li>
-          <li><span class="ck">✓</span> OTel + Prometheus exporters</li>
-          <li><span class="ck">✓</span> Plugin system &amp; CLI</li>
+          <li><span class="ck">✓</span> Real-time dashboard (7 views)</li>
+          <li><span class="ck">✓</span> 2,610+ model pricing database</li>
+          <li><span class="ck">✓</span> Cost intelligence (tiers, routing, budget gates)</li>
+          <li><span class="ck">✓</span> Forecasting, optimizer &amp; token analyzer</li>
+          <li><span class="ck">✓</span> 8-slot plugin system &amp; reactions engine</li>
+          <li><span class="ck">✓</span> All framework integrations &amp; exporters</li>
         </ul>
         <a href="https://github.com/agentcostin/agentcost" target="_blank" class="btn-block filled">Get Started — Free</a>
       </div>
@@ -496,7 +499,7 @@ response = client.chat.completions.<span class="fn">create</span>(
         <p class="p-desc">Governance and control for organizations.</p>
         <ul class="p-list">
           <li><span class="ck">✓</span> Everything in Community</li>
-          <li><span class="ck">✓</span> SSO / SAML authentication</li>
+          <li><span class="ck">✓</span> SSO (any OIDC/SAML provider)</li>
           <li><span class="ck">✓</span> Budget enforcement &amp; alerts</li>
           <li><span class="ck">✓</span> Policy engine &amp; approvals</li>
           <li><span class="ck">✓</span> Anomaly detection</li>

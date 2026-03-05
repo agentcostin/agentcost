@@ -1,5 +1,5 @@
 site_name: AgentCost
-site_description: "AI Agent Cost Governance — track, control, and optimize LLM spending"
+site_description: "AI Agent Cost Governance — track, control, and optimize LLM spending across 2,610+ models"
 site_url: https://docs.agentcost.in
 repo_url: https://github.com/agentcostin/agentcost
 repo_name: agentcost/agentcost
@@ -39,6 +39,7 @@ nav:
     - Core Concepts: concepts.md
   - Guides:
     - Dashboard: guides/dashboard.md
+    - Cost Intelligence: guides/intelligence.md
     - LangChain: guides/langchain.md
     - CrewAI: guides/crewai.md
     - AutoGen: guides/autogen.md

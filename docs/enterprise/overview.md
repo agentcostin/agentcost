@@ -8,11 +8,12 @@ AgentCost Enterprise adds governance, security, and compliance features for team
 
 ### SSO/SAML Authentication
 
-Integrate with your existing identity provider via Keycloak:
+Integrate with any standards-compliant identity provider:
 
-- **OIDC** — OpenID Connect for modern identity providers
-- **SAML 2.0** — Enterprise SAML for Active Directory, Okta, Auth0
+- **OIDC** — Works with Okta, Auth0, Azure AD, Google, AWS Cognito, Keycloak, Authentik
+- **SAML 2.0** — Enterprise SAML for Active Directory, Okta, Ping Identity, OneLogin
 - **Role-based access** — Admin, Manager, Agent Developer, Viewer
+- **Auto-discovery** — Set `OIDC_ISSUER_URL` and endpoints are auto-configured
 
 ### Multi-Tenant Organizations
 
@@ -106,10 +107,19 @@ Transparent LLM proxy that enforces policies:
 # Start enterprise stack
 docker compose up -d
 
-# Configure
+# Configure with any OIDC provider
 export AGENTCOST_EDITION=enterprise
 export AGENTCOST_AUTH_ENABLED=true
+export OIDC_ISSUER_URL=https://your-idp.example.com/realms/agentcost
+export OIDC_CLIENT_ID=agentcost-api
+export OIDC_CLIENT_SECRET=your-secret
+```
+
+Or use legacy Keycloak env vars (still supported):
+
+```bash
 export KEYCLOAK_URL=http://localhost:8180
+export KEYCLOAK_REALM=agentcost
 ```
 
 See [Self-Hosting Guide](../guides/self-hosting.md) for full setup.

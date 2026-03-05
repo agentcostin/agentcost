@@ -47,12 +47,15 @@ That's it. Every LLM call is now tracked with model, tokens, cost, latency, and 
 | Feature | Description |
 |---------|-------------|
 | **Tracing SDK** | Wrap any OpenAI/Anthropic/LiteLLM client in one line |
-| **Dashboard** | 6-tab web UI: overview, costs, forecasts, optimizer, analytics, estimator |
+| **2,610+ Model Pricing** | Vendored pricing from 40+ providers, auto-synced weekly |
+| **Dashboard** | 7-tab web UI with real-time model search across all providers |
+| **Cost Intelligence** | Tier classification, complexity routing, budget gates, token analysis |
 | **Cost Forecasting** | Predict next 7/14/30 days of spending |
 | **Cost Optimizer** | Model downgrade recommendations with savings estimates |
-| **Prompt Estimator** | Pre-call cost estimation for 42 models |
+| **Prompt Estimator** | Pre-call cost estimation across 2,610+ models |
+| **Reactions Engine** | YAML-driven event reactions (budget alerts, auto-suspend, webhooks) |
+| **8-Slot Plugin System** | Notifier, Policy, Exporter, Provider, Tracker, Reactor, Runtime, Agent |
 | **Framework Integrations** | LangChain, CrewAI, AutoGen, LlamaIndex |
-| **Plugin System** | Extensible with community and custom plugins |
 | **Exporters** | OpenTelemetry, Prometheus, Grafana |
 | **CLI** | Benchmark, compare, trace, budget management |
 | **TypeScript SDK** | Full Node.js/Deno/Bun support |

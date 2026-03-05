@@ -14,7 +14,7 @@
 
 ---
 
-**AI costs are invisible, unpredictable, and uncontrolled.** Teams deploy agents across OpenAI, Anthropic, Google, and open-source models with no idea what they're actually spending — or whether cheaper models would work just as well. AgentCost fixes that.
+**AI costs are invisible, unpredictable, and uncontrolled.** Teams deploy agents across OpenAI, Anthropic, Google, and open-source models with no idea what they're actually spending — or whether cheaper models would work just as well. AgentCost fixes that with a vendored pricing database of **2,610+ models from 40+ providers**, automatic cost-tier classification, and intelligent model routing.
 
 ## Quickstart
 
@@ -48,7 +48,7 @@ curl -X POST http://localhost:8500/api/seed -H "Content-Type: application/json" 
 agentcost dashboard
 ```
 
-The dashboard gives you six intelligence views:
+The dashboard gives you seven intelligence views:
 
 | View | What it shows |
 |------|---------------|
@@ -57,7 +57,8 @@ The dashboard gives you six intelligence views:
 | **Forecasting** | Predicted costs for next 7/14/30 days, budget exhaustion alerts |
 | **Optimizer** | Model downgrade recommendations with estimated savings |
 | **Analytics** | Token efficiency, top spenders, chargeback reports |
-| **Estimator** | Pre-call cost estimation — compare 42 models before you call |
+| **Estimator** | Pre-call cost estimation across 2,610+ models |
+| **Models** | Search/filter all models by provider, tier, cost range, context window |
 
 ## Framework Support
 
@@ -197,7 +198,7 @@ docker compose -f docker-compose.dev.yml up
 ### Enterprise Edition
 
 ```bash
-# Full stack: PostgreSQL + Keycloak SSO + API
+# Full stack: PostgreSQL + SSO + API
 docker compose up -d
 
 # Configure SSO
@@ -212,7 +213,7 @@ For teams and organizations that need governance:
 
 | Feature | Description |
 |---------|-------------|
-| **SSO/SAML** | Keycloak integration, OIDC + SAML 2.0 |
+| **SSO/SAML** | Any OIDC/SAML provider (Okta, Auth0, Azure AD, Keycloak) |
 | **Organizations** | Multi-tenant team management with roles |
 | **Budget Enforcement** | Cost centers, allocations, pre-call validation |
 | **Policy Engine** | JSON rules: block models, cap costs, require approval |
@@ -235,7 +236,9 @@ Enterprise features are source-available under BSL 1.1. See [enterprise/LICENSE]
 | `AGENTCOST_EDITION` | `auto` | `community`, `enterprise`, or `auto` |
 | `AGENTCOST_AUTH_ENABLED` | `false` | Enable SSO (enterprise) |
 | `AGENTCOST_DB_URL` | SQLite | PostgreSQL connection string |
-| `KEYCLOAK_URL` | — | Keycloak server URL |
+| `OIDC_ISSUER_URL` | — | OIDC provider URL (e.g., https://auth.example.com/realms/app) |
+| `OIDC_CLIENT_ID` | agentcost-api | OIDC client ID |
+| `OIDC_CLIENT_SECRET` | — | OIDC client secret |
 
 ## Contributing
 

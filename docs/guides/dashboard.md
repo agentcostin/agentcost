@@ -1,6 +1,6 @@
 # Dashboard Guide
 
-The AgentCost dashboard provides six intelligence views for understanding and controlling your AI costs.
+The AgentCost dashboard provides seven intelligence views for understanding and controlling your AI costs.
 
 ## Launching the Dashboard
 
@@ -70,7 +70,20 @@ Deep-dive analysis:
 
 ### Estimator
 
-Pre-call cost estimation. Enter a prompt and compare estimated costs across 42 models before making expensive API calls.
+Pre-call cost estimation. Enter a prompt and compare estimated costs across 2,610+ models before making expensive API calls.
+
+### Models Explorer
+
+Search and filter the full model pricing database:
+
+- **Real-time search** by model name across 2,610+ models
+- **Filter by provider** — OpenAI, Anthropic, Google, Groq, DeepSeek, Bedrock, Azure, and 30+ more
+- **Filter by tier** — Economy, Standard, Premium, Free
+- **Filter by cost range** — Set max input cost per 1M tokens
+- **Filter by context window** — Minimum context size
+- **Click any model** for detailed pricing, tier classification, and capability info (vision, tools)
+
+The Models Explorer is powered by the vendored pricing API at `/api/models`, which serves data from the same 2,610-model database used for cost calculation.
 
 ## API Endpoints
 

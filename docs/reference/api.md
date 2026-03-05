@@ -201,7 +201,7 @@ Available when `AGENTCOST_EDITION=enterprise`.
 ### Authentication
 
 ```
-GET  /auth/login         → Redirect to Keycloak
+GET  /auth/login         → Redirect to OIDC provider
 GET  /auth/callback      → OIDC callback
 GET  /auth/me            → Current user info
 POST /auth/logout        → Logout
@@ -243,4 +243,66 @@ GET    /policy/approvals/stats
 GET  /notify/channels     → List channels
 POST /notify/channels     → Create channel
 GET  /notify/scorecards   → Agent scorecards
+```
+
+## Model Registry API
+
+Available in all editions (community + enterprise).
+
+### List Models
+
+```
+GET /api/models?provider=openai&tier=standard&limit=100&sort=input_asc
+```
+
+Returns paginated model list from the 2,610+ vendored pricing database.
+
+Query parameters: `provider`, `tier`, `mode`, `limit`, `offset`, `sort` (input_asc, input_desc, name, provider).
+
+### Tier Summary
+
+```
+GET /api/models/tiers?limit_per_tier=50
+```
+
+Returns tier classification summary with grouped models (economy, standard, premium, free).
+
+### Search Models
+
+```
+GET /api/models/search?q=gpt-4&provider=openai&tier=standard&max_input=5&min_context=100&limit=50
+```
+
+Real-time search with filters for provider, tier, cost range, and context window.
+
+### Providers
+
+```
+GET /api/models/providers
+```
+
+Returns all providers with model counts.
+
+### Single Model
+
+```
+GET /api/models/{model_id}
+```
+
+Full model detail: pricing, tier, context window, capabilities (vision, tools).
+
+## Reactions API
+
+YAML-driven cost event reactions, available in all editions.
+
+```
+GET    /reactions           → List all reactions
+POST   /reactions           → Create reaction
+DELETE /reactions/{name}    → Delete reaction
+POST   /reactions/{name}/enable
+POST   /reactions/{name}/disable
+POST   /reactions/{name}/trigger  → Manual trigger
+GET    /reactions/history   → Reaction execution history
+GET    /reactions/stats     → Engine statistics
+POST   /reactions/reload    → Reload from YAML
 ```

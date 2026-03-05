@@ -102,6 +102,6 @@ agentcost info
 ## Next Steps
 
 - [Core Concepts](concepts.md) — Understand traces, projects, agents, sessions
-- [Dashboard Guide](guides/dashboard.md) — Tour of all 6 intelligence views
+- [Dashboard Guide](guides/dashboard.md) — Tour of all 7 intelligence views
 - [Python SDK Reference](reference/python-sdk.md) — Full API documentation
 - [Framework Guides](guides/langchain.md) — LangChain, CrewAI, AutoGen, LlamaIndex

@@ -22,7 +22,7 @@ Dashboard at [http://localhost:8100](http://localhost:8100).
 
 ## Enterprise Edition
 
-Full stack with PostgreSQL, Keycloak SSO, and all enterprise features:
+Full stack with PostgreSQL, SSO, and all enterprise features:
 
 ```bash
 git clone https://github.com/agentcostin/agentcost.git
@@ -38,7 +38,7 @@ This starts:
 |---------|------|---------|
 | AgentCost API | 8100 | Dashboard + REST API |
 | PostgreSQL | 5432 | Application data |
-| Keycloak | 8180 | SSO/SAML authentication |
+| (Your IdP) | — | SSO via OIDC_ISSUER_URL env var |
 
 ### Environment Variables
 
@@ -91,7 +91,7 @@ AGENTCOST_DB_URL=postgresql://agentcost:agentcost@localhost:5432/agentcost
 ### Checklist
 
 - [ ] PostgreSQL with connection pooling (PgBouncer)
-- [ ] Keycloak connected to your identity provider (LDAP, SAML, OIDC)
+- [ ] OIDC_ISSUER_URL configured for your identity provider
 - [ ] TLS termination at load balancer
 - [ ] `SESSION_SECRET` set to a strong random value (32+ bytes)
 - [ ] Default passwords changed

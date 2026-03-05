@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending">
+        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending across 2,610+ models">
       
       
       
@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -626,10 +626,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cost-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complexity-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complexity Router
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#budget-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Budget Gates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cost-intelligence" class="md-nav__link">
     <span class="md-ellipsis">
       
         Cost Intelligence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plugin-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugin Architecture
       
     </span>
   </a>
@@ -743,6 +787,34 @@
     
   
     Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/intelligence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Intelligence
   
 
     
@@ -1346,10 +1418,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cost-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complexity-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complexity Router
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#budget-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Budget Gates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cost-intelligence" class="md-nav__link">
     <span class="md-ellipsis">
       
         Cost Intelligence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plugin-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugin Architecture
       
     </span>
   </a>
@@ -1475,16 +1591,146 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">client</span> <span class="o">=</span> <span class="n">trace</span><span class="p">(</span><span class="n">OpenAI</span><span class="p">(),</span> <span class="n">project</span><span class="o">=</span><span class="s2">&quot;support&quot;</span><span class="p">,</span> <span class="n">session_id</span><span class="o">=</span><span class="s2">&quot;conv-12345&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="cost-calculation">Cost Calculation</h2>
-<p>AgentCost calculates costs using a built-in model registry covering 42 models:</p>
+<p>AgentCost calculates costs using a vendored pricing database of 2,610+ models from 40+ providers (sourced from LiteLLM's community-maintained dataset, synced weekly):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cost = (input_tokens × input_price + output_tokens × output_price) / 1,000,000
 </code></pre></div>
-<p>The model registry (<code>dashboard/js/models.js</code>) is the single source of truth for pricing and is updated with each release.</p>
+<p>The vendored data lives in <code>agentcost/cost/model_prices.json</code> and is the single source of truth. Custom pricing overrides can be added via <code>overrides.json</code> or at runtime with <code>register_model()</code>. Cache-aware pricing is supported for Anthropic prompt caching and OpenAI cached tokens.</p>
+<h2 id="cost-tiers">Cost Tiers</h2>
+<p>Every model is automatically classified into a cost tier based on input pricing:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Price Range (per 1M input tokens)</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Economy</strong></td>
+<td>&lt; $0.50</td>
+<td>gpt-4o-mini, Claude 3 Haiku</td>
+</tr>
+<tr>
+<td><strong>Standard</strong></td>
+<td>$0.50 – $5.00</td>
+<td>gpt-4o, Claude Sonnet</td>
+</tr>
+<tr>
+<td><strong>Premium</strong></td>
+<td>&gt; $5.00</td>
+<td>o1, Claude Opus</td>
+</tr>
+<tr>
+<td><strong>Free</strong></td>
+<td>$0.00</td>
+<td>Ollama/local models</td>
+</tr>
+</tbody>
+</table>
+<p>Tiers integrate with the policy engine (restrict agents to specific tiers), budget gates (block premium when budget is low), and the complexity router.</p>
+<h2 id="complexity-router">Complexity Router</h2>
+<p>The complexity router auto-classifies each prompt and routes to the appropriate cost tier:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Routes To</th>
+<th>Triggers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SIMPLE</strong></td>
+<td>Economy</td>
+<td>Short factual questions, yes/no, lookups</td>
+</tr>
+<tr>
+<td><strong>MEDIUM</strong></td>
+<td>Standard</td>
+<td>Summarization, moderate generation</td>
+</tr>
+<tr>
+<td><strong>COMPLEX</strong></td>
+<td>Standard</td>
+<td>Code review, architecture design, analysis</td>
+</tr>
+<tr>
+<td><strong>REASONING</strong></td>
+<td>Premium</td>
+<td>Mathematical proofs, chain-of-thought, logic</td>
+</tr>
+</tbody>
+</table>
+<h2 id="budget-gates">Budget Gates</h2>
+<p>Pre-execution budget checks at each workflow step:</p>
+<ul>
+<li><strong>ALLOW</strong> — Budget is healthy, proceed</li>
+<li><strong>WARN</strong> (80%) — Budget warning, proceed but emit alert</li>
+<li><strong>DOWNGRADE</strong> (90%) — Auto-switch to cheaper model (e.g., gpt-4o → gpt-4o-mini)</li>
+<li><strong>BLOCK</strong> (100%) — Budget exhausted, deny the call</li>
+</ul>
 <h2 id="cost-intelligence">Cost Intelligence</h2>
-<p>AgentCost provides four intelligence modules on top of raw trace data:</p>
+<p>AgentCost provides five intelligence modules on top of raw trace data:</p>
 <p><strong>Forecasting</strong> — Predicts future costs using linear regression, exponential moving average (EMA), and ensemble methods. Includes budget exhaustion prediction.</p>
 <p><strong>Optimizer</strong> — Analyzes your usage patterns and recommends cheaper models that could handle the same workloads. Shows estimated savings.</p>
 <p><strong>Analytics</strong> — Breakdowns by model, project, agent, and time. Token efficiency metrics and chargeback reports.</p>
-<p><strong>Estimator</strong> — Pre-call cost estimation. Before making an expensive LLM call, estimate what it will cost across 42 models.</p>
+<p><strong>Estimator</strong> — Pre-call cost estimation. Before making an expensive LLM call, estimate what it will cost across 2,610+ models.</p>
+<p><strong>Token Analyzer</strong> — Context efficiency scoring (0–100). Detects wasteful patterns: excessive system prompts, under-utilized context windows, and low output ratios.</p>
+<h2 id="plugin-architecture">Plugin Architecture</h2>
+<p>AgentCost uses an 8-slot plugin system. Every integration point is swappable:</p>
+<table>
+<thead>
+<tr>
+<th>Slot</th>
+<th>Plugin Class</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Notifier</td>
+<td><code>NotifierPlugin</code></td>
+<td>Alerts (Slack, email, webhook, PagerDuty)</td>
+</tr>
+<tr>
+<td>2. Policy</td>
+<td><code>PolicyPlugin</code></td>
+<td>Custom policy evaluation rules</td>
+</tr>
+<tr>
+<td>3. Exporter</td>
+<td><code>ExporterPlugin</code></td>
+<td>Export traces (S3, Snowflake, Datadog)</td>
+</tr>
+<tr>
+<td>4. Provider</td>
+<td><code>ProviderPlugin</code></td>
+<td>Cost calculation for custom LLM providers</td>
+</tr>
+<tr>
+<td>5. Tracker</td>
+<td><code>TrackerPlugin</code></td>
+<td>Cost tracking backends (in-memory, DB, Langfuse)</td>
+</tr>
+<tr>
+<td>6. Reactor</td>
+<td><code>ReactorPlugin</code></td>
+<td>Custom reaction action handlers</td>
+</tr>
+<tr>
+<td>7. Runtime</td>
+<td><code>RuntimePlugin</code></td>
+<td>Model routing, rate limiting, feature flags</td>
+</tr>
+<tr>
+<td>8. Agent</td>
+<td><code>AgentPlugin</code></td>
+<td>Agent lifecycle management, workspace config</td>
+</tr>
+</tbody>
+</table>
+<p>Built-in plugins ship out of the box: 4 notifiers, InMemoryTracker, AgentLifecycle, PagerDutyReactor.</p>
 <h2 id="data-storage">Data Storage</h2>
 <p><strong>Community edition</strong>: SQLite database (zero configuration, file-based).</p>
 <p><strong>Enterprise edition</strong>: PostgreSQL with connection pooling for production workloads.</p>
@@ -1505,7 +1751,27 @@
 <td style="text-align: center;">✅</td>
 </tr>
 <tr>
-<td>Dashboard</td>
+<td>Dashboard + Models Explorer</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>2,610+ Model Pricing</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Cost Tiers &amp; Complexity Router</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Budget Gates</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Token Analyzer</td>
 <td style="text-align: center;">✅</td>
 <td style="text-align: center;">✅</td>
 </tr>
@@ -1530,7 +1796,12 @@
 <td style="text-align: center;">✅</td>
 </tr>
 <tr>
-<td>Plugins</td>
+<td>8-Slot Plugin System</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Reactions Engine (YAML)</td>
 <td style="text-align: center;">✅</td>
 <td style="text-align: center;">✅</td>
 </tr>
@@ -1545,7 +1816,7 @@
 <td style="text-align: center;">✅</td>
 </tr>
 <tr>
-<td>SSO/SAML</td>
+<td>SSO (any OIDC/SAML provider)</td>
 <td style="text-align: center;">—</td>
 <td style="text-align: center;">✅</td>
 </tr>

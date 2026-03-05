@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending">
+        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending across 2,610+ models">
       
       
       
@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -616,6 +616,34 @@
     
   
     Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/intelligence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Intelligence
   
 
     
@@ -1388,6 +1416,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#model-registry-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Registry API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Registry API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tier-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reactions-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reactions API
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1978,6 +2089,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#model-registry-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Registry API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Registry API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tier-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reactions-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reactions API
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2124,7 +2318,7 @@
 <h2 id="enterprise-endpoints">Enterprise Endpoints</h2>
 <p>Available when <code>AGENTCOST_EDITION=enterprise</code>.</p>
 <h3 id="authentication">Authentication</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>GET  /auth/login         → Redirect to Keycloak
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>GET  /auth/login         → Redirect to OIDC provider
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>GET  /auth/callback      → OIDC callback
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>GET  /auth/me            → Current user info
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>POST /auth/logout        → Logout
@@ -2154,6 +2348,41 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>GET  /notify/channels     → List channels
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>POST /notify/channels     → Create channel
 <a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>GET  /notify/scorecards   → Agent scorecards
+</code></pre></div>
+<h2 id="model-registry-api">Model Registry API</h2>
+<p>Available in all editions (community + enterprise).</p>
+<h3 id="list-models">List Models</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>GET /api/models?provider=openai&amp;tier=standard&amp;limit=100&amp;sort=input_asc
+</code></pre></div>
+<p>Returns paginated model list from the 2,610+ vendored pricing database.</p>
+<p>Query parameters: <code>provider</code>, <code>tier</code>, <code>mode</code>, <code>limit</code>, <code>offset</code>, <code>sort</code> (input_asc, input_desc, name, provider).</p>
+<h3 id="tier-summary">Tier Summary</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>GET /api/models/tiers?limit_per_tier=50
+</code></pre></div>
+<p>Returns tier classification summary with grouped models (economy, standard, premium, free).</p>
+<h3 id="search-models">Search Models</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>GET /api/models/search?q=gpt-4&amp;provider=openai&amp;tier=standard&amp;max_input=5&amp;min_context=100&amp;limit=50
+</code></pre></div>
+<p>Real-time search with filters for provider, tier, cost range, and context window.</p>
+<h3 id="providers">Providers</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>GET /api/models/providers
+</code></pre></div>
+<p>Returns all providers with model counts.</p>
+<h3 id="single-model">Single Model</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>GET /api/models/{model_id}
+</code></pre></div>
+<p>Full model detail: pricing, tier, context window, capabilities (vision, tools).</p>
+<h2 id="reactions-api">Reactions API</h2>
+<p>YAML-driven cost event reactions, available in all editions.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>GET    /reactions           → List all reactions
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>POST   /reactions           → Create reaction
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>DELETE /reactions/{name}    → Delete reaction
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>POST   /reactions/{name}/enable
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>POST   /reactions/{name}/disable
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>POST   /reactions/{name}/trigger  → Manual trigger
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>GET    /reactions/history   → Reaction execution history
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>GET    /reactions/stats     → Engine statistics
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>POST   /reactions/reload    → Reload from YAML
 </code></pre></div>
 
 

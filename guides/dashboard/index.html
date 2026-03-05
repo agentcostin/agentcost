@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending">
+        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending across 2,610+ models">
       
       
       
@@ -16,14 +16,14 @@
         <link rel="prev" href="../../concepts/">
       
       
-        <link rel="next" href="../langchain/">
+        <link rel="next" href="../intelligence/">
       
       
         
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -770,6 +770,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#models-explorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Models Explorer
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -790,6 +801,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intelligence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1440,6 +1479,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#models-explorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Models Explorer
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1477,7 +1527,7 @@
 
 
 <h1 id="dashboard-guide">Dashboard Guide</h1>
-<p>The AgentCost dashboard provides six intelligence views for understanding and controlling your AI costs.</p>
+<p>The AgentCost dashboard provides seven intelligence views for understanding and controlling your AI costs.</p>
 <h2 id="launching-the-dashboard">Launching the Dashboard</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>agentcost<span class="w"> </span>dashboard
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># → http://localhost:8500</span>
@@ -1523,7 +1573,18 @@
 <li><strong>Chargeback reports</strong> — Cost allocation by team/project</li>
 </ul>
 <h3 id="estimator">Estimator</h3>
-<p>Pre-call cost estimation. Enter a prompt and compare estimated costs across 42 models before making expensive API calls.</p>
+<p>Pre-call cost estimation. Enter a prompt and compare estimated costs across 2,610+ models before making expensive API calls.</p>
+<h3 id="models-explorer">Models Explorer</h3>
+<p>Search and filter the full model pricing database:</p>
+<ul>
+<li><strong>Real-time search</strong> by model name across 2,610+ models</li>
+<li><strong>Filter by provider</strong> — OpenAI, Anthropic, Google, Groq, DeepSeek, Bedrock, Azure, and 30+ more</li>
+<li><strong>Filter by tier</strong> — Economy, Standard, Premium, Free</li>
+<li><strong>Filter by cost range</strong> — Set max input cost per 1M tokens</li>
+<li><strong>Filter by context window</strong> — Minimum context size</li>
+<li><strong>Click any model</strong> for detailed pricing, tier classification, and capability info (vision, tools)</li>
+</ul>
+<p>The Models Explorer is powered by the vendored pricing API at <code>/api/models</code>, which serves data from the same 2,610-model database used for cost calculation.</p>
 <h2 id="api-endpoints">API Endpoints</h2>
 <p>All dashboard views are powered by REST endpoints you can use directly:</p>
 <table>

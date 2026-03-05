@@ -2,74 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.agentcost.in/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/changelog/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/concepts/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/contributing/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/getting-started/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/enterprise/overview/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/guides/autogen/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/guides/crewai/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/guides/dashboard/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/guides/exporters/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.agentcost.in/guides/intelligence/</loc>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/guides/langchain/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/guides/llamaindex/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/guides/plugins/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/guides/self-hosting/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/reference/api/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/reference/cli/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/reference/python-sdk/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
          <loc>https://docs.agentcost.in/reference/typescript-sdk/</loc>
-         <lastmod>2026-03-03</lastmod>
+         <lastmod>2026-03-05</lastmod>
     </url>
 </urlset>

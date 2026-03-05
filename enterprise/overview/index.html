@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending">
+        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending across 2,610+ models">
       
       
       
@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -616,6 +616,34 @@
     
   
     Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/intelligence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Intelligence
   
 
     
@@ -1547,11 +1575,12 @@
 <p><strong>License:</strong> Business Source License 1.1 (source-available, converts to Apache 2.0 after 3 years)</p>
 <h2 id="feature-overview">Feature Overview</h2>
 <h3 id="ssosaml-authentication">SSO/SAML Authentication</h3>
-<p>Integrate with your existing identity provider via Keycloak:</p>
+<p>Integrate with any standards-compliant identity provider:</p>
 <ul>
-<li><strong>OIDC</strong> — OpenID Connect for modern identity providers</li>
-<li><strong>SAML 2.0</strong> — Enterprise SAML for Active Directory, Okta, Auth0</li>
+<li><strong>OIDC</strong> — Works with Okta, Auth0, Azure AD, Google, AWS Cognito, Keycloak, Authentik</li>
+<li><strong>SAML 2.0</strong> — Enterprise SAML for Active Directory, Okta, Ping Identity, OneLogin</li>
 <li><strong>Role-based access</strong> — Admin, Manager, Agent Developer, Viewer</li>
+<li><strong>Auto-discovery</strong> — Set <code>OIDC_ISSUER_URL</code> and endpoints are auto-configured</li>
 </ul>
 <h3 id="multi-tenant-organizations">Multi-Tenant Organizations</h3>
 <ul>
@@ -1650,10 +1679,16 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Start enterprise stack</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Configure</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Configure with any OIDC provider</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">AGENTCOST_EDITION</span><span class="o">=</span>enterprise
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">AGENTCOST_AUTH_ENABLED</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KEYCLOAK_URL</span><span class="o">=</span>http://localhost:8180
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OIDC_ISSUER_URL</span><span class="o">=</span>https://your-idp.example.com/realms/agentcost
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OIDC_CLIENT_ID</span><span class="o">=</span>agentcost-api
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OIDC_CLIENT_SECRET</span><span class="o">=</span>your-secret
+</code></pre></div>
+<p>Or use legacy Keycloak env vars (still supported):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KEYCLOAK_URL</span><span class="o">=</span>http://localhost:8180
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KEYCLOAK_REALM</span><span class="o">=</span>agentcost
 </code></pre></div>
 <p>See <a href="../../guides/self-hosting/">Self-Hosting Guide</a> for full setup.</p>
 <h2 id="contact">Contact</h2>

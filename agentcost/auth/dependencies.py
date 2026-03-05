@@ -2,9 +2,9 @@
 FastAPI Auth Dependencies — Injected into route handlers via Depends().
 
 Three authentication strategies, tried in order:
-  1. Bearer JWT (Authorization: Bearer <token>) — OIDC from Keycloak
+  1. Bearer JWT (Authorization: Bearer <token>) — from OIDC provider
   2. API Key (X-AgentCost-Key: ac_live_xxx) — SDK / agent traffic
-  3. Session cookie (agentcost_session) — post-SAML browser sessions
+  3. Session cookie (agentcost_session) — post-SAML/OIDC browser sessions
 
 If AGENTCOST_AUTH_ENABLED=false, all endpoints get an anonymous context.
 

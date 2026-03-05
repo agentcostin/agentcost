@@ -1,12 +1,13 @@
 """
-JWT Provider — Validates Keycloak-issued JWTs using JWKS (RS256).
+JWT Provider — Validates OIDC-issued JWTs using JWKS (RS256).
 
 Features:
-  - Fetches and caches Keycloak's JWKS public keys
+  - Fetches and caches JWKS public keys from any OIDC provider
   - Auto-refreshes keys on signature failure (key rotation)
   - Validates issuer, audience, expiry, and custom claims
   - Returns TokenClaims dataclass on success
 
+Works with any OIDC-compliant IdP (Okta, Auth0, Azure AD, Keycloak, etc.).
 This module has NO FastAPI dependency — can be used from CLI, workers, etc.
 """
 
@@ -44,7 +45,7 @@ def _ensure_imports():
 
 
 class JWKSKeyCache:
-    """Fetches and caches JWKS signing keys from Keycloak.
+    """Fetches and caches JWKS signing keys from the OIDC provider.
 
     Keys are refreshed:
       - On first request
@@ -59,12 +60,12 @@ class JWKSKeyCache:
         self._last_fetch: float = 0
 
     def _fetch(self) -> None:
-        """Download JWKS from Keycloak."""
+        """Download JWKS from the OIDC provider."""
         _ensure_imports()
         import urllib.request
         import ssl
 
-        # In dev, Keycloak runs on HTTP — skip SSL verification
+        # In dev, IdP may run on HTTP — skip SSL verification
         ctx = ssl.create_default_context()
         ctx.check_hostname = False
         ctx.verify_mode = ssl.CERT_NONE
@@ -131,7 +132,7 @@ def reset_key_cache() -> None:
 
 
 def validate_jwt(token: str, config: Optional[AuthConfig] = None) -> TokenClaims:
-    """Validate a Keycloak-issued JWT and return structured claims.
+    """Validate an OIDC-issued JWT and return structured claims.
 
     Steps:
       1. Decode header to get `kid` (key ID)
@@ -164,11 +165,10 @@ def validate_jwt(token: str, config: Optional[AuthConfig] = None) -> TokenClaims
         key = cache.get_key(kid, force_refresh=True)
 
     # Step 3: verify and decode
-    # Accept both internal (http://keycloak:8080) and public (http://localhost:8180)
-    # issuer URLs, since Keycloak signs tokens with the URL the user logged in through.
+    # Accept both internal and public issuer URLs
     valid_issuers = {cfg.issuer_url, cfg.public_issuer_url}
 
-    # Decode — Keycloak access tokens may not include 'aud' claim,
+    # Decode — some OIDC providers may not include 'aud' claim in access tokens,
     # so we validate audience only if present.
     payload = _jwt.decode(
         token,
@@ -178,7 +178,7 @@ def validate_jwt(token: str, config: Optional[AuthConfig] = None) -> TokenClaims
         options={
             "verify_exp": True,
             "verify_iss": False,  # We check manually below
-            "verify_aud": False,  # Keycloak doesn't always include aud
+            "verify_aud": False,  # Some providers don't always include aud
             "require": ["exp", "iss", "sub"],
         },
     )

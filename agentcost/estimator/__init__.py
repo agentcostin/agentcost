@@ -33,65 +33,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
-
-# Pricing per 1M tokens (input, output) — Feb 2026 approximate
-MODEL_PRICING = {
-    # ── OpenAI ─── (per 1M tokens: input, output) ─────────────────────────
-    # GPT-5.x (latest)
-    "gpt-5.2": (1.75, 14.00),
-    "gpt-5.2-pro": (21.00, 168.00),
-    "gpt-5.2-codex": (1.75, 14.00),
-    "gpt-5.1": (1.25, 10.00),
-    "gpt-5.1-codex": (1.25, 10.00),
-    "gpt-5.1-codex-mini": (0.25, 2.00),
-    "gpt-5": (1.25, 10.00),
-    "gpt-5-mini": (0.25, 2.00),
-    "gpt-5-nano": (0.05, 0.40),
-    # GPT-4.x (current)
-    "gpt-4.1": (2.00, 8.00),
-    "gpt-4.1-mini": (0.40, 1.60),
-    "gpt-4.1-nano": (0.10, 0.40),
-    "gpt-4o": (2.50, 10.00),
-    "gpt-4o-mini": (0.15, 0.60),
-    # OpenAI reasoning
-    "o4-mini": (1.10, 4.40),
-    "o3": (2.00, 8.00),
-    "o3-mini": (1.10, 4.40),
-    # OpenAI open-source
-    "gpt-oss-20b": (0.03, 0.14),
-    "gpt-oss-120b": (0.039, 0.19),
-    # ── Anthropic ─── (per 1M tokens: input, output) ──────────────────────
-    # Claude 4.6 (Feb 2026 — latest)
-    "claude-opus-4-6": (5.00, 25.00),
-    "claude-sonnet-4-6": (3.00, 15.00),
-    # Claude 4.5 (Nov 2025)
-    "claude-opus-4-5": (5.00, 25.00),
-    "claude-sonnet-4-5": (3.00, 15.00),
-    "claude-haiku-4-5": (1.00, 5.00),
-    # Claude 4.x (legacy, still active)
-    "claude-sonnet-4": (3.00, 15.00),
-    # ── Google Gemini ─── (per 1M tokens: input, output) ──────────────────
-    "gemini-3-pro": (2.00, 12.00),
-    "gemini-2.5-pro": (1.25, 10.00),
-    "gemini-2.5-flash": (0.15, 0.60),
-    "gemini-2.5-flash-lite": (0.10, 0.40),
-    "gemini-2.0-flash": (0.10, 0.40),
-    # ── xAI Grok ─── (per 1M tokens: input, output) ──────────────────────
-    "grok-4": (3.00, 15.00),
-    "grok-4-fast": (0.20, 0.50),
-    "grok-4.1-fast": (0.20, 0.50),
-    # ── DeepSeek ─── (per 1M tokens: input, output) ──────────────────────
-    "deepseek-chat": (0.28, 0.42),
-    "deepseek-reasoner": (0.28, 0.42),
-    "deepseek-r1": (0.55, 2.19),
-    # ── Local / Self-hosted (free) ────────────────────────────────────────
-    "llama3:8b": (0.0, 0.0),
-    "llama3:70b": (0.0, 0.0),
-    "mistral": (0.0, 0.0),
-    "mixtral": (0.0, 0.0),
-    "gemma2": (0.0, 0.0),
-    "qwen2": (0.0, 0.0),
-}
+from ..cost.calculator import (
+    get_pricing_per_1m,
+    list_models,
+    register_model_per_1m,
+    estimate_tokens,
+)
 
 # Average output-to-input ratios by task type
 OUTPUT_RATIOS = {
@@ -143,28 +90,23 @@ class CostEstimator:
     """Pre-call cost estimator for LLM requests."""
 
     def __init__(self, custom_pricing: Dict[str, tuple] = None):
-        self._pricing = dict(MODEL_PRICING)
         if custom_pricing:
-            self._pricing.update(custom_pricing)
+            for model, (inp, out) in custom_pricing.items():
+                register_model_per_1m(model, inp, out)
 
     def add_pricing(self, model: str, input_per_1m: float, output_per_1m: float):
         """Add or update model pricing."""
-        self._pricing[model] = (input_per_1m, output_per_1m)
+        register_model_per_1m(model, input_per_1m, output_per_1m)
 
     @property
     def supported_models(self) -> List[str]:
-        return sorted(self._pricing.keys())
+        return list_models()
 
     def count_tokens(self, text: str) -> int:
         """
-        Approximate token count using the ~4 chars per token heuristic.
-        For production, use tiktoken — this is a fast approximation.
+        Approximate token count using tiktoken (if available) or ~4 chars/token.
         """
-        if not text:
-            return 0
-        # Rough approximation: ~4 chars per token for English
-        # This works well for GPT-style tokenizers
-        return max(1, len(text) // 4)
+        return estimate_tokens(text)
 
     def count_message_tokens(self, messages: List[dict]) -> int:
         """Estimate token count for a list of chat messages."""
@@ -241,6 +183,12 @@ class CostEstimator:
             results.append(est)
         return results
 
+    # Popular models for quick comparison (used when no models specified)
+    _DEFAULT_COMPARE_MODELS = [
+        "gpt-4o", "gpt-4o-mini", "claude-sonnet-4-5-20250929",
+        "claude-haiku-4-5-20251001", "gemini-2.0-flash", "deepseek-chat",
+    ]
+
     def compare_models(
         self, prompt: str, models: List[str] = None, task_type: str = "default"
     ) -> List[dict]:
@@ -249,7 +197,7 @@ class CostEstimator:
         Returns sorted by cost (cheapest first).
         """
         if models is None:
-            models = list(self._pricing.keys())
+            models = self._DEFAULT_COMPARE_MODELS
 
         estimates = []
         for model in models:
@@ -273,16 +221,19 @@ class CostEstimator:
         if max_output_tokens:
             estimated_output = min(estimated_output, max_output_tokens)
 
-        # Look up pricing
-        pricing = self._get_pricing(model)
-        input_price, output_price = pricing
+        # Look up pricing via vendored cost map (2,600+ models)
+        pricing = get_pricing_per_1m(model)
+        input_price = pricing["input"]
+        output_price = pricing["output"]
 
         cost_in = input_tokens * input_price / 1_000_000
         cost_out = estimated_output * output_price / 1_000_000
         total_cost = cost_in + cost_out
 
         # Determine confidence
-        if model in self._pricing:
+        from ..cost.calculator import get_model_info as _get_info
+        info = _get_info(model)
+        if info is not None:
             pricing_source = (
                 "free" if input_price == 0 and output_price == 0 else "known"
             )
@@ -303,16 +254,3 @@ class CostEstimator:
             pricing_source=pricing_source,
             task_type=task_type,
         )
-
-    def _get_pricing(self, model: str) -> tuple:
-        """Get pricing for a model with fuzzy matching."""
-        if model in self._pricing:
-            return self._pricing[model]
-
-        # Fuzzy match: try prefix matching
-        for known_model, pricing in self._pricing.items():
-            if model.startswith(known_model) or known_model.startswith(model):
-                return pricing
-
-        # Default fallback: assume mid-range pricing
-        return (1.0, 3.0)

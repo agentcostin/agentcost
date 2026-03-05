@@ -5,6 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-03-05
+
+### Integration Phases (vendor-cost-map branch)
+
+#### Phase 1 — Vendored Cost Calculator
+- Vendored LiteLLM `model_prices_and_context_window.json` — 2,610 models from 40+ providers
+- Native cost calculator in `agentcost/cost/calculator.py` — zero external dependencies
+- Multi-strategy model name resolution (exact → strip prefix → strip tags → substring)
+- Cache-aware pricing (Anthropic prompt caching, OpenAI cached tokens)
+- `overrides.json` for custom/private model pricing, `sync_upstream.py` for updates
+- `litellm` moved from core to optional dependency
+- 80 new tests
+
+#### Phase 2 — Plugin Architecture Rewrite
+- Expanded plugin system from 6 to 8 slots: added `RuntimePlugin` (model routing, rate limiting) and `AgentPlugin` (lifecycle, workspace config)
+- 7 built-in plugins: Slack/Webhook/Email/PagerDuty notifiers, InMemoryTracker, AgentLifecycle, PagerDutyReactor
+- Agent lifecycle state machine: Registered → Active → BudgetWarning → Suspended → Resumed → Terminated
+- SDK `CostTracker` emits `budget.warning` (80%) and `budget.exceeded` (100%) via EventBus
+- Traces auto-recorded to TrackerPlugin when loaded
+- Scaffold templates for all 8 plugin types
+- 77 new tests
+
+#### Phase 3 — Cost Intelligence Layer
+- **Tier Registry**: Classifies 2,610 models into economy/standard/premium tiers from pricing data, with policy integration
+- **Token Analyzer**: Context efficiency scoring (0–100), detects excessive system prompts, under-utilization, near-limit usage
+- **Budget Gate**: Pre-execution checks with ALLOW → WARN (80%) → DOWNGRADE (90%) → BLOCK (100%), auto-downgrade chains per provider
+- **Complexity Router**: Auto-classify prompts as SIMPLE/MEDIUM/COMPLEX/REASONING, route to appropriate tier/model
+- 67 new tests
+
+#### Phase 4 — Dashboard Integration
+- 5 new API endpoints: `/api/models`, `/api/models/tiers`, `/api/models/search`, `/api/models/providers`, `/api/models/{id}`
+- Replaced hardcoded 42-model `dashboard/js/models.js` with dynamic API fetch (2,610+ models)
+- New **Models Explorer** dashboard tab with real-time search, provider/tier/cost/context filters
+- Backward-compatible: `getModel()`, `getProviders()`, `TIER_COLORS`, `PROVIDER_COLORS` preserved
+- 26 new tests
+
+#### Phase 5 — Auth Simplification
+- Replaced Keycloak-specific config with generic OIDC/SAML: works with Okta, Auth0, Azure AD, Google, any compliant IdP
+- Single `OIDC_ISSUER_URL` replaces `KEYCLOAK_URL` + `KEYCLOAK_REALM` (legacy env vars still supported)
+- Explicit endpoint overrides: `OIDC_JWKS_URL`, `OIDC_TOKEN_URL`, etc. for non-standard providers
+- OIDC auto-discovery from `{issuer}/.well-known/openid-configuration`
+- Generic SAML IdP config: `SAML_IDP_ENTITY_ID`, `SAML_IDP_SSO_URL`, `SAML_IDP_CERT`
+- Removed `docker/keycloak/` and `scripts/start-sso.sh`
+- 3 new auth config tests
+
+#### Phase 6 — Hardening
+- GitHub Action for automated weekly upstream cost map sync (`sync-pricing.yml`) with auto-PR
+- 42 end-to-end integration tests: multi-provider cost paths, reaction→notifier dispatch, SDK→tracker→budget chain, intelligence pipeline, plugin lifecycle, agent events, dashboard consistency
+- Fixed `test_heuristic_fallback` assertion range for tiktoken/heuristic compatibility
+- Verified `pyproject.toml` includes `reactions/*.yaml` and `cost/*.json` in wheel artifacts
+
 ## [1.0.0] - 2026-03-01
 
 ### Added

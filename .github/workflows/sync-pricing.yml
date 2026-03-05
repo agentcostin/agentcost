@@ -1,0 +1,85 @@
+name: Sync Upstream Cost Map
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "LiteLLM git ref to sync from (default: main)"
+        required: false
+        default: "main"
+      dry_run:
+        description: "Dry run — show diff without writing"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync upstream pricing data
+        id: sync
+        run: |
+          REF="${{ github.event.inputs.ref || 'main' }}"
+          DRY_RUN="${{ github.event.inputs.dry_run || 'false' }}"
+          if [ "$DRY_RUN" = "true" ]; then
+            python -m agentcost.cost.sync_upstream --ref "$REF" --dry-run | tee sync_output.txt
+            echo "dry_run=true" >> "$GITHUB_OUTPUT"
+          else
+            python -m agentcost.cost.sync_upstream --ref "$REF" | tee sync_output.txt
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+          fi
+          ADDED=$(grep -oP 'Added:\s+\K\d+' sync_output.txt || echo "0")
+          REMOVED=$(grep -oP 'Removed:\s+\K\d+' sync_output.txt || echo "0")
+          CHANGED=$(grep -oP 'Price changed:\s+\K\d+' sync_output.txt || echo "0")
+          TOTAL=$(grep -oP 'Models after:\s+\K\d+' sync_output.txt || echo "0")
+          echo "added=$ADDED" >> "$GITHUB_OUTPUT"
+          echo "removed=$REMOVED" >> "$GITHUB_OUTPUT"
+          echo "changed=$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet agentcost/cost/model_prices.json; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run tests
+        if: steps.diff.outputs.has_changes == 'true' && steps.sync.outputs.dry_run == 'false'
+        run: |
+          pip install -e ".[dev]" 2>/dev/null || pip install pytest pyyaml
+          pytest tests/test_calculator.py tests/test_cost_calculator.py -v --tb=short
+
+      - name: Create Pull Request
+        if: steps.diff.outputs.has_changes == 'true' && steps.sync.outputs.dry_run == 'false'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: sync upstream model pricing (${{ steps.sync.outputs.added }} added, ${{ steps.sync.outputs.changed }} changed)"
+          title: "Upstream pricing sync: ${{ steps.sync.outputs.total }} models"
+          body: |
+            ## Automated Pricing Sync
+            Synced from [BerriAI/litellm](https://github.com/BerriAI/litellm) `main`.
+            | Metric | Count |
+            |--------|-------|
+            | Total models | ${{ steps.sync.outputs.total }} |
+            | Added | ${{ steps.sync.outputs.added }} |
+            | Removed | ${{ steps.sync.outputs.removed }} |
+            | Price changed | ${{ steps.sync.outputs.changed }} |
+          branch: chore/sync-upstream-pricing
+          labels: dependencies, automated
+          delete-branch: true

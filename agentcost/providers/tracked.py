@@ -17,63 +17,16 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
-# ── Pricing per 1M tokens (early 2026 — update as needed) ───────────────────
+# ── Cost Calculation ─────────────────────────────────────────────────────────
+# Uses vendored model pricing from agentcost/cost/model_prices.json (2,600+ models).
+# No external dependency required. See agentcost.cost.calculator for details.
 
-MODEL_PRICING: dict[str, dict[str, float]] = {
-    # OpenAI
-    "gpt-4o": {"input": 2.50, "output": 10.00},
-    "gpt-4o-mini": {"input": 0.15, "output": 0.60},
-    "gpt-4-turbo": {"input": 10.00, "output": 30.00},
-    "gpt-3.5-turbo": {"input": 0.50, "output": 1.50},
-    "o1": {"input": 15.00, "output": 60.00},
-    "o1-mini": {"input": 3.00, "output": 12.00},
-    "o3-mini": {"input": 1.10, "output": 4.40},
-    # Anthropic
-    "claude-sonnet-4-5-20250929": {"input": 3.00, "output": 15.00},
-    "claude-sonnet-4-20250514": {"input": 3.00, "output": 15.00},
-    "claude-haiku-4-5-20251001": {"input": 0.80, "output": 4.00},
-    "claude-opus-4-20250514": {"input": 15.00, "output": 75.00},
-    # Google
-    "gemini-2.0-flash": {"input": 0.10, "output": 0.40},
-    "gemini-1.5-pro": {"input": 1.25, "output": 5.00},
-    # Deepseek
-    "deepseek-chat": {"input": 0.14, "output": 0.28},
-    "deepseek-reasoner": {"input": 0.55, "output": 2.19},
-    # Meta / Llama (typical hosted pricing)
-    "meta-llama/llama-3.1-70b-instruct": {"input": 0.35, "output": 0.40},
-    "meta-llama/llama-3.1-8b-instruct": {"input": 0.05, "output": 0.08},
-    # Mistral
-    "mistral/mistral-large-latest": {"input": 2.00, "output": 6.00},
-    "mistral/mistral-small-latest": {"input": 0.20, "output": 0.60},
-    # Groq
-    "groq/llama-3.1-70b-versatile": {"input": 0.59, "output": 0.79},
-    "groq/llama-3.1-8b-instant": {"input": 0.05, "output": 0.08},
-    # Together AI
-    "together_ai/meta-llama/Llama-3.1-70B-Instruct-Turbo": {
-        "input": 0.54,
-        "output": 0.54,
-    },
-    # Ollama / Local models — $0 API cost (compute is your own hardware)
-    # Users can override with custom pricing via AGENTCOST_OLLAMA_PRICING env
-    "llama3.2": {"input": 0.00, "output": 0.00},
-    "llama3.1": {"input": 0.00, "output": 0.00},
-    "llama3": {"input": 0.00, "output": 0.00},
-    "llama2": {"input": 0.00, "output": 0.00},
-    "mistral": {"input": 0.00, "output": 0.00},
-    "mixtral": {"input": 0.00, "output": 0.00},
-    "gemma2": {"input": 0.00, "output": 0.00},
-    "gemma": {"input": 0.00, "output": 0.00},
-    "phi3": {"input": 0.00, "output": 0.00},
-    "phi4": {"input": 0.00, "output": 0.00},
-    "qwen2.5": {"input": 0.00, "output": 0.00},
-    "qwen2": {"input": 0.00, "output": 0.00},
-    "codellama": {"input": 0.00, "output": 0.00},
-    "deepseek-coder-v2": {"input": 0.00, "output": 0.00},
-    "starcoder2": {"input": 0.00, "output": 0.00},
-    "nomic-embed-text": {"input": 0.00, "output": 0.00},
-    # Default fallback
-    "_default": {"input": 2.50, "output": 10.00},
-}
+from ..cost.calculator import (
+    calculate_cost as _calc_cost,
+    cost_per_token as _cost_per_token,
+    get_pricing_per_1m as _get_pricing_per_1m,
+    completion_cost as _completion_cost,
+)
 
 
 # ── Data classes ─────────────────────────────────────────────────────────────
@@ -127,104 +80,13 @@ class UsageAccumulator:
 
 
 def get_pricing(model: str) -> dict[str, float]:
-    """Look up pricing for a model, with fuzzy matching."""
-    # Check custom Ollama pricing from env: AGENTCOST_OLLAMA_PRICING="0.01,0.02" (input,output per 1M)
-    _ollama_override = os.environ.get("AGENTCOST_OLLAMA_PRICING")
-    if _ollama_override and _is_ollama_model(model):
-        try:
-            parts = _ollama_override.split(",")
-            return {
-                "input": float(parts[0]),
-                "output": float(parts[1]) if len(parts) > 1 else float(parts[0]),
-            }
-        except (ValueError, IndexError):
-            pass
-
-    if model in MODEL_PRICING:
-        return MODEL_PRICING[model]
-    # Strip common LiteLLM prefixes for matching
-    stripped = model
-    for prefix in (
-        "openai/",
-        "anthropic/",
-        "groq/",
-        "together_ai/",
-        "mistral/",
-        "bedrock/",
-        "vertex_ai/",
-        "azure/",
-        "ollama/",
-        "huggingface/",
-        "replicate/",
-        "cohere/",
-        "deepseek/",
-        "fireworks_ai/",
-        "anyscale/",
-    ):
-        if stripped.startswith(prefix):
-            stripped = stripped[len(prefix) :]
-            break
-    if stripped in MODEL_PRICING:
-        return MODEL_PRICING[stripped]
-    # Strip Ollama tags like ":7b", ":latest", ":13b-instruct-q4_0"
-    base_model = stripped.split(":")[0] if ":" in stripped else stripped
-    if base_model in MODEL_PRICING:
-        return MODEL_PRICING[base_model]
-    # Fuzzy: check if a known key is a substring
-    for key in MODEL_PRICING:
-        if key != "_default" and (key in model or model in key):
-            return MODEL_PRICING[key]
-    # If it looks like an Ollama model (no slash, no known cloud prefix), assume local → $0
-    if _is_ollama_model(model):
-        return {"input": 0.00, "output": 0.00}
-    return MODEL_PRICING["_default"]
-
-
-def _is_ollama_model(model: str) -> bool:
-    """Heuristic: detect models that are likely served by Ollama (local, no cloud prefix)."""
-    cloud_prefixes = (
-        "gpt-",
-        "claude-",
-        "gemini-",
-        "o1",
-        "o3",
-        "openai/",
-        "anthropic/",
-        "groq/",
-        "together",
-        "mistral/",
-        "bedrock/",
-        "vertex_ai/",
-        "azure/",
-    )
-    m = model.lower()
-    return not any(m.startswith(p) for p in cloud_prefixes)
+    """Look up pricing for a model (per-1M-token format for backward compatibility)."""
+    return _get_pricing_per_1m(model)
 
 
 def calculate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
-    pricing = get_pricing(model)
-    return (
-        input_tokens * pricing["input"] + output_tokens * pricing["output"]
-    ) / 1_000_000
-
-
-def _try_litellm_cost(
-    model: str, input_tokens: int, output_tokens: int
-) -> float | None:
-    """Try to use LiteLLM's built-in cost calculation (has 300+ models)."""
-    try:
-        import litellm
-
-        cost = litellm.completion_cost(
-            model=model,
-            prompt=str(input_tokens),
-            completion=str(output_tokens),
-        )
-        if cost and cost > 0:
-            return cost
-    except Exception:
-        pass
-    return None
+    """Calculate cost using vendored model pricing (2,600+ models)."""
+    return _calc_cost(model, input_tokens, output_tokens)
 
 
 # ── Provider ─────────────────────────────────────────────────────────────────
@@ -400,11 +262,7 @@ class TrackedProvider:
         os.environ.setdefault("OPENAI_API_KEY", api_key)
 
     def _calc_cost(self, input_tokens: int, output_tokens: int) -> float:
-        """Calculate cost, preferring LiteLLM's database when available."""
-        if self._litellm:
-            lc = _try_litellm_cost(self.model, input_tokens, output_tokens)
-            if lc is not None:
-                return lc
+        """Calculate cost using vendored model pricing (2,600+ models)."""
         return calculate_cost(self.model, input_tokens, output_tokens)
 
     # Models that use reasoning (o1, o3, gpt-5, etc.) need special handling:

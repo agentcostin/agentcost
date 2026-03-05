@@ -142,6 +142,161 @@ class {class_name}(ProviderPlugin):
     def supported_models(self) -> list[str]:
         return list(self.PRICING.keys())
 ''',
+    "tracker": '''"""
+{name} — AgentCost Tracker Plugin
+
+Provides a custom cost tracking backend.
+"""
+from agentcost.plugins import (
+    TrackerPlugin, PluginMeta, PluginType,
+)
+
+
+class {class_name}(TrackerPlugin):
+    meta = PluginMeta(
+        name="{pkg_name}",
+        version="0.1.0",
+        plugin_type=PluginType.TRACKER,
+        description="Track costs via {name}",
+    )
+
+    def __init__(self):
+        self._traces: list[dict] = []
+
+    def record_trace(self, event: dict) -> None:
+        # TODO: Send trace event to your backend (e.g., Langfuse, Datadog)
+        self._traces.append(event)
+
+    def get_spend(self, scope: str, scope_id: str, period: str = "month") -> float:
+        # TODO: Query your backend for spend data
+        return sum(
+            t.get("cost", 0.0)
+            for t in self._traces
+            if t.get(scope) == scope_id
+        )
+''',
+    "reactor": '''"""
+{name} — AgentCost Reactor Plugin
+
+Provides custom reaction actions for the ReactionEngine.
+"""
+from agentcost.plugins import (
+    ReactorPlugin, PluginMeta, PluginType,
+)
+
+
+class {class_name}(ReactorPlugin):
+    meta = PluginMeta(
+        name="{pkg_name}",
+        version="0.1.0",
+        plugin_type=PluginType.REACTOR,
+        description="Custom reaction actions: {name}",
+    )
+
+    def get_actions(self) -> dict:
+        return {{
+            "{pkg_name}-alert": self._handle_alert,
+        }}
+
+    def _handle_alert(self, event_type: str, event_data: dict) -> bool:
+        # TODO: Implement your custom action (Jira ticket, Lambda call, etc.)
+        print(f"[{pkg_name}] Alert: {{event_type}} — {{event_data.get('message', '')}}")
+        return True
+''',
+    "runtime": '''"""
+{name} — AgentCost Runtime Plugin
+
+Controls model routing, rate limiting, and feature flags at runtime.
+"""
+from agentcost.plugins import (
+    RuntimePlugin, PluginMeta, PluginType,
+)
+
+
+class {class_name}(RuntimePlugin):
+    meta = PluginMeta(
+        name="{pkg_name}",
+        version="0.1.0",
+        plugin_type=PluginType.RUNTIME,
+        description="Runtime configuration: {name}",
+    )
+
+    def __init__(self):
+        self._overrides: dict[str, str] = {{}}
+        self._rate_limits: dict[str, int] = {{}}
+        self._call_counts: dict[str, int] = {{}}
+        self._flags: dict[str, bool] = {{}}
+
+    def configure(self, config: dict) -> None:
+        self._overrides = config.get("model_overrides", {{}})
+        self._rate_limits = config.get("rate_limits", {{}})
+        self._flags = config.get("feature_flags", {{}})
+
+    def get_model_override(self, requested_model: str, context: dict) -> str | None:
+        # TODO: Implement model override logic (e.g., budget-based downgrade)
+        return self._overrides.get(requested_model)
+
+    def check_rate_limit(self, scope: str, scope_id: str) -> bool:
+        key = f"{{scope}}:{{scope_id}}"
+        limit = self._rate_limits.get(key, 0)
+        if limit <= 0:
+            return True  # No limit configured
+        count = self._call_counts.get(key, 0) + 1
+        self._call_counts[key] = count
+        return count <= limit
+
+    def get_feature_flags(self) -> dict[str, bool]:
+        return dict(self._flags)
+''',
+    "agent": '''"""
+{name} — AgentCost Agent Plugin
+
+Manages agent lifecycle states and workspace configuration.
+"""
+from agentcost.plugins import (
+    AgentPlugin, PluginMeta, PluginType,
+)
+
+
+VALID_TRANSITIONS = {{
+    "registered": {{"active"}},
+    "active": {{"budget_warning", "suspended", "terminated"}},
+    "budget_warning": {{"active", "suspended", "terminated"}},
+    "suspended": {{"resumed", "terminated"}},
+    "resumed": {{"active", "suspended", "terminated"}},
+    "terminated": set(),
+}}
+
+
+class {class_name}(AgentPlugin):
+    meta = PluginMeta(
+        name="{pkg_name}",
+        version="0.1.0",
+        plugin_type=PluginType.AGENT,
+        description="Agent lifecycle manager: {name}",
+    )
+
+    def __init__(self):
+        self._states: dict[str, str] = {{}}
+        self._workspace_configs: dict[str, dict] = {{}}
+
+    def get_agent_state(self, agent_id: str) -> str:
+        return self._states.get(agent_id, "registered")
+
+    def transition(self, agent_id: str, new_state: str, reason: str = "") -> bool:
+        current = self.get_agent_state(agent_id)
+        allowed = VALID_TRANSITIONS.get(current, set())
+        if new_state not in allowed:
+            return False
+        self._states[agent_id] = new_state
+        return True
+
+    def get_workspace_config(self, project: str) -> dict:
+        return self._workspace_configs.get(project, {{}})
+
+    def set_workspace_config(self, project: str, config: dict) -> None:
+        self._workspace_configs[project] = config
+''',
 }
 
 

@@ -15,7 +15,7 @@ from typing import Optional
 class AuthMethod(str, Enum):
     """How the user/agent authenticated."""
 
-    OIDC = "oidc"  # JWT from Keycloak OIDC flow
+    OIDC = "oidc"  # JWT from OIDC provider
     SAML = "saml"  # SAML assertion → session
     API_KEY = "api_key"  # SDK / agent API key
     SESSION = "session"  # Cookie-based session (post SAML/OIDC)
@@ -23,7 +23,7 @@ class AuthMethod(str, Enum):
 
 
 class Role(str, Enum):
-    """Platform roles — maps to Keycloak realm roles."""
+    """Platform roles — maps to IdP roles/groups."""
 
     PLATFORM_ADMIN = "platform_admin"
     ORG_ADMIN = "org_admin"
@@ -64,15 +64,15 @@ class Role(str, Enum):
 
 @dataclass(frozen=True)
 class TokenClaims:
-    """Decoded claims from a Keycloak JWT or SAML assertion.
+    """Decoded claims from an OIDC JWT or SAML assertion.
 
-    Fields align with the custom protocol mappers in the realm config:
+    Fields align with standard OIDC claims plus custom claims for multi-tenancy:
       - org_id, org_slug: multi-tenant isolation
-      - roles: realm-level role list
+      - roles: application-level role list
       - Standard OIDC: sub, email, name, preferred_username
     """
 
-    sub: str  # Keycloak user UUID
+    sub: str  # User ID (OIDC subject)
     email: str = ""
     name: str = ""
     preferred_username: str = ""

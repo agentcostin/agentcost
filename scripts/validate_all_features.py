@@ -434,9 +434,9 @@ check("Dashboard JS", lambda: all(os.path.exists(ROOT/"dashboard"/"js"/f) for f 
 # ═══════════════════════════════════════════════════════════════════════════
 section("Infrastructure & Tooling")
 for n,p in [("docker-compose.yml","docker-compose.yml"),("Dockerfile","docker/Dockerfile"),
-    ("Dockerfile.dashboard","docker/Dockerfile.dashboard"),("Keycloak realm","docker/keycloak/agentcost-realm.json"),
+    ("Dockerfile.dashboard","docker/Dockerfile.dashboard"),
     ("SQLite→Postgres migration","scripts/migrate-sqlite-to-postgres.py"),("Seed data","scripts/seed_sample_data.py"),
-    ("SSO start script","scripts/start-sso.sh"),("Sample tasks","sample-data/tasks.jsonl"),
+    ("Sample tasks","sample-data/tasks.jsonl"),
     ("pyproject.toml","pyproject.toml"),("setup.sh","setup.sh"),
     ("VSCode extension","vscode-extension/src/extension.ts"),("TypeScript SDK","sdks/typescript/src/index.ts"),
     ("ACP Server","acp-server/src/server.ts"),("ACP Client","acp-client/client.py"),

@@ -16,7 +16,7 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from typing import Any, Callable
 
-from ..providers.tracked import calculate_cost, _try_litellm_cost
+from ..providers.tracked import calculate_cost
 
 
 @dataclass
@@ -49,8 +49,11 @@ class CostTracker:
         self.total_output_tokens = 0
         self.traces: list[TraceEvent] = []
         self.budget_limit: float | None = None
+        self.warning_threshold: float = 0.80  # emit budget.warning at 80%
         self._on_budget_alert: Callable | None = None
         self._on_trace: list[Callable] = []
+        self._warning_emitted: bool = False
+        self._exceeded_emitted: bool = False
 
     def record(self, event: TraceEvent):
         self.traces.append(event)
@@ -58,24 +61,37 @@ class CostTracker:
         self.total_calls += 1
         self.total_input_tokens += event.input_tokens
         self.total_output_tokens += event.output_tokens
+
+        # Notify trace callbacks
         for cb in self._on_trace:
             try:
                 cb(event)
             except:
                 pass
-        if (
-            self.budget_limit
-            and self.total_cost >= self.budget_limit
-            and self._on_budget_alert
-        ):
-            try:
-                self._on_budget_alert(self.project, self.total_cost, self.budget_limit)
-            except:
-                pass
+
+        # Record in TrackerPlugin (if loaded)
+        _record_to_tracker(event)
+
+        # Budget threshold checks → EventBus events
+        if self.budget_limit:
+            usage_pct = self.total_cost / self.budget_limit
+            if usage_pct >= 1.0 and not self._exceeded_emitted:
+                self._exceeded_emitted = True
+                _emit_budget_event("budget.exceeded", self.project, self.total_cost, self.budget_limit)
+                if self._on_budget_alert:
+                    try:
+                        self._on_budget_alert(self.project, self.total_cost, self.budget_limit)
+                    except:
+                        pass
+            elif usage_pct >= self.warning_threshold and not self._warning_emitted:
+                self._warning_emitted = True
+                _emit_budget_event("budget.warning", self.project, self.total_cost, self.budget_limit)
 
     def set_budget(self, limit: float, on_alert: Callable | None = None):
         self.budget_limit = limit
         self._on_budget_alert = on_alert
+        self._warning_emitted = False
+        self._exceeded_emitted = False
 
     def on_trace(self, callback: Callable):
         self._on_trace.append(callback)
@@ -105,6 +121,8 @@ class CostTracker:
         self.total_input_tokens = 0
         self.total_output_tokens = 0
         self.traces.clear()
+        self._warning_emitted = False
+        self._exceeded_emitted = False
 
 
 _trackers: dict[str, CostTracker] = {}
@@ -139,8 +157,43 @@ def _persist_event(event: TraceEvent):
         pass
 
 
+def _emit_budget_event(event_type: str, project: str, current_spend: float, budget_limit: float):
+    """Emit budget.warning or budget.exceeded to EventBus for ReactionEngine."""
+    try:
+        from ..events import get_event_bus
+
+        bus = get_event_bus()
+        bus.emit(event_type, {
+            "project": project,
+            "current_spend": round(current_spend, 6),
+            "budget_limit": round(budget_limit, 6),
+            "usage_pct": round(current_spend / budget_limit * 100, 1),
+            "message": f"Project '{project}' budget {event_type.split('.')[-1]}: "
+                       f"${current_spend:.4f} / ${budget_limit:.4f} "
+                       f"({current_spend / budget_limit * 100:.1f}%)",
+        })
+    except Exception:
+        pass  # EventBus may not be initialized
+
+
+def _record_to_tracker(event: TraceEvent):
+    """Record trace to the first loaded TrackerPlugin (if any)."""
+    try:
+        from ..plugins import registry
+
+        if registry.trackers:
+            trace_dict = event.to_dict()
+            for tracker in registry.trackers:
+                try:
+                    tracker.record_trace(trace_dict)
+                except Exception:
+                    pass
+    except Exception:
+        pass
+
+
 def _calc(model, inp, out):
-    return _try_litellm_cost(model, inp, out) or calculate_cost(model, inp, out)
+    return calculate_cost(model, inp, out)
 
 
 class _TracedCompletions:

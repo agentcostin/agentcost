@@ -127,4 +127,4 @@ See [Self-Hosting Guide](../guides/self-hosting.md) for full setup.
 ## Contact
 
 - **Email:** open@agentcost.in
-- **Docs:** [docs.agentcost.in](https://docs.agentcost.in)
+- **Docs:** [agentcost.in/docs](https://agentcost.in/docs/)

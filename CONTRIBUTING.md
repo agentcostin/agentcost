@@ -91,7 +91,7 @@ python -m agentcost dashboard
 
 ## Plugin Development
 
-See the [Plugin Development Guide](https://docs.agentcost.in/plugins/) for creating AgentCost plugins.
+See the [Plugin Development Guide](https://agentcost.in/docs/guides/plugins/) for creating AgentCost plugins.
 
 ```bash
 # Scaffold a new plugin

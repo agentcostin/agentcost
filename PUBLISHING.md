@@ -75,7 +75,7 @@ Once done, proceed to set up PyPI, npm, and the other services below.
 | **PyPI**            |        ✅ Free         | No limits for open-source packages                |
 | **npm**             |        ✅ Free         | Public packages are free, no limits               |
 | **GHCR**            |        ✅ Free         | Public container images are free, unlimited pulls |
-| **GitHub Pages**    |        ✅ Free         | For docs site (docs.agentcost.in)                 |
+| **GitHub Pages**    |        ✅ Free         | For docs site (agentcost.in/docs)                 |
 | **GitHub Releases** |        ✅ Free         | Auto-generated with each tag                      |
 
 **Key requirement:** Your repository must be **public** (which it will be, since AgentCost is open-source). Private repos on free accounts get only 2,000 Actions minutes/month.
@@ -256,9 +256,9 @@ The `.github/workflows/docs.yml` runs on every push to `main` that changes `docs
 
 ### Custom Domain (Optional)
 
-To use `docs.agentcost.in`:
+To use `agentcost.in/docs`:
 
-1. In repo → Settings → Pages → Custom domain → enter `docs.agentcost.in`
+1. In repo → Settings → Pages → Custom domain → enter `agentcost.in/docs`
 2. Add DNS records in **GoDaddy** (https://dcc.godaddy.com/manage/agentcost.in/dns):
 
     | Type  | Name   | Value                   | TTL |
@@ -277,7 +277,7 @@ To use `docs.agentcost.in`:
 This gives you:
 
 - `agentcost.in` → landing page
-- `docs.agentcost.in` → MkDocs documentation site
+- `agentcost.in/docs` → MkDocs documentation site
 - `www.agentcost.in` → redirects to main site
 
 ---

@@ -161,7 +161,7 @@ agentcost plugin install agentcost-s3-archive
 agentcost plugin create my-plugin
 ```
 
-Plugins can export data, add alerting, create custom views, and more. See the [Plugin Development Guide](https://docs.agentcost.in/plugins/).
+Plugins can export data, add alerting, create custom views, and more. See the [Plugin Development Guide](https://agentcost.in/docs/guides/plugins/).
 
 ## TypeScript SDK
 
@@ -226,7 +226,7 @@ For teams and organizations that need governance:
 
 Enterprise features are source-available under BSL 1.1. See [enterprise/LICENSE](enterprise/LICENSE).
 
-→ [Contact us](mailto:open@agentcost.in) or [read the docs](https://docs.agentcost.in/enterprise/)
+→ [Contact us](mailto:open@agentcost.in) or [read the docs](https://agentcost.in/docs/enterprise/overview/)
 
 ## Configuration
 
@@ -259,7 +259,7 @@ pytest tests/ -v
 ---
 
 <p align="center">
-  <a href="https://docs.agentcost.in">Documentation</a> ·
+  <a href="https://agentcost.in/docs/">Documentation</a> ·
   <a href="https://github.com/agentcostin/agentcost/issues">Issues</a> ·
   <a href="https://discord.gg/agentcost">Discord</a> ·
   <a href="https://twitter.com/agentcost">Twitter</a>

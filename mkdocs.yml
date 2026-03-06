@@ -1,6 +1,6 @@
 site_name: AgentCost
 site_description: "AI Agent Cost Governance — track, control, and optimize LLM spending across 2,610+ models"
-site_url: https://docs.agentcost.in
+site_url: https://agentcost.in/docs/
 repo_url: https://github.com/agentcostin/agentcost
 repo_name: agentcost/agentcost
 edit_uri: edit/main/docs/

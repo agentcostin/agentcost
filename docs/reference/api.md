@@ -306,3 +306,45 @@ GET    /reactions/history   → Reaction execution history
 GET    /reactions/stats     → Engine statistics
 POST   /reactions/reload    → Reload from YAML
 ```
+
+## Goals API
+
+Business objective cost attribution.
+
+```
+POST   /api/goals                    → Create a goal
+GET    /api/goals                    → List goals (filter: project, status, parent)
+GET    /api/goals/{id}               → Get goal with cost summary
+GET    /api/goals/{id}/cost          → Cost attribution (direct + children rollup)
+GET    /api/goals/{id}/ancestry      → Full goal ancestry chain
+PUT    /api/goals/{id}               → Update goal
+DELETE /api/goals/{id}               → Delete goal
+GET    /api/goals/{id}/budget-check  → Check if goal is within budget
+```
+
+## Templates API
+
+Governance template management.
+
+```
+GET    /api/templates                → List available templates
+GET    /api/templates/{name}         → Preview template configuration
+POST   /api/templates/{name}/apply   → Apply a template
+POST   /api/templates                → Upload a custom YAML template
+GET    /api/templates/export         → Export current config as template
+```
+
+## Heartbeat API
+
+Per-cycle cost monitoring for agent orchestrators.
+
+```
+POST   /api/heartbeats/{agent_id}/start    → Start a heartbeat cycle
+POST   /api/heartbeats/{agent_id}/spend    → Record spend in current cycle
+POST   /api/heartbeats/{agent_id}/end      → End cycle and get summary
+POST   /api/heartbeats/{agent_id}/pause    → Pause agent (external trigger)
+POST   /api/heartbeats/{agent_id}/resume   → Resume paused agent
+GET    /api/heartbeats/{agent_id}          → Get cycle history
+GET    /api/heartbeats/{agent_id}/summary  → Agent summary stats
+GET    /api/heartbeats/agents              → List all tracked agents
+```

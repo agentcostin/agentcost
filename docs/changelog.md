@@ -4,6 +4,15 @@ See the full [CHANGELOG.md](https://github.com/agentcostin/agentcost/blob/main/C
 
 ## Current Release
 
+### v1.2.0 (March 2026)
+
+Paperclip-inspired features for agent orchestration:
+
+- **Goal Attribution** — Track costs per business objective with hierarchical rollup
+- **Governance Templates** — 5 built-in profiles (startup, enterprise, SOC2, agency, research-lab)
+- **Heartbeat Monitoring** — Per-cycle cost tracking with anomaly detection and auto-pause
+- **59 new tests**, 588 total passing
+
 ### v1.1.0 (March 2026)
 
 Integration release — six phases of hardening and intelligence:

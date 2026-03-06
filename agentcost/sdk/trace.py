@@ -35,6 +35,7 @@ class TraceEvent:
     metadata: dict = field(default_factory=dict)
     agent_id: str | None = None
     session_id: str | None = None
+    goal_id: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -191,17 +192,26 @@ def _record_to_tracker(event: TraceEvent):
     except Exception:
         pass
 
+    # Record spend against goal (if goal_id is set)
+    if event.goal_id:
+        try:
+            from ..goals import get_goal_service
+            get_goal_service().record_spend(event.goal_id, event.cost)
+        except Exception:
+            pass
+
 
 def _calc(model, inp, out):
     return calculate_cost(model, inp, out)
 
 
 class _TracedCompletions:
-    def __init__(self, orig, project, provider, persist):
+    def __init__(self, orig, project, provider, persist, goal_id=None):
         self._o = orig
         self._p = project
         self._prov = provider
         self._persist = persist
+        self._goal_id = goal_id
 
     def create(self, **kw) -> Any:
         model = kw.get("model", "unknown")
@@ -223,6 +233,7 @@ class _TracedCompletions:
                 latency_ms=lat,
                 status="success",
                 timestamp=datetime.now().isoformat(),
+                goal_id=self._goal_id,
             )
             tracker.record(ev)
             if self._persist:
@@ -242,6 +253,7 @@ class _TracedCompletions:
                 status="error",
                 error=str(e)[:500],
                 timestamp=datetime.now().isoformat(),
+                goal_id=self._goal_id,
             )
             tracker.record(ev)
             if self._persist:
@@ -250,26 +262,27 @@ class _TracedCompletions:
 
 
 class _TracedChat:
-    def __init__(self, chat, project, provider, persist):
+    def __init__(self, chat, project, provider, persist, goal_id=None):
         self.completions = _TracedCompletions(
-            chat.completions, project, provider, persist
+            chat.completions, project, provider, persist, goal_id
         )
 
 
 class _TracedOpenAI:
-    def __init__(self, client, project, provider, persist):
+    def __init__(self, client, project, provider, persist, goal_id=None):
         self._c = client
-        self.chat = _TracedChat(client.chat, project, provider, persist)
+        self.chat = _TracedChat(client.chat, project, provider, persist, goal_id)
 
     def __getattr__(self, n):
         return getattr(self._c, n)
 
 
 class _TracedMessages:
-    def __init__(self, orig, project, persist):
+    def __init__(self, orig, project, persist, goal_id=None):
         self._o = orig
         self._p = project
         self._persist = persist
+        self._goal_id = goal_id
 
     def create(self, **kw) -> Any:
         model = kw.get("model", "unknown")
@@ -291,6 +304,7 @@ class _TracedMessages:
                 latency_ms=lat,
                 status="success",
                 timestamp=datetime.now().isoformat(),
+                goal_id=self._goal_id,
             )
             tracker.record(ev)
             if self._persist:
@@ -310,6 +324,7 @@ class _TracedMessages:
                 status="error",
                 error=str(e)[:500],
                 timestamp=datetime.now().isoformat(),
+                goal_id=self._goal_id,
             )
             tracker.record(ev)
             if self._persist:
@@ -318,15 +333,15 @@ class _TracedMessages:
 
 
 class _TracedAnthropic:
-    def __init__(self, client, project, persist):
+    def __init__(self, client, project, persist, goal_id=None):
         self._c = client
-        self.messages = _TracedMessages(client.messages, project, persist)
+        self.messages = _TracedMessages(client.messages, project, persist, goal_id)
 
     def __getattr__(self, n):
         return getattr(self._c, n)
 
 
-def trace(client: Any, project: str = "default", persist: bool = True) -> Any:
+def trace(client: Any, project: str = "default", persist: bool = True, goal_id: str | None = None) -> Any:
     """Wrap an OpenAI or Anthropic client with automatic cost tracking."""
     ct = type(client).__module__
     if "openai" in ct or hasattr(client, "chat"):
@@ -339,9 +354,9 @@ def trace(client: Any, project: str = "default", persist: bool = True) -> Any:
                 prov = "groq"
             elif "11434" in b or "ollama" in b.lower():
                 prov = "ollama"
-        return _TracedOpenAI(client, project, prov, persist)
+        return _TracedOpenAI(client, project, prov, persist, goal_id)
     elif "anthropic" in ct or hasattr(client, "messages"):
-        return _TracedAnthropic(client, project, persist)
+        return _TracedAnthropic(client, project, persist, goal_id)
     else:
         raise TypeError(
             f"Unsupported client: {type(client).__name__}. Use openai.OpenAI or anthropic.Anthropic"

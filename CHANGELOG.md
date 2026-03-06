@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-06
+
+### Added — Paperclip-Inspired Features
+
+#### Goal-Aware Cost Attribution
+- `agentcost.goals` module with `GoalService` for creating and managing business objectives
+- Hierarchical goal trees with cost rollup (child → parent → grandparent)
+- `goal_id` field on `TraceEvent` — tag any LLM call to a business goal
+- SDK `trace()` wrapper accepts `goal_id` parameter
+- Goal budget checks (`check_goal_budget()`)
+- Cost attribution queries: direct cost, children cost, total cost, ancestry chain
+- 19 tests
+
+#### Governance Templates
+- `agentcost.templates` module with 5 built-in templates:
+  - `startup` — Economy-focused, $500/month, Slack alerts
+  - `enterprise` — 5 cost centers, approval workflows, PagerDuty
+  - `soc2-compliance` — Full audit trail, no free-tier, approval gates
+  - `agency` — Multi-client, per-client budgets, chargeback reports
+  - `research-lab` — Unrestricted, analytics focus
+- `TemplateRegistry` with list, preview, apply, export
+- YAML template format for custom governance profiles
+- Templates can include goals, policies, reactions, tier restrictions, and budgets
+- 20 tests
+
+#### Heartbeat-Based Cost Monitoring
+- `agentcost.heartbeat` module with `HeartbeatTracker`
+- Per-cycle cost tracking: `start_cycle()` → `record_spend()` → `end_cycle()`
+- Rolling average anomaly detection (flags cycles > 2x average cost)
+- Auto-pause agents at budget thresholds (80% warning, 100% pause)
+- Orchestrator webhook callback (`pause_callback`) for external systems (Paperclip, CrewAI)
+- Agent summary stats: total cycles, avg cost, anomaly count, budget utilization
+- 20 tests
+
+#### Documentation
+- New guide: Goal-Aware Cost Attribution
+- New guide: Governance Templates
+- New guide: Heartbeat Monitoring
+
 ## [1.1.0] - 2026-03-05
 
 ### Integration Phases (vendor-cost-map branch)

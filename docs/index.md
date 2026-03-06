@@ -55,6 +55,9 @@ That's it. Every LLM call is now tracked with model, tokens, cost, latency, and 
 | **Prompt Estimator** | Pre-call cost estimation across 2,610+ models |
 | **Reactions Engine** | YAML-driven event reactions (budget alerts, auto-suspend, webhooks) |
 | **8-Slot Plugin System** | Notifier, Policy, Exporter, Provider, Tracker, Reactor, Runtime, Agent |
+| **Goal Attribution** | Track costs per business objective with hierarchical rollup |
+| **Governance Templates** | Pre-configured profiles: startup, enterprise, SOC2, agency, research |
+| **Heartbeat Monitoring** | Per-cycle cost tracking for agent orchestrators (Paperclip, CrewAI) |
 | **Framework Integrations** | LangChain, CrewAI, AutoGen, LlamaIndex |
 | **Exporters** | OpenTelemetry, Prometheus, Grafana |
 | **CLI** | Benchmark, compare, trace, budget management |

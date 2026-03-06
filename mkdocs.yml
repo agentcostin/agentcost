@@ -40,6 +40,9 @@ nav:
   - Guides:
     - Dashboard: guides/dashboard.md
     - Cost Intelligence: guides/intelligence.md
+    - Goal Attribution: guides/goals.md
+    - Governance Templates: guides/templates.md
+    - Heartbeat Monitoring: guides/heartbeat.md
     - LangChain: guides/langchain.md
     - CrewAI: guides/crewai.md
     - AutoGen: guides/autogen.md

@@ -161,7 +161,7 @@ def sync(
 
     diff = _diff_summary(old_data, new_data)
 
-    print(f"\nDiff summary:")
+    print("\nDiff summary:")
     print(f"  Models before: {diff['total_old']}")
     print(f"  Models after:  {diff['total_new']}")
     print(f"  Added:         {len(diff['added'])}")

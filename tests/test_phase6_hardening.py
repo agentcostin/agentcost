@@ -217,7 +217,6 @@ class TestSDKTrackerBudgetChain:
             pm.registry = old_reg
 
     def test_budget_warning_fires_at_threshold(self):
-        import sys
         from agentcost.sdk.trace import CostTracker, TraceEvent
 
         trace_mod = sys.modules["agentcost.sdk.trace"]

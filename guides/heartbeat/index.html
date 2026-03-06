@@ -6,28 +6,28 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending">
+        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending across 2,610+ models">
       
       
       
-        <link rel="canonical" href="https://docs.agentcost.in/guides/llamaindex/">
+        <link rel="canonical" href="https://docs.agentcost.in/guides/heartbeat/">
       
       
-        <link rel="prev" href="../autogen/">
+        <link rel="prev" href="../templates/">
       
       
-        <link rel="next" href="../plugins/">
+        <link rel="next" href="../langchain/">
       
       
         
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
-        <title>LlamaIndex - AgentCost</title>
+        <title>Heartbeat Monitoring - AgentCost</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#llamaindex-integration" class="md-skip">
+        <a href="#heartbeat-based-cost-monitoring" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              LlamaIndex
+              Heartbeat Monitoring
             
           </span>
         </div>
@@ -639,6 +639,242 @@
   
   
     <li class="md-nav__item">
+      <a href="../intelligence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../goals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Goal Attribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heartbeat Monitoring
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heartbeat Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concept
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anomaly-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anomaly Detection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-pause-on-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-Pause on Budget
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#orchestrator-webhook-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrator Webhook Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-with-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining with Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../langchain/" class="md-nav__link">
         
   
@@ -720,37 +956,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LlamaIndex
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../llamaindex/" class="md-nav__link">
         
   
   
@@ -766,59 +975,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-gets-tracked" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Gets Tracked
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1258,10 +1414,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#concept" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Concept
       
     </span>
   </a>
@@ -1280,10 +1436,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-gets-tracked" class="md-nav__link">
+  <a href="#anomaly-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Gets Tracked
+        Anomaly Detection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-pause-on-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-Pause on Budget
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#orchestrator-webhook-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrator Webhook Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-with-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining with Goals
       
     </span>
   </a>
@@ -1310,37 +1510,119 @@
   
 
 
-<h1 id="llamaindex-integration">LlamaIndex Integration</h1>
-<p>Track costs for LlamaIndex queries, indexing, and retrieval.</p>
-<h2 id="installation">Installation</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>agentcostin<span class="w"> </span>llama-index
+<h1 id="heartbeat-based-cost-monitoring">Heartbeat-Based Cost Monitoring</h1>
+<p>Track costs per agent heartbeat cycle, detect anomalies between cycles, and auto-pause agents when budgets are hit. Designed to integrate with orchestrators like Paperclip, CrewAI, and AutoGen.</p>
+<h2 id="concept">Concept</h2>
+<p>Agents in orchestration systems run on scheduled heartbeat intervals — periodic cycles where they check for work, execute tasks, and go idle. The HeartbeatTracker wraps these cycles with cost monitoring:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>start_cycle → [agent makes LLM calls] → end_cycle
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>              ↓ cost recorded per call ↓
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>              → anomaly check → budget check → auto-pause if needed
 </code></pre></div>
 <h2 id="basic-usage">Basic Usage</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">VectorStoreIndex</span><span class="p">,</span> <span class="n">SimpleDirectoryReader</span><span class="p">,</span> <span class="n">ServiceContext</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk.integrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">llamaindex_callback</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create callback manager with AgentCost tracking</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">callback_manager</span> <span class="o">=</span> <span class="n">llamaindex_callback</span><span class="p">(</span><span class="s2">&quot;llamaindex-project&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Use with service context</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">service_context</span> <span class="o">=</span> <span class="n">ServiceContext</span><span class="o">.</span><span class="n">from_defaults</span><span class="p">(</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">callback_manager</span><span class="o">=</span><span class="n">callback_manager</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Load and index documents</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">documents</span> <span class="o">=</span> <span class="n">SimpleDirectoryReader</span><span class="p">(</span><span class="s2">&quot;./data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">index</span> <span class="o">=</span> <span class="n">VectorStoreIndex</span><span class="o">.</span><span class="n">from_documents</span><span class="p">(</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">documents</span><span class="p">,</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">service_context</span><span class="o">=</span><span class="n">service_context</span><span class="p">,</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="p">)</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Query — all LLM calls are tracked</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">query_engine</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">as_query_engine</span><span class="p">()</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="n">response</span> <span class="o">=</span> <span class="n">query_engine</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;What are the key findings?&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.heartbeat</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeartbeatTracker</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">tracker</span> <span class="o">=</span> <span class="n">HeartbeatTracker</span><span class="p">()</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Set a budget for the agent</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">tracker</span><span class="o">.</span><span class="n">set_budget</span><span class="p">(</span><span class="s2">&quot;agent-123&quot;</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mf">10.00</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># --- Agent heartbeat cycle begins ---</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">cycle_id</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">start_cycle</span><span class="p">(</span><span class="s2">&quot;agent-123&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Agent makes LLM calls — record each cost</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">tracker</span><span class="o">.</span><span class="n">record_spend</span><span class="p">(</span><span class="s2">&quot;agent-123&quot;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">tracker</span><span class="o">.</span><span class="n">record_spend</span><span class="p">(</span><span class="s2">&quot;agent-123&quot;</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># --- Agent heartbeat cycle ends ---</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">summary</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">end_cycle</span><span class="p">(</span><span class="s2">&quot;agent-123&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># {&#39;cycle_id&#39;: &#39;...&#39;, &#39;cost&#39;: 0.08, &#39;calls&#39;: 2, &#39;duration_s&#39;: 30.5, &#39;status&#39;: &#39;completed&#39;}</span>
 </code></pre></div>
-<h2 id="what-gets-tracked">What Gets Tracked</h2>
-<p>Every LLM call during indexing and querying is tracked, including embedding calls and completion calls with their associated costs.</p>
-<p>View results: <code>agentcost dashboard</code></p>
+<h2 id="anomaly-detection">Anomaly Detection</h2>
+<p>The tracker maintains a rolling average of cycle costs. If a cycle's cost exceeds 2x the average, it's flagged as an anomaly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">tracker</span> <span class="o">=</span> <span class="n">HeartbeatTracker</span><span class="p">(</span><span class="n">anomaly_multiplier</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># After 5 normal cycles at ~$0.10 each:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">tracker</span><span class="o">.</span><span class="n">start_cycle</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">tracker</span><span class="o">.</span><span class="n">record_spend</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">)</span>  <span class="c1"># 5x the average!</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">summary</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">end_cycle</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">])</span>          <span class="c1"># &quot;anomaly&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s2">&quot;anomaly_reason&quot;</span><span class="p">])</span>  <span class="c1"># &quot;Cycle cost $0.50 is 5.0x the rolling average $0.10&quot;</span>
+</code></pre></div>
+<h2 id="auto-pause-on-budget">Auto-Pause on Budget</h2>
+<p>When cumulative spend hits the budget limit, the agent is automatically paused:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">tracker</span> <span class="o">=</span> <span class="n">HeartbeatTracker</span><span class="p">()</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">tracker</span><span class="o">.</span><span class="n">set_budget</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mf">1.00</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># After several cycles totaling &gt; $1.00:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">is_paused</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">))</span>  <span class="c1"># True</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Resume when budget is replenished</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">tracker</span><span class="o">.</span><span class="n">resume_agent</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="orchestrator-webhook-integration">Orchestrator Webhook Integration</h2>
+<p>For external orchestrators (Paperclip, CrewAI), set a callback that fires when an agent is paused:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">notify_orchestrator</span><span class="p">(</span><span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;POST to Paperclip&#39;s agent pause endpoint.&quot;&quot;&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="sa">f</span><span class="s2">&quot;http://paperclip:3100/api/agents/</span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">/pause&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="p">)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="n">tracker</span> <span class="o">=</span> <span class="n">HeartbeatTracker</span><span class="p">(</span><span class="n">pause_callback</span><span class="o">=</span><span class="n">notify_orchestrator</span><span class="p">)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">tracker</span><span class="o">.</span><span class="n">set_budget</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mf">5.00</span><span class="p">)</span>
+</code></pre></div>
+<p>When the agent exceeds its budget, the callback fires with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pause&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Budget exceeded: $5.12 / $5.00&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;cumulative_spend&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5.12</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="agent-summary">Agent Summary</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">summary</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_agent_summary</span><span class="p">(</span><span class="s2">&quot;agent-123&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># {</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">#   &quot;agent_id&quot;: &quot;agent-123&quot;,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">#   &quot;total_cycles&quot;: 42,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1">#   &quot;total_cost&quot;: 3.75,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">#   &quot;total_calls&quot;: 156,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">#   &quot;avg_cost_per_cycle&quot;: 0.089,</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">#   &quot;anomaly_count&quot;: 1,</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1">#   &quot;budget&quot;: 10.0,</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1">#   &quot;budget_used_pct&quot;: 37.5,</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1">#   &quot;paused&quot;: false,</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># }</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Get cycle history</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="n">cycles</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_agent_cycles</span><span class="p">(</span><span class="s2">&quot;agent-123&quot;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># List all tracked agents</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="n">agents</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_all_agents</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="combining-with-goals">Combining with Goals</h2>
+<p>Track goal attribution within heartbeat cycles:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.heartbeat</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeartbeatTracker</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.goals</span><span class="w"> </span><span class="kn">import</span> <span class="n">GoalService</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">tracker</span> <span class="o">=</span> <span class="n">HeartbeatTracker</span><span class="p">()</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">goals</span> <span class="o">=</span> <span class="n">GoalService</span><span class="p">()</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">goals</span><span class="o">.</span><span class="n">create_goal</span><span class="p">(</span><span class="s2">&quot;feature-x&quot;</span><span class="p">,</span> <span class="s2">&quot;Build Feature X&quot;</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mf">50.0</span><span class="p">)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">tracker</span><span class="o">.</span><span class="n">start_cycle</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Each LLM call records cost to both heartbeat and goal</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">cost</span> <span class="o">=</span> <span class="mf">0.15</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="n">tracker</span><span class="o">.</span><span class="n">record_spend</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">,</span> <span class="n">cost</span><span class="p">)</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="n">goals</span><span class="o">.</span><span class="n">record_spend</span><span class="p">(</span><span class="s2">&quot;feature-x&quot;</span><span class="p">,</span> <span class="n">cost</span><span class="p">)</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="n">tracker</span><span class="o">.</span><span class="n">end_cycle</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># Query both</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="nb">print</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">get_cumulative_spend</span><span class="p">(</span><span class="s2">&quot;agent-1&quot;</span><span class="p">))</span>    <span class="c1"># 0.15</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="nb">print</span><span class="p">(</span><span class="n">goals</span><span class="o">.</span><span class="n">get_goal_cost</span><span class="p">(</span><span class="s2">&quot;feature-x&quot;</span><span class="p">))</span>           <span class="c1"># {&#39;direct_cost&#39;: 0.15, ...}</span>
+</code></pre></div>
 
 
 

@@ -6,28 +6,28 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending">
+        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending across 2,610+ models">
       
       
       
-        <link rel="canonical" href="https://docs.agentcost.in/guides/dashboard/">
+        <link rel="canonical" href="https://docs.agentcost.in/guides/templates/">
       
       
-        <link rel="prev" href="../../concepts/">
+        <link rel="prev" href="../goals/">
       
       
-        <link rel="next" href="../langchain/">
+        <link rel="next" href="../heartbeat/">
       
       
         
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
-        <title>Dashboard - AgentCost</title>
+        <title>Governance Templates - AgentCost</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dashboard-guide" class="md-skip">
+        <a href="#governance-templates" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dashboard
+              Governance Templates
             
           </span>
         </div>
@@ -268,7 +268,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../dashboard/" class="md-tabs__link">
           
   
   
@@ -608,6 +608,90 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intelligence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../goals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Goal Attribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -627,7 +711,7 @@
   <span class="md-ellipsis">
     
   
-    Dashboard
+    Governance Templates
   
 
     
@@ -645,7 +729,7 @@
   <span class="md-ellipsis">
     
   
-    Dashboard
+    Governance Templates
   
 
     
@@ -671,10 +755,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#launching-the-dashboard" class="md-nav__link">
+  <a href="#built-in-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Launching the Dashboard
+        Built-in Templates
       
     </span>
   </a>
@@ -682,33 +766,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#seeding-demo-data" class="md-nav__link">
+  <a href="#using-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Seeding Demo Data
+        Using Templates
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#views" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Views
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Views">
+    <nav class="md-nav" aria-label="Using Templates">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#preview-before-applying" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Preview Before Applying
       
     </span>
   </a>
@@ -716,54 +789,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cost-breakdown" class="md-nav__link">
+  <a href="#apply-a-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cost Breakdown
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#forecasting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Forecasting
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optimizer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optimizer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analytics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analytics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#estimator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Estimator
+        Apply a Template
       
     </span>
   </a>
@@ -776,10 +805,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-endpoints" class="md-nav__link">
+  <a href="#custom-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API Endpoints
+        Custom Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-from-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create from YAML
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-and-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load and Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-current-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Current Config
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#template-sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template Sections
       
     </span>
   </a>
@@ -790,6 +869,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../heartbeat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heartbeat Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1341,10 +1448,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#launching-the-dashboard" class="md-nav__link">
+  <a href="#built-in-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Launching the Dashboard
+        Built-in Templates
       
     </span>
   </a>
@@ -1352,33 +1459,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#seeding-demo-data" class="md-nav__link">
+  <a href="#using-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Seeding Demo Data
+        Using Templates
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#views" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Views
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Views">
+    <nav class="md-nav" aria-label="Using Templates">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#preview-before-applying" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Preview Before Applying
       
     </span>
   </a>
@@ -1386,54 +1482,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cost-breakdown" class="md-nav__link">
+  <a href="#apply-a-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cost Breakdown
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#forecasting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Forecasting
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optimizer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optimizer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analytics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analytics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#estimator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Estimator
+        Apply a Template
       
     </span>
   </a>
@@ -1446,10 +1498,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-endpoints" class="md-nav__link">
+  <a href="#custom-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API Endpoints
+        Custom Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-from-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create from YAML
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-and-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load and Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-current-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Current Config
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#template-sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template Sections
       
     </span>
   </a>
@@ -1476,95 +1578,179 @@
   
 
 
-<h1 id="dashboard-guide">Dashboard Guide</h1>
-<p>The AgentCost dashboard provides six intelligence views for understanding and controlling your AI costs.</p>
-<h2 id="launching-the-dashboard">Launching the Dashboard</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>agentcost<span class="w"> </span>dashboard
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># → http://localhost:8500</span>
-</code></pre></div>
-<p>Or with custom port:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">AGENTCOST_PORT</span><span class="o">=</span><span class="m">8100</span><span class="w"> </span>agentcost<span class="w"> </span>dashboard
-</code></pre></div>
-<h2 id="seeding-demo-data">Seeding Demo Data</h2>
-<p>To explore the dashboard immediately:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8500/api/seed<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;days&quot;: 14, &quot;clear&quot;: true}&#39;</span>
-</code></pre></div>
-<p>Or use the script:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>scripts/seed_sample_data.py<span class="w"> </span>--days<span class="w"> </span><span class="m">14</span><span class="w"> </span>--clear
-</code></pre></div>
-<h2 id="views">Views</h2>
-<h3 id="overview">Overview</h3>
-<p>The landing page shows key metrics at a glance: total spend, call volume, error rate, and cost-over-time charts. Use the project filter to drill into specific applications.</p>
-<h3 id="cost-breakdown">Cost Breakdown</h3>
-<p>Detailed spend analysis by model, project, and provider. Shows which models consume the most budget and identifies cost trends over time.</p>
-<h3 id="forecasting">Forecasting</h3>
-<p>Predicts future costs using three methods:</p>
-<ul>
-<li><strong>Linear</strong> — Simple trend extrapolation</li>
-<li><strong>EMA</strong> — Exponential moving average (adapts to recent changes faster)</li>
-<li><strong>Ensemble</strong> — Weighted combination (recommended)</li>
-</ul>
-<p>Includes budget exhaustion prediction: "At current rates, your $1,000 monthly budget will be exhausted by March 15th."</p>
-<h3 id="optimizer">Optimizer</h3>
-<p>Analyzes your usage patterns and recommends model substitutions:</p>
-<ul>
-<li>Which calls use expensive models for simple tasks?</li>
-<li>What savings would you get from switching <code>gpt-4o</code> → <code>gpt-4o-mini</code> for classification?</li>
-<li>Overall efficiency score for each project</li>
-</ul>
-<h3 id="analytics">Analytics</h3>
-<p>Deep-dive analysis:</p>
-<ul>
-<li><strong>Token efficiency</strong> — Cost per 1K tokens by model</li>
-<li><strong>Top spenders</strong> — Highest-cost agents, projects, or models</li>
-<li><strong>Error analysis</strong> — Error rates by model and type</li>
-<li><strong>Chargeback reports</strong> — Cost allocation by team/project</li>
-</ul>
-<h3 id="estimator">Estimator</h3>
-<p>Pre-call cost estimation. Enter a prompt and compare estimated costs across 42 models before making expensive API calls.</p>
-<h2 id="api-endpoints">API Endpoints</h2>
-<p>All dashboard views are powered by REST endpoints you can use directly:</p>
+<h1 id="governance-templates">Governance Templates</h1>
+<p>Pre-configured cost governance profiles that set up policies, budgets, tier restrictions, reactions, and notifications in one step. Inspired by Paperclip's Clipmart pattern.</p>
+<h2 id="built-in-templates">Built-in Templates</h2>
 <table>
 <thead>
 <tr>
-<th>Endpoint</th>
+<th>Template</th>
 <th>Description</th>
+<th>Tier</th>
+<th>Budgets</th>
+<th>Policies</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>GET /api/summary</code></td>
-<td>Overview metrics</td>
+<td><strong>startup</strong></td>
+<td>Cost-conscious, economy-focused</td>
+<td>Economy + Standard</td>
+<td>$500/month</td>
+<td>Block premium in dev</td>
 </tr>
 <tr>
-<td><code>GET /api/cost/by-model</code></td>
-<td>Cost breakdown by model</td>
+<td><strong>enterprise</strong></td>
+<td>Full governance, 5 cost centers</td>
+<td>All tiers, premium needs approval</td>
+<td>$5K prod, $1K staging</td>
+<td>Premium requires approval</td>
 </tr>
 <tr>
-<td><code>GET /api/cost/over-time</code></td>
-<td>Time-series cost data</td>
+<td><strong>soc2-compliance</strong></td>
+<td>Audit trail, no free-tier</td>
+<td>No free tier</td>
+<td>—</td>
+<td>Block free, log premium</td>
 </tr>
 <tr>
-<td><code>GET /api/forecast/{project}</code></td>
-<td>Cost predictions</td>
+<td><strong>agency</strong></td>
+<td>Multi-client, per-client budgets</td>
+<td>Economy + Standard</td>
+<td>Per-client</td>
+<td>Chargeback reports</td>
 </tr>
 <tr>
-<td><code>GET /api/optimizer/{project}</code></td>
-<td>Optimization recommendations</td>
-</tr>
-<tr>
-<td><code>GET /api/analytics/{project}/summary</code></td>
-<td>Usage analytics</td>
-</tr>
-<tr>
-<td><code>POST /api/estimate</code></td>
-<td>Cost estimation</td>
+<td><strong>research-lab</strong></td>
+<td>No restrictions, analytics focus</td>
+<td>All tiers including free</td>
+<td>$10K experiments</td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
-<p>See the <a href="../../reference/api/">API Reference</a> for full documentation.</p>
+<h2 id="using-templates">Using Templates</h2>
+<h3 id="preview-before-applying">Preview Before Applying</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.templates</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_template_registry</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">reg</span> <span class="o">=</span> <span class="n">get_template_registry</span><span class="p">()</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># List available templates</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">list_templates</span><span class="p">():</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Preview what would change</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">preview</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">preview</span><span class="p">(</span><span class="s2">&quot;startup&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">preview</span><span class="p">[</span><span class="s2">&quot;tier_restrictions&quot;</span><span class="p">])</span>  <span class="c1"># {&#39;allowed_tiers&#39;: [&#39;economy&#39;, &#39;standard&#39;]}</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">preview</span><span class="p">[</span><span class="s2">&quot;budgets&quot;</span><span class="p">])</span>            <span class="c1"># [{&#39;project&#39;: &#39;default&#39;, &#39;monthly_limit&#39;: 500}]</span>
+</code></pre></div>
+<h3 id="apply-a-template">Apply a Template</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">&quot;enterprise&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># {&#39;template&#39;: &#39;enterprise&#39;, &#39;sections&#39;: [</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">#   {&#39;section&#39;: &#39;tier_restrictions&#39;, &#39;items&#39;: 1},</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">#   {&#39;section&#39;: &#39;budgets&#39;, &#39;items&#39;: 3},</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#   {&#39;section&#39;: &#39;policies&#39;, &#39;items&#39;: 2},</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">#   {&#39;section&#39;: &#39;cost_centers&#39;, &#39;items&#39;: 5},</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">#   ...</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># ]}</span>
+</code></pre></div>
+<h2 id="custom-templates">Custom Templates</h2>
+<h3 id="create-from-yaml">Create from YAML</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># my-team.yaml</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-team</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Custom setup for our ML team</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">ml</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">research</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nt">tier_restrictions</span><span class="p">:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">allowed_tiers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">economy</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">standard</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">premium</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">require_approval_for</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">premium</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nt">budgets</span><span class="p">:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">training</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">monthly_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000.0</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="nt">alert_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.80</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inference</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="nt">monthly_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000.0</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="nt">policies</span><span class="p">:</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Log all premium usage</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nt">conditions</span><span class="p">:</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">field</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tier</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="nt">op</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eq</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">premium</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">log_only</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="nt">priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="nt">reactions</span><span class="p">:</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="nt">budget-warning</span><span class="p">:</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">    </span><span class="nt">auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">    </span><span class="nt">actions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">notify</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">log</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2h</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="nt">goals</span><span class="p">:</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reduce-cost-30pct</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reduce inference cost by 30%</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">    </span><span class="nt">budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="nt">settings</span><span class="p">:</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="w">  </span><span class="nt">complexity_routing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">  </span><span class="nt">token_analyzer_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h3 id="load-and-apply">Load and Apply</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">reg</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="s2">&quot;my-team.yaml&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">reg</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">&quot;my-team&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="export-current-config">Export Current Config</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">yaml_str</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">export_current</span><span class="p">(</span><span class="s2">&quot;my-backup&quot;</span><span class="p">,</span> <span class="s2">&quot;Snapshot of current config&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;backup.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml_str</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="template-sections">Template Sections</h2>
+<p>Each template can configure:</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>What it sets up</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tier_restrictions</code></td>
+<td>Allowed tiers, approval requirements</td>
+</tr>
+<tr>
+<td><code>budgets</code></td>
+<td>Per-project monthly/daily limits</td>
+</tr>
+<tr>
+<td><code>policies</code></td>
+<td>Policy engine rules (deny, approve, log)</td>
+</tr>
+<tr>
+<td><code>reactions</code></td>
+<td>Event-driven automation (YAML reactions)</td>
+</tr>
+<tr>
+<td><code>cost_centers</code></td>
+<td>Cost center definitions with ERP codes</td>
+</tr>
+<tr>
+<td><code>notifications</code></td>
+<td>Slack, PagerDuty, webhook channels</td>
+</tr>
+<tr>
+<td><code>goals</code></td>
+<td>Business objectives with budgets</td>
+</tr>
+<tr>
+<td><code>settings</code></td>
+<td>Feature flags (complexity routing, audit, etc.)</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -664,6 +664,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/goals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Goal Attribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/heartbeat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heartbeat Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/langchain/" class="md-nav__link">
         
   
@@ -1499,6 +1583,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#goals-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goals API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#templates-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Templates API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#heartbeat-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heartbeat API
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2172,6 +2289,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#goals-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goals API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#templates-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Templates API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#heartbeat-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heartbeat API
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2383,6 +2533,36 @@
 <a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>GET    /reactions/history   → Reaction execution history
 <a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>GET    /reactions/stats     → Engine statistics
 <a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>POST   /reactions/reload    → Reload from YAML
+</code></pre></div>
+<h2 id="goals-api">Goals API</h2>
+<p>Business objective cost attribution.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>POST   /api/goals                    → Create a goal
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>GET    /api/goals                    → List goals (filter: project, status, parent)
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>GET    /api/goals/{id}               → Get goal with cost summary
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>GET    /api/goals/{id}/cost          → Cost attribution (direct + children rollup)
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>GET    /api/goals/{id}/ancestry      → Full goal ancestry chain
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>PUT    /api/goals/{id}               → Update goal
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>DELETE /api/goals/{id}               → Delete goal
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>GET    /api/goals/{id}/budget-check  → Check if goal is within budget
+</code></pre></div>
+<h2 id="templates-api">Templates API</h2>
+<p>Governance template management.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>GET    /api/templates                → List available templates
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>GET    /api/templates/{name}         → Preview template configuration
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>POST   /api/templates/{name}/apply   → Apply a template
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>POST   /api/templates                → Upload a custom YAML template
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>GET    /api/templates/export         → Export current config as template
+</code></pre></div>
+<h2 id="heartbeat-api">Heartbeat API</h2>
+<p>Per-cycle cost monitoring for agent orchestrators.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>POST   /api/heartbeats/{agent_id}/start    → Start a heartbeat cycle
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>POST   /api/heartbeats/{agent_id}/spend    → Record spend in current cycle
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>POST   /api/heartbeats/{agent_id}/end      → End cycle and get summary
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>POST   /api/heartbeats/{agent_id}/pause    → Pause agent (external trigger)
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>POST   /api/heartbeats/{agent_id}/resume   → Resume paused agent
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>GET    /api/heartbeats/{agent_id}          → Get cycle history
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>GET    /api/heartbeats/{agent_id}/summary  → Agent summary stats
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>GET    /api/heartbeats/agents              → List all tracked agents
 </code></pre></div>
 
 

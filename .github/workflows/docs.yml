@@ -1,4 +1,4 @@
-name: Deploy Docs
+name: Deploy Site
 
 on:
   push:
@@ -11,11 +11,9 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
-  deploy-docs:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,23 +26,19 @@ jobs:
       - name: Install MkDocs
         run: pip install mkdocs-material mkdocs-autorefs
 
-      - name: Build docs
-        run: mkdocs build --site-dir _site
+      - name: Build combined site
+        run: |
+          mkdocs build --site-dir _build/docs
+          cp site/index.html _build/index.html
+          cp site/CNAME _build/CNAME
+          cp -r site/assets _build/assets 2>/dev/null || true
+          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/"></head></html>' > _build/404.html
+          echo "Built:"
+          ls _build/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
-
-  deploy-landing:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Deploy landing page
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
-          destination_dir: landing
+          publish_dir: ./_build
+          cname: agentcost.in

@@ -130,9 +130,7 @@ class TestCostTier:
         from agentcost.intelligence import TierRegistry
 
         reg = TierRegistry()
-        result = reg.check_tier_policy(
-            "o1", allowed_tiers=["economy"]
-        )
+        result = reg.check_tier_policy("o1", allowed_tiers=["economy"])
         assert not result["allowed"]
         assert "premium" in result["reason"]
         assert result["suggested_alternative"] is not None
@@ -195,8 +193,12 @@ class TestTokenAnalyzer:
 
         a = TokenAnalyzer()
         call = a.record_call(
-            model="gpt-4o", input_tokens=5000, output_tokens=500,
-            max_context=128000, system_tokens=2000, project="p1",
+            model="gpt-4o",
+            input_tokens=5000,
+            output_tokens=500,
+            max_context=128000,
+            system_tokens=2000,
+            project="p1",
         )
         assert call.total_tokens == 5500
         assert call.context_utilization == pytest.approx(5000 / 128000, rel=0.01)
@@ -208,8 +210,12 @@ class TestTokenAnalyzer:
         a = TokenAnalyzer()
         for _ in range(10):
             a.record_call(
-                model="gpt-4o", input_tokens=20000, output_tokens=2000,
-                max_context=128000, system_tokens=3000, project="healthy",
+                model="gpt-4o",
+                input_tokens=20000,
+                output_tokens=2000,
+                max_context=128000,
+                system_tokens=3000,
+                project="healthy",
             )
         report = a.analyze("healthy")
         assert report.total_calls == 10
@@ -222,14 +228,19 @@ class TestTokenAnalyzer:
         a = TokenAnalyzer()
         for _ in range(5):
             a.record_call(
-                model="gpt-4o", input_tokens=10000, output_tokens=500,
-                max_context=128000, system_tokens=5000,  # 50% system!
+                model="gpt-4o",
+                input_tokens=10000,
+                output_tokens=500,
+                max_context=128000,
+                system_tokens=5000,  # 50% system!
                 project="bloated",
             )
         report = a.analyze("bloated")
         assert any("system" in w.lower() for w in report.warnings)
-        assert any("system" in r.lower() or "shorten" in r.lower()
-                    for r in report.recommendations)
+        assert any(
+            "system" in r.lower() or "shorten" in r.lower()
+            for r in report.recommendations
+        )
 
     def test_warn_low_utilization(self):
         from agentcost.intelligence import TokenAnalyzer
@@ -237,8 +248,11 @@ class TestTokenAnalyzer:
         a = TokenAnalyzer()
         for _ in range(5):
             a.record_call(
-                model="gpt-4o", input_tokens=500, output_tokens=100,
-                max_context=128000, project="low",
+                model="gpt-4o",
+                input_tokens=500,
+                output_tokens=100,
+                max_context=128000,
+                project="low",
             )
         report = a.analyze("low")
         assert any("utilization" in w.lower() for w in report.warnings)
@@ -249,12 +263,16 @@ class TestTokenAnalyzer:
         a = TokenAnalyzer()
         for _ in range(5):
             a.record_call(
-                model="gpt-4o", input_tokens=120000, output_tokens=5000,
-                max_context=128000, project="full",
+                model="gpt-4o",
+                input_tokens=120000,
+                output_tokens=5000,
+                max_context=128000,
+                project="full",
             )
         report = a.analyze("full")
-        assert any("context limit" in w.lower() or "near" in w.lower()
-                    for w in report.warnings)
+        assert any(
+            "context limit" in w.lower() or "near" in w.lower() for w in report.warnings
+        )
 
     def test_warn_low_output_ratio(self):
         from agentcost.intelligence import TokenAnalyzer
@@ -262,8 +280,11 @@ class TestTokenAnalyzer:
         a = TokenAnalyzer()
         for _ in range(5):
             a.record_call(
-                model="gpt-4o", input_tokens=50000, output_tokens=50,
-                max_context=128000, project="low-out",
+                model="gpt-4o",
+                input_tokens=50000,
+                output_tokens=50,
+                max_context=128000,
+                project="low-out",
             )
         report = a.analyze("low-out")
         assert any("output" in w.lower() for w in report.warnings)
@@ -273,8 +294,11 @@ class TestTokenAnalyzer:
 
         a = TokenAnalyzer()
         a.record_call(
-            model="gpt-4o", input_tokens=20000, output_tokens=2000,
-            max_context=128000, project="test",
+            model="gpt-4o",
+            input_tokens=20000,
+            output_tokens=2000,
+            max_context=128000,
+            project="test",
         )
         report = a.analyze("test")
         assert 0 <= report.efficiency_score <= 100
@@ -283,8 +307,20 @@ class TestTokenAnalyzer:
         from agentcost.intelligence import TokenAnalyzer
 
         a = TokenAnalyzer()
-        a.record_call(model="a", input_tokens=100, output_tokens=50, max_context=1000, project="p1")
-        a.record_call(model="b", input_tokens=200, output_tokens=100, max_context=1000, project="p2")
+        a.record_call(
+            model="a",
+            input_tokens=100,
+            output_tokens=50,
+            max_context=1000,
+            project="p1",
+        )
+        a.record_call(
+            model="b",
+            input_tokens=200,
+            output_tokens=100,
+            max_context=1000,
+            project="p2",
+        )
         report = a.analyze()  # no scope filter
         assert report.total_calls == 2
 
@@ -304,7 +340,9 @@ class TestTokenAnalyzer:
 
         a = TokenAnalyzer(max_calls=5)
         for i in range(10):
-            a.record_call(model="m", input_tokens=100, output_tokens=50, max_context=1000)
+            a.record_call(
+                model="m", input_tokens=100, output_tokens=50, max_context=1000
+            )
         assert len(a._calls) == 5
 
     def test_reset(self):
@@ -387,7 +425,9 @@ class TestBudgetGate:
     def test_custom_thresholds(self):
         from agentcost.intelligence import BudgetGate
 
-        gate = BudgetGate(budget=10.00, warn_pct=0.50, downgrade_pct=0.70, block_pct=0.90)
+        gate = BudgetGate(
+            budget=10.00, warn_pct=0.50, downgrade_pct=0.70, block_pct=0.90
+        )
         gate.spent = 5.50  # 55%
         d = gate.check("gpt-4o")
         assert d.action == "warn"
@@ -675,7 +715,9 @@ class TestPhase3Integration:
 
         # 1. Classify the prompt
         result = cr.classify("Analyze the performance of our Q3 portfolio")
-        model = cr.route("Analyze the performance of our Q3 portfolio", provider="openai")
+        model = cr.route(
+            "Analyze the performance of our Q3 portfolio", provider="openai"
+        )
 
         # 2. Gate check
         decision = gate.check(model, estimated_tokens=5000, provider="openai")
@@ -704,8 +746,10 @@ class TestPhase3Integration:
 
         report = analyzer.analyze("wasteful")
         # Should get recommendation about smaller model
-        assert any("smaller" in r.lower() or "context" in r.lower()
-                    for r in report.recommendations)
+        assert any(
+            "smaller" in r.lower() or "context" in r.lower()
+            for r in report.recommendations
+        )
 
         # Verify gpt-4o-mini would be cheaper
         gpt4o_tier = reg.get_tier_info("gpt-4o")

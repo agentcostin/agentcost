@@ -291,9 +291,7 @@ class TestReactionEngine:
             actions=["notify"],
             condition={"usage_pct": {"gte": 80}},
         )
-        result = engine.execute(
-            reaction, "budget.warning", {"usage_pct": 50}
-        )
+        result = engine.execute(reaction, "budget.warning", {"usage_pct": 50})
         assert not result.success
         assert result.skipped_reason == "condition_not_met"
 
@@ -307,9 +305,7 @@ class TestReactionEngine:
             actions=["log"],
             condition={"usage_pct": {"gte": 80}},
         )
-        result = engine.execute(
-            reaction, "budget.warning", {"usage_pct": 90}
-        )
+        result = engine.execute(reaction, "budget.warning", {"usage_pct": 90})
         assert result.success
         assert "log" in result.actions_executed
 

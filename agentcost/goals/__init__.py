@@ -151,9 +151,7 @@ class GoalService:
             self._spend[goal_id] += cost
             self._call_counts[goal_id] = self._call_counts.get(goal_id, 0) + 1
 
-    def get_goal_cost(
-        self, goal_id: str, include_children: bool = True
-    ) -> dict:
+    def get_goal_cost(self, goal_id: str, include_children: bool = True) -> dict:
         """Get cost for a goal, optionally including all sub-goals.
 
         Returns:
@@ -249,10 +247,12 @@ class GoalService:
         result = []
         for goal in self._goals.values():
             cost_data = self.get_goal_cost(goal.id)
-            result.append({
-                **goal.to_dict(),
-                **cost_data,
-            })
+            result.append(
+                {
+                    **goal.to_dict(),
+                    **cost_data,
+                }
+            )
         return result
 
 

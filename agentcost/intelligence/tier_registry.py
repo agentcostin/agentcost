@@ -43,8 +43,8 @@ class CostTier(str, Enum):
 
 # Thresholds in cost per 1M input tokens (USD)
 DEFAULT_THRESHOLDS = {
-    "economy_max": 0.50,    # < $0.50/1M → economy
-    "standard_max": 5.00,   # $0.50 – $5.00/1M → standard
+    "economy_max": 0.50,  # < $0.50/1M → economy
+    "standard_max": 5.00,  # $0.50 – $5.00/1M → standard
     # > $5.00/1M → premium
 }
 
@@ -65,9 +65,13 @@ class TierInfo:
 class TierPolicy:
     """Policy rules for tier-based access control."""
 
-    allowed_tiers: list[str] = field(default_factory=lambda: ["economy", "standard", "premium"])
+    allowed_tiers: list[str] = field(
+        default_factory=lambda: ["economy", "standard", "premium"]
+    )
     max_cost_per_call: float = 0.0  # 0 = no limit
-    require_approval_for: list[str] = field(default_factory=list)  # tiers requiring approval
+    require_approval_for: list[str] = field(
+        default_factory=list
+    )  # tiers requiring approval
 
 
 class TierRegistry:
@@ -119,7 +123,8 @@ class TierRegistry:
                     input_cost_per_1m=round(input_cost * 1_000_000, 4),
                     output_cost_per_1m=round(output_cost * 1_000_000, 4),
                     provider=info.get("litellm_provider", ""),
-                    max_context=info.get("max_input_tokens", 0) or info.get("max_tokens", 0),
+                    max_context=info.get("max_input_tokens", 0)
+                    or info.get("max_tokens", 0),
                 )
         except Exception as e:
             logger.warning("Failed to load tier data: %s", e)
@@ -225,8 +230,11 @@ class TierRegistry:
         return min(candidates, key=lambda x: x.input_cost_per_1m)
 
     def check_tier_policy(
-        self, model: str, allowed_tiers: list[str] | None = None,
-        max_cost_per_call: float = 0, estimated_tokens: int = 0,
+        self,
+        model: str,
+        allowed_tiers: list[str] | None = None,
+        max_cost_per_call: float = 0,
+        estimated_tokens: int = 0,
     ) -> dict:
         """Check if a model is allowed under tier policy rules.
 
@@ -315,13 +323,15 @@ class TierRegistry:
                 (i for i in self._cache.values() if i.tier.value == tier_name),
                 key=lambda x: x.input_cost_per_1m,
             ):
-                models.append({
-                    "model": info.model,
-                    "provider": info.provider,
-                    "input_cost_per_1m": info.input_cost_per_1m,
-                    "output_cost_per_1m": info.output_cost_per_1m,
-                    "max_context": info.max_context,
-                })
+                models.append(
+                    {
+                        "model": info.model,
+                        "provider": info.provider,
+                        "input_cost_per_1m": info.input_cost_per_1m,
+                        "output_cost_per_1m": info.output_cost_per_1m,
+                        "max_context": info.max_context,
+                    }
+                )
                 if len(models) >= limit_per_tier:
                     break
             data["tiers"][tier_name] = models

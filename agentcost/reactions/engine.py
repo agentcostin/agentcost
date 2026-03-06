@@ -414,7 +414,10 @@ class ReactionEngine:
         now = time.time()
         with self._lock:
             last_fired = self._cooldowns.get(reaction.name, 0)
-            if reaction.cooldown_seconds > 0 and (now - last_fired) < reaction.cooldown_seconds:
+            if (
+                reaction.cooldown_seconds > 0
+                and (now - last_fired) < reaction.cooldown_seconds
+            ):
                 return ReactionResult(
                     reaction_name=reaction.name,
                     event_type=event_type,
@@ -597,7 +600,11 @@ class ReactionEngine:
             from ..events import get_event_bus
 
             bus = get_event_bus()
-            escalated_data = {**data, "escalated_from": event_type, "severity": "critical"}
+            escalated_data = {
+                **data,
+                "escalated_from": event_type,
+                "severity": "critical",
+            }
             bus.emit(escalated_type, escalated_data)
             logger.warning("ESCALATE: %s → %s", event_type, escalated_type)
         except Exception as e:

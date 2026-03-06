@@ -202,8 +202,14 @@ class TestGoalSDKIntegration:
         from agentcost.sdk.trace import TraceEvent
 
         ev = TraceEvent(
-            trace_id="t1", project="p", model="m", provider="p",
-            input_tokens=0, output_tokens=0, cost=0.1, latency_ms=0,
+            trace_id="t1",
+            project="p",
+            model="m",
+            provider="p",
+            input_tokens=0,
+            output_tokens=0,
+            cost=0.1,
+            latency_ms=0,
             goal_id="my-goal",
         )
         assert ev.goal_id == "my-goal"
@@ -220,15 +226,22 @@ class TestGoalSDKIntegration:
 
         # Monkey-patch goal service
         import agentcost.goals as gmod
+
         old = gmod._global_service
         gmod._global_service = svc
 
         try:
             tracker = CostTracker("goal-test")
             ev = TraceEvent(
-                trace_id="t1", project="goal-test", model="gpt-4o",
-                provider="openai", input_tokens=100, output_tokens=50,
-                cost=0.05, latency_ms=100, goal_id="sdk-goal",
+                trace_id="t1",
+                project="goal-test",
+                model="gpt-4o",
+                provider="openai",
+                input_tokens=100,
+                output_tokens=50,
+                cost=0.05,
+                latency_ms=100,
+                goal_id="sdk-goal",
             )
             tracker.record(ev)
 
@@ -254,11 +267,13 @@ class TestTemplate:
     def test_from_dict(self):
         from agentcost.templates import Template
 
-        t = Template.from_dict({
-            "name": "test",
-            "description": "A test template",
-            "budgets": [{"project": "p1", "monthly_limit": 100}],
-        })
+        t = Template.from_dict(
+            {
+                "name": "test",
+                "description": "A test template",
+                "budgets": [{"project": "p1", "monthly_limit": 100}],
+            }
+        )
         assert t.name == "test"
         assert len(t.budgets) == 1
 
@@ -389,9 +404,9 @@ budgets:
 class TestBuiltinTemplateContent:
     """Verify built-in templates have valid structure."""
 
-    @pytest.mark.parametrize("name", [
-        "startup", "enterprise", "soc2-compliance", "agency", "research-lab"
-    ])
+    @pytest.mark.parametrize(
+        "name", ["startup", "enterprise", "soc2-compliance", "agency", "research-lab"]
+    )
     def test_template_has_required_fields(self, name):
         from agentcost.templates import TemplateRegistry
 
@@ -418,8 +433,8 @@ class TestBuiltinTemplateContent:
         reg = TemplateRegistry()
         t = reg.get_template("soc2-compliance")
         has_block = any(
-            p.get("action") == "deny" and
-            any(c.get("value") == "free" for c in p.get("conditions", []))
+            p.get("action") == "deny"
+            and any(c.get("value") == "free" for c in p.get("conditions", []))
             for p in t.policies
         )
         assert has_block
@@ -569,7 +584,9 @@ class TestHeartbeatBudget:
         from agentcost.heartbeat import HeartbeatTracker
 
         callbacks = []
-        ht = HeartbeatTracker(pause_callback=lambda aid, data: callbacks.append((aid, data)))
+        ht = HeartbeatTracker(
+            pause_callback=lambda aid, data: callbacks.append((aid, data))
+        )
         ht.set_budget("a1", 0.50)
 
         ht.start_cycle("a1")
@@ -670,14 +687,21 @@ class TestCrossFeatureIntegration:
         """Templates can include goal definitions."""
         from agentcost.templates import Template
 
-        t = Template.from_dict({
-            "name": "with-goals",
-            "description": "Template with goals",
-            "goals": [
-                {"id": "q1-okr", "name": "Q1 OKR", "budget": 5000},
-                {"id": "launch", "name": "Product Launch", "parent_goal_id": "q1-okr", "budget": 2000},
-            ],
-        })
+        t = Template.from_dict(
+            {
+                "name": "with-goals",
+                "description": "Template with goals",
+                "goals": [
+                    {"id": "q1-okr", "name": "Q1 OKR", "budget": 5000},
+                    {
+                        "id": "launch",
+                        "name": "Product Launch",
+                        "parent_goal_id": "q1-okr",
+                        "budget": 2000,
+                    },
+                ],
+            }
+        )
         assert len(t.goals) == 2
         assert t.goals[0]["id"] == "q1-okr"
 

@@ -78,15 +78,21 @@ class CostTracker:
             usage_pct = self.total_cost / self.budget_limit
             if usage_pct >= 1.0 and not self._exceeded_emitted:
                 self._exceeded_emitted = True
-                _emit_budget_event("budget.exceeded", self.project, self.total_cost, self.budget_limit)
+                _emit_budget_event(
+                    "budget.exceeded", self.project, self.total_cost, self.budget_limit
+                )
                 if self._on_budget_alert:
                     try:
-                        self._on_budget_alert(self.project, self.total_cost, self.budget_limit)
+                        self._on_budget_alert(
+                            self.project, self.total_cost, self.budget_limit
+                        )
                     except:
                         pass
             elif usage_pct >= self.warning_threshold and not self._warning_emitted:
                 self._warning_emitted = True
-                _emit_budget_event("budget.warning", self.project, self.total_cost, self.budget_limit)
+                _emit_budget_event(
+                    "budget.warning", self.project, self.total_cost, self.budget_limit
+                )
 
     def set_budget(self, limit: float, on_alert: Callable | None = None):
         self.budget_limit = limit
@@ -158,21 +164,26 @@ def _persist_event(event: TraceEvent):
         pass
 
 
-def _emit_budget_event(event_type: str, project: str, current_spend: float, budget_limit: float):
+def _emit_budget_event(
+    event_type: str, project: str, current_spend: float, budget_limit: float
+):
     """Emit budget.warning or budget.exceeded to EventBus for ReactionEngine."""
     try:
         from ..events import get_event_bus
 
         bus = get_event_bus()
-        bus.emit(event_type, {
-            "project": project,
-            "current_spend": round(current_spend, 6),
-            "budget_limit": round(budget_limit, 6),
-            "usage_pct": round(current_spend / budget_limit * 100, 1),
-            "message": f"Project '{project}' budget {event_type.split('.')[-1]}: "
-                       f"${current_spend:.4f} / ${budget_limit:.4f} "
-                       f"({current_spend / budget_limit * 100:.1f}%)",
-        })
+        bus.emit(
+            event_type,
+            {
+                "project": project,
+                "current_spend": round(current_spend, 6),
+                "budget_limit": round(budget_limit, 6),
+                "usage_pct": round(current_spend / budget_limit * 100, 1),
+                "message": f"Project '{project}' budget {event_type.split('.')[-1]}: "
+                f"${current_spend:.4f} / ${budget_limit:.4f} "
+                f"({current_spend / budget_limit * 100:.1f}%)",
+            },
+        )
     except Exception:
         pass  # EventBus may not be initialized
 
@@ -196,6 +207,7 @@ def _record_to_tracker(event: TraceEvent):
     if event.goal_id:
         try:
             from ..goals import get_goal_service
+
             get_goal_service().record_spend(event.goal_id, event.cost)
         except Exception:
             pass
@@ -341,7 +353,12 @@ class _TracedAnthropic:
         return getattr(self._c, n)
 
 
-def trace(client: Any, project: str = "default", persist: bool = True, goal_id: str | None = None) -> Any:
+def trace(
+    client: Any,
+    project: str = "default",
+    persist: bool = True,
+    goal_id: str | None = None,
+) -> Any:
     """Wrap an OpenAI or Anthropic client with automatic cost tracking."""
     ct = type(client).__module__
     if "openai" in ct or hasattr(client, "chat"):

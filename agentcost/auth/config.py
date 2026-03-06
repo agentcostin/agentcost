@@ -74,23 +74,37 @@ class AuthConfig:
 
     @property
     def jwks_url(self) -> str:
-        return self.oidc_jwks_url or f"{self.oidc_issuer_url}/protocol/openid-connect/certs"
+        return (
+            self.oidc_jwks_url
+            or f"{self.oidc_issuer_url}/protocol/openid-connect/certs"
+        )
 
     @property
     def token_url(self) -> str:
-        return self.oidc_token_url or f"{self.oidc_issuer_url}/protocol/openid-connect/token"
+        return (
+            self.oidc_token_url
+            or f"{self.oidc_issuer_url}/protocol/openid-connect/token"
+        )
 
     @property
     def userinfo_url(self) -> str:
-        return self.oidc_userinfo_url or f"{self.oidc_issuer_url}/protocol/openid-connect/userinfo"
+        return (
+            self.oidc_userinfo_url
+            or f"{self.oidc_issuer_url}/protocol/openid-connect/userinfo"
+        )
 
     @property
     def auth_url(self) -> str:
-        return self.oidc_auth_url or f"{self.oidc_issuer_url}/protocol/openid-connect/auth"
+        return (
+            self.oidc_auth_url or f"{self.oidc_issuer_url}/protocol/openid-connect/auth"
+        )
 
     @property
     def logout_url(self) -> str:
-        return self.oidc_logout_url or f"{self.oidc_issuer_url}/protocol/openid-connect/logout"
+        return (
+            self.oidc_logout_url
+            or f"{self.oidc_issuer_url}/protocol/openid-connect/logout"
+        )
 
     @property
     def discovery_url(self) -> str:
@@ -141,15 +155,23 @@ def get_auth_config() -> AuthConfig:
         oidc_jwks_url=os.environ.get("OIDC_JWKS_URL", ""),
         oidc_userinfo_url=os.environ.get("OIDC_USERINFO_URL", ""),
         oidc_logout_url=os.environ.get("OIDC_LOGOUT_URL", ""),
-        saml_entity_id=os.environ.get("SAML_ENTITY_ID", "https://agentcost.local/saml/metadata"),
-        saml_acs_url=os.environ.get("SAML_ACS_URL", "http://localhost:8100/auth/saml/acs"),
-        saml_slo_url=os.environ.get("SAML_SLO_URL", "http://localhost:8100/auth/saml/slo"),
+        saml_entity_id=os.environ.get(
+            "SAML_ENTITY_ID", "https://agentcost.local/saml/metadata"
+        ),
+        saml_acs_url=os.environ.get(
+            "SAML_ACS_URL", "http://localhost:8100/auth/saml/acs"
+        ),
+        saml_slo_url=os.environ.get(
+            "SAML_SLO_URL", "http://localhost:8100/auth/saml/slo"
+        ),
         saml_idp_entity_id=os.environ.get("SAML_IDP_ENTITY_ID", ""),
         saml_idp_sso_url=os.environ.get("SAML_IDP_SSO_URL", ""),
         saml_idp_slo_url=os.environ.get("SAML_IDP_SLO_URL", ""),
         saml_idp_cert=os.environ.get("SAML_IDP_CERT", ""),
         saml_idp_metadata_url=os.environ.get("SAML_IDP_METADATA_URL", ""),
-        session_secret=os.environ.get("SESSION_SECRET", "change-me-in-production-please"),
+        session_secret=os.environ.get(
+            "SESSION_SECRET", "change-me-in-production-please"
+        ),
         api_key_header=os.environ.get("API_KEY_HEADER", "X-AgentCost-Key"),
     )
 

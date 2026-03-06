@@ -53,7 +53,19 @@ class TestCostMapLoading:
     def test_list_models_by_provider(self):
         openai_models = list_models(provider="openai")
         assert len(openai_models) > 10
-        assert all("gpt" in m or "o1" in m or "o3" in m or "o4" in m or "dall-e" in m or "tts" in m or "whisper" in m or "text-embedding" in m or "chatgpt" in m or "ft:" in m for m in openai_models[:5])
+        assert all(
+            "gpt" in m
+            or "o1" in m
+            or "o3" in m
+            or "o4" in m
+            or "dall-e" in m
+            or "tts" in m
+            or "whisper" in m
+            or "text-embedding" in m
+            or "chatgpt" in m
+            or "ft:" in m
+            for m in openai_models[:5]
+        )
 
     def test_reload_works(self):
         """reload() should re-read from disk without error."""
@@ -260,10 +272,13 @@ class TestModelRegistration:
         assert pricing["output"] == pytest.approx(8.00, abs=0.01)
 
     def test_register_model_raw(self):
-        register_model("test-corp/custom-v2", {
-            "input_cost_per_token": 0.000003,
-            "output_cost_per_token": 0.000015,
-        })
+        register_model(
+            "test-corp/custom-v2",
+            {
+                "input_cost_per_token": 0.000003,
+                "output_cost_per_token": 0.000015,
+            },
+        )
         cost = calculate_cost("test-corp/custom-v2", 1000, 500)
         assert cost > 0
 

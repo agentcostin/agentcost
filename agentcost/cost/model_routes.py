@@ -26,11 +26,13 @@ router = APIRouter(prefix="/api/models", tags=["models"])
 def _get_registry():
     """Lazy import to avoid circular deps."""
     from .calculator import get_model_registry_for_dashboard
+
     return get_model_registry_for_dashboard
 
 
 def _get_tier_registry():
     from ..intelligence.tier_registry import get_tier_registry
+
     return get_tier_registry()
 
 
@@ -39,12 +41,20 @@ def _get_tier_registry():
 
 @router.get("")
 async def list_models(
-    provider: Optional[str] = Query(None, description="Filter by provider (e.g., openai, anthropic)"),
-    tier: Optional[str] = Query(None, description="Filter by tier (economy, standard, premium, free)"),
-    mode: Optional[str] = Query(None, description="Filter by mode (chat, completion, embedding)"),
+    provider: Optional[str] = Query(
+        None, description="Filter by provider (e.g., openai, anthropic)"
+    ),
+    tier: Optional[str] = Query(
+        None, description="Filter by tier (economy, standard, premium, free)"
+    ),
+    mode: Optional[str] = Query(
+        None, description="Filter by mode (chat, completion, embedding)"
+    ),
     limit: int = Query(100, ge=1, le=5000, description="Max results"),
     offset: int = Query(0, ge=0, description="Offset for pagination"),
-    sort: str = Query("input_asc", description="Sort: input_asc, input_desc, name, provider"),
+    sort: str = Query(
+        "input_asc", description="Sort: input_asc, input_desc, name, provider"
+    ),
 ):
     """List all models from the vendored pricing data.
 
@@ -71,7 +81,7 @@ async def list_models(
         models.sort(key=lambda m: (m.get("provider", ""), m.get("input", 0)))
 
     total = len(models)
-    models = models[offset:offset + limit]
+    models = models[offset : offset + limit]
 
     return {
         "total": total,
@@ -101,9 +111,15 @@ async def search_models(
     q: str = Query("", description="Search by model name (substring match)"),
     provider: Optional[str] = Query(None, description="Filter by provider"),
     tier: Optional[str] = Query(None, description="Filter by tier"),
-    min_input: Optional[float] = Query(None, description="Min input cost per 1M tokens"),
-    max_input: Optional[float] = Query(None, description="Max input cost per 1M tokens"),
-    min_context: Optional[int] = Query(None, description="Min context window (K tokens)"),
+    min_input: Optional[float] = Query(
+        None, description="Min input cost per 1M tokens"
+    ),
+    max_input: Optional[float] = Query(
+        None, description="Max input cost per 1M tokens"
+    ),
+    min_context: Optional[int] = Query(
+        None, description="Min context window (K tokens)"
+    ),
     limit: int = Query(50, ge=1, le=500),
 ):
     """Search and filter models by name, provider, tier, cost range, context size.
@@ -116,11 +132,17 @@ async def search_models(
     # Text search
     if q:
         q_lower = q.lower()
-        models = [m for m in models if q_lower in m["id"].lower() or q_lower in m.get("provider", "").lower()]
+        models = [
+            m
+            for m in models
+            if q_lower in m["id"].lower() or q_lower in m.get("provider", "").lower()
+        ]
 
     # Provider filter
     if provider:
-        models = [m for m in models if m.get("provider", "").lower() == provider.lower()]
+        models = [
+            m for m in models if m.get("provider", "").lower() == provider.lower()
+        ]
 
     # Tier filter
     if tier:

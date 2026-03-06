@@ -161,7 +161,7 @@ class BudgetGate:
                     action=GateAction.DOWNGRADE.value,
                     model=alt,
                     reason=f"Estimated cost ${est_cost:.4f} exceeds remaining "
-                           f"${remaining:.4f} — downgraded to {alt}",
+                    f"${remaining:.4f} — downgraded to {alt}",
                     **base,
                 )
             else:
@@ -169,7 +169,7 @@ class BudgetGate:
                     action=GateAction.BLOCK.value,
                     model=model,
                     reason=f"Estimated cost ${est_cost:.4f} exceeds remaining "
-                           f"${remaining:.4f}, no downgrade available",
+                    f"${remaining:.4f}, no downgrade available",
                     **base,
                 )
             self._log(decision)
@@ -255,14 +255,16 @@ class BudgetGate:
 
         idx = chain.index(model)
         # Return the next cheaper model in the chain
-        for alt in chain[idx + 1:]:
+        for alt in chain[idx + 1 :]:
             return alt
         return None
 
     def _log(self, decision: GateDecision):
-        self._history.append({
-            **decision.to_dict(),
-            "timestamp": time.time(),
-        })
+        self._history.append(
+            {
+                **decision.to_dict(),
+                "timestamp": time.time(),
+            }
+        )
         if len(self._history) > 500:
             self._history = self._history[-500:]

@@ -157,10 +157,13 @@ class EmailNotifierPlugin(NotifierPlugin):
         body = event.message or json.dumps(event.metadata or event.details, indent=2)
         logger.info(
             "EMAIL [stub] to=%s subject='%s' body='%s'",
-            self.recipients, subject, body[:200],
+            self.recipients,
+            subject,
+            body[:200],
         )
         return SendResult(
-            success=True, message="stub",
+            success=True,
+            message="stub",
             provider_response={"recipients": self.recipients, "subject": subject},
         )
 
@@ -199,10 +202,13 @@ class PagerDutyNotifierPlugin(NotifierPlugin):
         summary = f"AgentCost: {event.event_type} — {event.message}"
         logger.info(
             "PAGERDUTY [stub] routing_key=%s severity=%s summary='%s'",
-            self.routing_key[:8] + "...", severity, summary[:200],
+            self.routing_key[:8] + "...",
+            severity,
+            summary[:200],
         )
         return SendResult(
-            success=True, message="stub",
+            success=True,
+            message="stub",
             provider_response={"severity": severity, "summary": summary[:200]},
         )
 
@@ -243,7 +249,7 @@ class InMemoryTrackerPlugin(TrackerPlugin):
         """Record a trace event and update running spend totals."""
         self._traces.append(event)
         if len(self._traces) > self._max_traces:
-            self._traces = self._traces[-self._max_traces:]
+            self._traces = self._traces[-self._max_traces :]
 
         cost = event.get("cost", 0.0)
         # Update spend for every scope key present in the event
@@ -252,9 +258,7 @@ class InMemoryTrackerPlugin(TrackerPlugin):
             if scope_id:
                 self._spend_by_scope[scope_key][scope_id] += cost
 
-    def get_spend(
-        self, scope: str, scope_id: str, period: str = "month"
-    ) -> float:
+    def get_spend(self, scope: str, scope_id: str, period: str = "month") -> float:
         """Get total spend for a scope. Period filtering is best-effort."""
         return self._spend_by_scope.get(scope, {}).get(scope_id, 0.0)
 
@@ -331,7 +335,10 @@ class AgentLifecyclePlugin(AgentPlugin):
         if new_state not in allowed:
             logger.warning(
                 "Invalid transition for agent %s: %s → %s (allowed: %s)",
-                agent_id, current, new_state, allowed,
+                agent_id,
+                current,
+                new_state,
+                allowed,
             )
             return False
 
@@ -354,7 +361,10 @@ class AgentLifecyclePlugin(AgentPlugin):
 
         logger.info(
             "Agent %s: %s → %s (reason: %s)",
-            agent_id, old_state, new_state, reason or "none",
+            agent_id,
+            old_state,
+            new_state,
+            reason or "none",
         )
         return True
 
@@ -369,7 +379,9 @@ class AgentLifecyclePlugin(AgentPlugin):
         """Return all agents and their states."""
         return dict(self._states)
 
-    def get_transition_history(self, agent_id: str | None = None, limit: int = 50) -> list[dict]:
+    def get_transition_history(
+        self, agent_id: str | None = None, limit: int = 50
+    ) -> list[dict]:
         """Get transition history, optionally filtered by agent."""
         if agent_id:
             filtered = [h for h in self._history if h["agent_id"] == agent_id]
@@ -436,7 +448,8 @@ class PagerDutyReactorPlugin(ReactorPlugin):
                 "source": "agentcost",
                 "component": event_data.get("project", "unknown"),
                 "custom_details": {
-                    k: v for k, v in event_data.items()
+                    k: v
+                    for k, v in event_data.items()
                     if k not in ("_reaction", "_webhook_url")
                 },
             },
@@ -447,12 +460,15 @@ class PagerDutyReactorPlugin(ReactorPlugin):
             # In production: POST to https://events.pagerduty.com/v2/enqueue
             logger.info(
                 "PAGERDUTY TRIGGER: dedup=%s severity=%s summary='%s'",
-                dedup_key, severity, summary[:100],
+                dedup_key,
+                severity,
+                summary[:100],
             )
         else:
             logger.info(
                 "PAGERDUTY TRIGGER [dry-run]: dedup=%s severity=%s",
-                dedup_key, severity,
+                dedup_key,
+                severity,
             )
         return True
 
@@ -524,11 +540,14 @@ def _emit_lifecycle_event(
 
         bus = get_event_bus()
         event_type = f"agent.{new_state}"
-        bus.emit(event_type, {
-            "agent_id": agent_id,
-            "from_state": old_state,
-            "to_state": new_state,
-            "reason": reason,
-        })
+        bus.emit(
+            event_type,
+            {
+                "agent_id": agent_id,
+                "from_state": old_state,
+                "to_state": new_state,
+                "reason": reason,
+            },
+        )
     except Exception:
         pass  # EventBus may not be initialized yet

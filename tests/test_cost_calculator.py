@@ -84,9 +84,13 @@ class TestCostPerToken:
     def test_cache_aware_anthropic(self):
         """Cached tokens should cost 90% less for Anthropic."""
         # Without cache
-        inp_full, out_full, _ = cost_per_token("claude-sonnet-4-5-20250929", 1000, 500, cached_tokens=0)
+        inp_full, out_full, _ = cost_per_token(
+            "claude-sonnet-4-5-20250929", 1000, 500, cached_tokens=0
+        )
         # With 800 cached tokens
-        inp_cached, out_cached, savings = cost_per_token("claude-sonnet-4-5-20250929", 1000, 500, cached_tokens=800)
+        inp_cached, out_cached, savings = cost_per_token(
+            "claude-sonnet-4-5-20250929", 1000, 500, cached_tokens=800
+        )
 
         # Cached input should be cheaper
         assert inp_cached < inp_full
@@ -159,10 +163,13 @@ class TestPrefixStripping:
 
 class TestRegistration:
     def test_register_model(self):
-        register_model("test-custom-model-abc", {
-            "input_cost_per_token": 0.000001,
-            "output_cost_per_token": 0.000005,
-        })
+        register_model(
+            "test-custom-model-abc",
+            {
+                "input_cost_per_token": 0.000001,
+                "output_cost_per_token": 0.000005,
+            },
+        )
         info = get_model_info("test-custom-model-abc")
         assert info is not None
         assert info["input_cost_per_token"] == 0.000001
@@ -313,6 +320,7 @@ class TestBackwardCompat:
     def test_providers_tracked_get_pricing(self):
         """providers.tracked.get_pricing should still return per-1M-token dict."""
         from agentcost.providers.tracked import get_pricing
+
         p = get_pricing("gpt-4o")
         assert "input" in p
         assert "output" in p
@@ -320,11 +328,13 @@ class TestBackwardCompat:
 
     def test_providers_tracked_calculate_cost(self):
         from agentcost.providers.tracked import calculate_cost
+
         cost = calculate_cost("gpt-4o", 1000, 500)
         assert cost == pytest.approx(0.0075, rel=0.01)
 
     def test_estimator_still_works(self):
         from agentcost.estimator import CostEstimator
+
         est = CostEstimator()
         result = est.estimate("gpt-4o", "Hello world", task_type="chat")
         assert result.estimated_cost > 0
@@ -332,11 +342,13 @@ class TestBackwardCompat:
 
     def test_estimator_custom_pricing(self):
         from agentcost.estimator import CostEstimator
+
         est = CostEstimator(custom_pricing={"my-test-model": (5.0, 20.0)})
         result = est.estimate("my-test-model", "Hello world")
         assert result.estimated_cost > 0
 
     def test_sdk_trace_imports(self):
         from agentcost.sdk.trace import CostTracker, _calc
+
         cost = _calc("gpt-4o", 1000, 500)
         assert cost == pytest.approx(0.0075, rel=0.01)

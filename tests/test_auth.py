@@ -171,7 +171,10 @@ class TestAuthConfig:
         from agentcost.auth.config import AuthConfig
 
         cfg = AuthConfig(oidc_issuer_url="https://auth.example.com/realms/test")
-        assert cfg.discovery_url == "https://auth.example.com/realms/test/.well-known/openid-configuration"
+        assert (
+            cfg.discovery_url
+            == "https://auth.example.com/realms/test/.well-known/openid-configuration"
+        )
 
 
 # ─── Test API Key ────────────────────────────────────────────────────────────

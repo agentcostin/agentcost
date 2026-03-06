@@ -107,9 +107,9 @@ class EfficiencyReport:
 
 # Thresholds for efficiency warnings
 SYSTEM_PROMPT_WARN = 0.30  # system > 30% of input is excessive
-LOW_UTILIZATION = 0.05     # using < 5% of context window
-HIGH_UTILIZATION = 0.90    # using > 90% risks truncation
-LOW_OUTPUT_RATIO = 0.02    # output < 2% of total → possible waste
+LOW_UTILIZATION = 0.05  # using < 5% of context window
+HIGH_UTILIZATION = 0.90  # using > 90% risks truncation
+LOW_OUTPUT_RATIO = 0.02  # output < 2% of total → possible waste
 IDEAL_UTILIZATION = (0.10, 0.70)  # ideal range for context usage
 
 
@@ -146,12 +146,10 @@ class TokenAnalyzer:
         )
         self._calls.append(call)
         if len(self._calls) > self._max_calls:
-            self._calls = self._calls[-self._max_calls:]
+            self._calls = self._calls[-self._max_calls :]
         return call
 
-    def analyze(
-        self, scope_id: str = "", scope: str = "project"
-    ) -> EfficiencyReport:
+    def analyze(self, scope_id: str = "", scope: str = "project") -> EfficiencyReport:
         """Analyze token efficiency for a scope.
 
         Args:
@@ -161,10 +159,15 @@ class TokenAnalyzer:
         calls = self._filter_calls(scope_id, scope)
         if not calls:
             return EfficiencyReport(
-                scope=scope, scope_id=scope_id or "all",
-                total_calls=0, total_input_tokens=0, total_output_tokens=0,
-                avg_context_utilization=0, avg_system_ratio=0,
-                avg_output_ratio=0, efficiency_score=0,
+                scope=scope,
+                scope_id=scope_id or "all",
+                total_calls=0,
+                total_input_tokens=0,
+                total_output_tokens=0,
+                avg_context_utilization=0,
+                avg_system_ratio=0,
+                avg_output_ratio=0,
+                efficiency_score=0,
                 warnings=["No calls recorded"],
             )
 
@@ -180,9 +183,7 @@ class TokenAnalyzer:
         # Check for excessive system prompts
         if avg_sys > SYSTEM_PROMPT_WARN:
             pct = round(avg_sys * 100, 1)
-            warnings.append(
-                f"System prompts average {pct}% of input tokens"
-            )
+            warnings.append(f"System prompts average {pct}% of input tokens")
             recommendations.append(
                 "Consider shortening system prompts or using few-shot examples "
                 "more selectively to reduce input cost"
@@ -191,16 +192,16 @@ class TokenAnalyzer:
         # Check for under-utilization
         if avg_ctx < LOW_UTILIZATION and total_input > 0:
             pct = round(avg_ctx * 100, 1)
-            warnings.append(
-                f"Context utilization is very low ({pct}%)"
-            )
+            warnings.append(f"Context utilization is very low ({pct}%)")
             recommendations.append(
                 "Consider using a model with a smaller context window "
                 "(smaller models are usually cheaper)"
             )
 
         # Check for near-limit usage
-        high_util_calls = sum(1 for c in calls if c.context_utilization > HIGH_UTILIZATION)
+        high_util_calls = sum(
+            1 for c in calls if c.context_utilization > HIGH_UTILIZATION
+        )
         if high_util_calls > len(calls) * 0.2:
             warnings.append(
                 f"{high_util_calls}/{len(calls)} calls near context limit (>90%)"
@@ -241,13 +242,13 @@ class TokenAnalyzer:
         """Filter calls by scope."""
         if not scope_id:
             return list(self._calls)
-        return [
-            c for c in self._calls
-            if getattr(c, scope, "") == scope_id
-        ]
+        return [c for c in self._calls if getattr(c, scope, "") == scope_id]
 
     def _calculate_score(
-        self, avg_ctx: float, avg_sys: float, avg_out: float,
+        self,
+        avg_ctx: float,
+        avg_sys: float,
+        avg_out: float,
         calls: list[TokenCall],
     ) -> float:
         """Calculate efficiency score 0-100.
@@ -286,7 +287,9 @@ class TokenAnalyzer:
             score += max(0, 20 * (1.0 - (avg_out - 0.50) / 0.50))
 
         # Near-limit penalty (20 pts)
-        high_pct = sum(1 for c in calls if c.context_utilization > HIGH_UTILIZATION) / len(calls)
+        high_pct = sum(
+            1 for c in calls if c.context_utilization > HIGH_UTILIZATION
+        ) / len(calls)
         score += max(0, 20 * (1.0 - high_pct * 2))
 
         return min(100.0, max(0.0, score))

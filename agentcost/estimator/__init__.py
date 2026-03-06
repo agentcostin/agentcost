@@ -185,8 +185,12 @@ class CostEstimator:
 
     # Popular models for quick comparison (used when no models specified)
     _DEFAULT_COMPARE_MODELS = [
-        "gpt-4o", "gpt-4o-mini", "claude-sonnet-4-5-20250929",
-        "claude-haiku-4-5-20251001", "gemini-2.0-flash", "deepseek-chat",
+        "gpt-4o",
+        "gpt-4o-mini",
+        "claude-sonnet-4-5-20250929",
+        "claude-haiku-4-5-20251001",
+        "gemini-2.0-flash",
+        "deepseek-chat",
     ]
 
     def compare_models(
@@ -232,6 +236,7 @@ class CostEstimator:
 
         # Determine confidence
         from ..cost.calculator import get_model_info as _get_info
+
         info = _get_info(model)
         if info is not None:
             pricing_source = (

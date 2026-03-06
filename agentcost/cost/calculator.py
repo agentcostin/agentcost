@@ -118,7 +118,11 @@ def _ensure_loaded():
             with open(_OVERRIDES_PATH) as f:
                 raw = json.load(f)
             # Filter out comment keys
-            _OVERRIDES = {k: v for k, v in raw.items() if not k.startswith("_") and isinstance(v, dict)}
+            _OVERRIDES = {
+                k: v
+                for k, v in raw.items()
+                if not k.startswith("_") and isinstance(v, dict)
+            }
             if _OVERRIDES:
                 logger.debug(f"Loaded {len(_OVERRIDES)} pricing overrides")
         except (json.JSONDecodeError, OSError) as e:
@@ -132,7 +136,10 @@ def _ensure_loaded():
             parts = _env_ollama.split(",")
             inp = float(parts[0]) / 1_000_000  # Convert from per-1M to per-token
             out = float(parts[1]) / 1_000_000 if len(parts) > 1 else inp
-            _OVERRIDES["_ollama_env"] = {"input_cost_per_token": inp, "output_cost_per_token": out}
+            _OVERRIDES["_ollama_env"] = {
+                "input_cost_per_token": inp,
+                "output_cost_per_token": out,
+            }
         except (ValueError, IndexError):
             pass
 
@@ -180,7 +187,7 @@ def _resolve_model(model: str) -> Optional[dict]:
     stripped = model
     for prefix in _PROVIDER_PREFIXES:
         if model.startswith(prefix):
-            stripped = model[len(prefix):]
+            stripped = model[len(prefix) :]
             break
 
     if stripped != model:
@@ -200,7 +207,9 @@ def _resolve_model(model: str) -> Optional[dict]:
     # 6. Substring fallback (e.g. "gpt-4o-2024-08-06" matches "gpt-4o")
     # Only check shorter known keys that are prefixes of the query
     for key, val in _COST_MAP.items():
-        if isinstance(val, dict) and (model.startswith(key) or stripped.startswith(key)):
+        if isinstance(val, dict) and (
+            model.startswith(key) or stripped.startswith(key)
+        ):
             return val
 
     return None
@@ -480,17 +489,19 @@ def get_model_registry_for_dashboard(
         except (ValueError, TypeError):
             context_k = 0
 
-        results.append({
-            "id": model_name,
-            "provider": provider,
-            "label": model_name,
-            "input": round(input_per_1m, 4),
-            "output": round(output_per_1m, 4),
-            "cache_read": round(cache_per_1m, 4),
-            "tier": tier,
-            "context": int(context_k),
-            "mode": info.get("mode", "chat"),
-        })
+        results.append(
+            {
+                "id": model_name,
+                "provider": provider,
+                "label": model_name,
+                "input": round(input_per_1m, 4),
+                "output": round(output_per_1m, 4),
+                "cache_read": round(cache_per_1m, 4),
+                "tier": tier,
+                "context": int(context_k),
+                "mode": info.get("mode", "chat"),
+            }
+        )
 
     return results
 

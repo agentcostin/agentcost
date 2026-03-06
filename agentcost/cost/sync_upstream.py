@@ -67,7 +67,9 @@ def _validate(data: dict) -> list[str]:
         return warnings
 
     if len(data) < 100:
-        warnings.append(f"Suspiciously small: only {len(data)} entries (expected 2000+)")
+        warnings.append(
+            f"Suspiciously small: only {len(data)} entries (expected 2000+)"
+        )
 
     # Spot-check some well-known models
     expected = ["gpt-4o", "gpt-4o-mini", "claude-sonnet-4-5-20250929"]

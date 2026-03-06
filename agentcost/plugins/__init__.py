@@ -217,15 +217,11 @@ class TrackerPlugin(AgentCostPlugin):
         ...
 
     @abstractmethod
-    def get_spend(
-        self, scope: str, scope_id: str, period: str = "month"
-    ) -> float:
+    def get_spend(self, scope: str, scope_id: str, period: str = "month") -> float:
         """Get total spend for a scope (project/agent/org) in a period."""
         ...
 
-    def check_budget(
-        self, scope: str, scope_id: str, budget: float
-    ) -> bool:
+    def check_budget(self, scope: str, scope_id: str, budget: float) -> bool:
         """Check if spend is within budget. Returns True if OK."""
         return self.get_spend(scope, scope_id) < budget
 
@@ -363,6 +359,7 @@ class PluginRegistry:
         found: list[PluginMeta] = []
         try:
             from importlib.metadata import entry_points
+
             eps = entry_points()
             if hasattr(eps, "select"):
                 group = eps.select(group="agentcost.plugins")
@@ -510,6 +507,7 @@ class PluginRegistry:
         """Register all reactor plugin actions with the reaction engine."""
         if engine is None:
             from ..reactions import get_reaction_engine
+
             engine = get_reaction_engine()
         count = 0
         for reactor in self._reactors:

@@ -53,7 +53,9 @@ class TestMultiProviderCost:
         for prefixed_name, bare_name in prefixed.items():
             c1 = calculate_cost(prefixed_name, 1000, 500)
             c2 = calculate_cost(bare_name, 1000, 500)
-            assert c1 == c2, f"Prefix mismatch: {prefixed_name} ({c1}) != {bare_name} ({c2})"
+            assert c1 == c2, (
+                f"Prefix mismatch: {prefixed_name} ({c1}) != {bare_name} ({c2})"
+            )
 
     def test_completion_cost_openai_format(self):
         from agentcost.cost.calculator import completion_cost
@@ -114,8 +116,12 @@ class TestReactionNotifierDispatch:
     def test_event_triggers_notifier(self):
         from agentcost.reactions.engine import ReactionEngine
         from agentcost.plugins import (
-            PluginRegistry, NotifierPlugin, NotifyEvent, SendResult,
-            PluginMeta, PluginType,
+            PluginRegistry,
+            NotifierPlugin,
+            NotifyEvent,
+            SendResult,
+            PluginMeta,
+            PluginType,
         )
 
         # Create a test notifier that records calls
@@ -123,7 +129,8 @@ class TestReactionNotifierDispatch:
 
         class RecordingNotifier(NotifierPlugin):
             meta = PluginMeta(
-                name="test-recorder", version="1.0.0",
+                name="test-recorder",
+                version="1.0.0",
                 plugin_type=PluginType.NOTIFIER,
             )
 
@@ -137,6 +144,7 @@ class TestReactionNotifierDispatch:
 
         # Patch the global registry temporarily
         import agentcost.plugins as plugins_mod
+
         old_reg = plugins_mod.registry
         plugins_mod.registry = reg
         try:
@@ -146,7 +154,8 @@ class TestReactionNotifierDispatch:
             assert reaction is not None
 
             result = engine.execute(
-                reaction, "budget.exceeded",
+                reaction,
+                "budget.exceeded",
                 {"message": "Budget blown!", "severity": "critical", "usage_pct": 105},
             )
             assert result.success
@@ -167,12 +176,15 @@ class TestReactionNotifierDispatch:
         engine.register_action(
             "test-custom", lambda et, ed: actions_fired.append(et) or True
         )
-        engine.add_reaction("test-reaction", {
-            "description": "Test",
-            "event": "test.event",
-            "actions": ["test-custom"],
-            "auto": True,
-        })
+        engine.add_reaction(
+            "test-reaction",
+            {
+                "description": "Test",
+                "event": "test.event",
+                "actions": ["test-custom"],
+                "auto": True,
+            },
+        )
 
         reaction = engine.reactions["test-reaction"]
         result = engine.execute(reaction, "test.event", {})
@@ -199,16 +211,24 @@ class TestSDKTrackerBudgetChain:
         reg.load(tracker_plugin)
 
         import agentcost.plugins as pm
+
         old_reg = pm.registry
         pm.registry = reg
         try:
             ct = CostTracker("integration-test")
             ct.set_budget(1.00)
-            ct.record(TraceEvent(
-                trace_id="t1", project="integration-test", model="gpt-4o",
-                provider="openai", input_tokens=1000, output_tokens=500,
-                cost=0.05, latency_ms=200,
-            ))
+            ct.record(
+                TraceEvent(
+                    trace_id="t1",
+                    project="integration-test",
+                    model="gpt-4o",
+                    provider="openai",
+                    input_tokens=1000,
+                    output_tokens=500,
+                    cost=0.05,
+                    latency_ms=200,
+                )
+            )
 
             # Verify tracker plugin recorded it
             spend = tracker_plugin.get_spend("project", "integration-test")
@@ -232,17 +252,33 @@ class TestSDKTrackerBudgetChain:
             ct.set_budget(1.00)
 
             # Push past 80%
-            ct.record(TraceEvent(
-                trace_id="a", project="p", model="m", provider="p",
-                input_tokens=0, output_tokens=0, cost=0.85, latency_ms=0,
-            ))
+            ct.record(
+                TraceEvent(
+                    trace_id="a",
+                    project="p",
+                    model="m",
+                    provider="p",
+                    input_tokens=0,
+                    output_tokens=0,
+                    cost=0.85,
+                    latency_ms=0,
+                )
+            )
             assert "budget.warning" in events
 
             # Push past 100%
-            ct.record(TraceEvent(
-                trace_id="b", project="p", model="m", provider="p",
-                input_tokens=0, output_tokens=0, cost=0.20, latency_ms=0,
-            ))
+            ct.record(
+                TraceEvent(
+                    trace_id="b",
+                    project="p",
+                    model="m",
+                    provider="p",
+                    input_tokens=0,
+                    output_tokens=0,
+                    cost=0.20,
+                    latency_ms=0,
+                )
+            )
             assert "budget.exceeded" in events
         finally:
             trace_mod._emit_budget_event = orig
@@ -259,7 +295,10 @@ class TestIntelligenceIntegration:
     def test_complexity_to_tier_to_gate(self):
         """Classify → tier check → budget gate — full pipeline."""
         from agentcost.intelligence import (
-            ComplexityRouter, TierRegistry, BudgetGate, CostTier,
+            ComplexityRouter,
+            TierRegistry,
+            BudgetGate,
+            CostTier,
         )
 
         router = ComplexityRouter()
@@ -285,8 +324,12 @@ class TestIntelligenceIntegration:
         # Record calls with excessive system prompts
         for _ in range(10):
             analyzer.record_call(
-                model="gpt-4o", input_tokens=10000, output_tokens=200,
-                max_context=128000, system_tokens=8000, project="wasteful",
+                model="gpt-4o",
+                input_tokens=10000,
+                output_tokens=200,
+                max_context=128000,
+                system_tokens=8000,
+                project="wasteful",
             )
 
         report = analyzer.analyze("wasteful")
@@ -375,6 +418,7 @@ class TestPluginLifecycle:
 
         class MockEngine:
             actions = {}
+
             def register_action(self, name, handler):
                 self.actions[name] = handler
 
@@ -421,15 +465,19 @@ class TestAgentLifecycleEvents:
 
         # Monkey-patch to use our bus
         import agentcost.plugins.builtins as bmod
+
         orig = bmod._emit_lifecycle_event
 
         def emit_to_our_bus(agent_id, old, new, reason):
-            bus.emit(f"agent.{new}", {
-                "agent_id": agent_id,
-                "from_state": old,
-                "to_state": new,
-                "reason": reason,
-            })
+            bus.emit(
+                f"agent.{new}",
+                {
+                    "agent_id": agent_id,
+                    "from_state": old,
+                    "to_state": new,
+                    "reason": reason,
+                },
+            )
 
         bmod._emit_lifecycle_event = emit_to_our_bus
         try:
@@ -460,6 +508,7 @@ class TestAgentLifecycleEvents:
         lc.register_agent("a1")
 
         import agentcost.plugins.builtins as bmod
+
         orig = bmod._emit_lifecycle_event
         bmod._emit_lifecycle_event = lambda *a: bus.emit(f"agent.{a[2]}", {})
         try:
@@ -527,6 +576,7 @@ class TestSyncScript:
 
     def test_sync_module_importable(self):
         from agentcost.cost.sync_upstream import sync, _validate, _diff_summary
+
         assert callable(sync)
         assert callable(_validate)
         assert callable(_diff_summary)
@@ -564,9 +614,18 @@ class TestSyncScript:
         # Create a minimal valid JSON file
         with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             data = {
-                "gpt-4o": {"input_cost_per_token": 0.0000025, "output_cost_per_token": 0.00001},
-                "gpt-4o-mini": {"input_cost_per_token": 0.00000015, "output_cost_per_token": 0.0000006},
-                "claude-sonnet-4-5-20250929": {"input_cost_per_token": 0.000003, "output_cost_per_token": 0.000015},
+                "gpt-4o": {
+                    "input_cost_per_token": 0.0000025,
+                    "output_cost_per_token": 0.00001,
+                },
+                "gpt-4o-mini": {
+                    "input_cost_per_token": 0.00000015,
+                    "output_cost_per_token": 0.0000006,
+                },
+                "claude-sonnet-4-5-20250929": {
+                    "input_cost_per_token": 0.000003,
+                    "output_cost_per_token": 0.000015,
+                },
             }
             # Add enough entries to pass validation
             for i in range(200):
@@ -591,14 +650,25 @@ class TestSyncScript:
 class TestScaffoldValidity:
     """Scaffolded plugins should produce importable Python code."""
 
-    @pytest.mark.parametrize("plugin_type", [
-        "notifier", "policy", "exporter", "provider",
-        "tracker", "reactor", "runtime", "agent",
-    ])
+    @pytest.mark.parametrize(
+        "plugin_type",
+        [
+            "notifier",
+            "policy",
+            "exporter",
+            "provider",
+            "tracker",
+            "reactor",
+            "runtime",
+            "agent",
+        ],
+    )
     def test_scaffold_produces_valid_python(self, plugin_type, tmp_path):
         from agentcost.plugins.scaffold import scaffold_plugin
 
-        path = scaffold_plugin(f"test-{plugin_type}", plugin_type, output_dir=str(tmp_path))
+        path = scaffold_plugin(
+            f"test-{plugin_type}", plugin_type, output_dir=str(tmp_path)
+        )
         module_name = f"test_{plugin_type}".replace("-", "_")
         plugin_py = os.path.join(path, module_name, "plugin.py")
         assert os.path.exists(plugin_py)

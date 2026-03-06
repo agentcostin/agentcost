@@ -61,7 +61,7 @@ class TestModelRegistryAPI:
         gpt4o = next((m for m in models if m["id"] == "gpt-4o"), None)
         if gpt4o:
             assert gpt4o["input"] > 0.1  # per 1M, should be dollars
-            assert gpt4o["input"] < 100   # not per token
+            assert gpt4o["input"] < 100  # not per token
             assert gpt4o["output"] > gpt4o["input"]  # output usually costs more
 
     def test_context_in_k(self):
@@ -156,6 +156,7 @@ class TestProviderList:
 class TestModelSearch:
     def _get_models(self):
         from agentcost.cost.calculator import get_model_registry_for_dashboard
+
         return get_model_registry_for_dashboard()
 
     def test_text_search(self):
@@ -182,7 +183,8 @@ class TestModelSearch:
         """Provider + tier + cost range."""
         models = self._get_models()
         filtered = [
-            m for m in models
+            m
+            for m in models
             if m.get("provider") == "openai"
             and m.get("tier") in ("fast", "budget", "economy")
             and 0 < m.get("input", 0) < 1.0
@@ -237,18 +239,21 @@ class TestRouteModule:
     def test_model_routes_importable(self):
         pytest.importorskip("fastapi")
         from agentcost.cost.model_routes import router
+
         assert router is not None
         assert router.prefix == "/api/models"
 
     def test_route_count(self):
         pytest.importorskip("fastapi")
         from agentcost.cost.model_routes import router
+
         routes = [r for r in router.routes]
         assert len(routes) >= 5
 
     def test_server_includes_model_routes(self):
         """Verify model routes are wired into server.py."""
         import os
+
         server_path = os.path.join(
             os.path.dirname(__file__), "..", "agentcost", "api", "server.py"
         )
@@ -266,6 +271,7 @@ class TestDashboardFiles:
     def test_models_js_is_dynamic(self):
         """models.js should fetch from /api/models, not hardcode models."""
         import os
+
         path = os.path.join(
             os.path.dirname(__file__), "..", "dashboard", "js", "models.js"
         )
@@ -283,6 +289,7 @@ class TestDashboardFiles:
     def test_models_js_backward_compat(self):
         """models.js should still expose getModel, getProviders, etc."""
         import os
+
         path = os.path.join(
             os.path.dirname(__file__), "..", "dashboard", "js", "models.js"
         )
@@ -295,9 +302,8 @@ class TestDashboardFiles:
 
     def test_index_html_has_models_tab(self):
         import os
-        path = os.path.join(
-            os.path.dirname(__file__), "..", "dashboard", "index.html"
-        )
+
+        path = os.path.join(os.path.dirname(__file__), "..", "dashboard", "index.html")
         content = open(path).read()
         assert "models" in content.lower()
         assert "ModelsExplorer" in content
@@ -305,14 +311,14 @@ class TestDashboardFiles:
 
     def test_index_html_has_models_nav(self):
         import os
-        path = os.path.join(
-            os.path.dirname(__file__), "..", "dashboard", "index.html"
-        )
+
+        path = os.path.join(os.path.dirname(__file__), "..", "dashboard", "index.html")
         content = open(path).read()
         assert "id:'models'" in content
 
     def test_intelligence_js_has_models_explorer(self):
         import os
+
         path = os.path.join(
             os.path.dirname(__file__), "..", "dashboard", "js", "intelligence.js"
         )

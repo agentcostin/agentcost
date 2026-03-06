@@ -137,7 +137,11 @@ BUILTIN_TEMPLATES: dict[str, dict] = {
             },
         },
         "notifications": [
-            {"type": "slack", "config": {"webhook_url": ""}, "events": ["budget.warning", "budget.exceeded"]},
+            {
+                "type": "slack",
+                "config": {"webhook_url": ""},
+                "events": ["budget.warning", "budget.exceeded"],
+            },
         ],
         "settings": {
             "default_tier": "economy",
@@ -191,8 +195,16 @@ BUILTIN_TEMPLATES: dict[str, dict] = {
             {"name": "Operations", "code": "OPS-001", "monthly_budget": 500.0},
         ],
         "notifications": [
-            {"type": "slack", "config": {"webhook_url": ""}, "events": ["budget.warning"]},
-            {"type": "pagerduty", "config": {"routing_key": ""}, "events": ["budget.exceeded", "anomaly.detected"]},
+            {
+                "type": "slack",
+                "config": {"webhook_url": ""},
+                "events": ["budget.warning"],
+            },
+            {
+                "type": "pagerduty",
+                "config": {"routing_key": ""},
+                "events": ["budget.exceeded", "anomaly.detected"],
+            },
         ],
         "settings": {
             "default_tier": "standard",
@@ -280,7 +292,11 @@ BUILTIN_TEMPLATES: dict[str, dict] = {
             "allowed_tiers": ["economy", "standard", "premium", "free"],
         },
         "budgets": [
-            {"project": "experiments", "monthly_limit": 10000.0, "alert_threshold": 0.90},
+            {
+                "project": "experiments",
+                "monthly_limit": 10000.0,
+                "alert_threshold": 0.90,
+            },
         ],
         "settings": {
             "default_tier": "standard",
@@ -358,55 +374,71 @@ class TemplateRegistry:
 
         # Apply tier restrictions
         if t.tier_restrictions:
-            applied["sections"].append({
-                "section": "tier_restrictions",
-                "items": 1,
-                "details": t.tier_restrictions,
-            })
+            applied["sections"].append(
+                {
+                    "section": "tier_restrictions",
+                    "items": 1,
+                    "details": t.tier_restrictions,
+                }
+            )
 
         # Apply budgets
         if t.budgets:
-            applied["sections"].append({
-                "section": "budgets",
-                "items": len(t.budgets),
-            })
+            applied["sections"].append(
+                {
+                    "section": "budgets",
+                    "items": len(t.budgets),
+                }
+            )
 
         # Apply policies
         if t.policies:
-            applied["sections"].append({
-                "section": "policies",
-                "items": len(t.policies),
-            })
+            applied["sections"].append(
+                {
+                    "section": "policies",
+                    "items": len(t.policies),
+                }
+            )
 
         # Apply reactions
         if t.reactions:
-            applied["sections"].append({
-                "section": "reactions",
-                "items": len(t.reactions),
-            })
+            applied["sections"].append(
+                {
+                    "section": "reactions",
+                    "items": len(t.reactions),
+                }
+            )
 
         # Apply cost centers
         if t.cost_centers:
-            applied["sections"].append({
-                "section": "cost_centers",
-                "items": len(t.cost_centers),
-            })
+            applied["sections"].append(
+                {
+                    "section": "cost_centers",
+                    "items": len(t.cost_centers),
+                }
+            )
 
         # Apply notifications
         if t.notifications:
-            applied["sections"].append({
-                "section": "notifications",
-                "items": len(t.notifications),
-            })
+            applied["sections"].append(
+                {
+                    "section": "notifications",
+                    "items": len(t.notifications),
+                }
+            )
 
         # Apply goals
         if t.goals:
-            applied["sections"].append({
-                "section": "goals",
-                "items": len(t.goals),
-            })
+            applied["sections"].append(
+                {
+                    "section": "goals",
+                    "items": len(t.goals),
+                }
+            )
 
-        logger.info("Applied template '%s': %d sections", name, len(applied["sections"]))
+        logger.info(
+            "Applied template '%s': %d sections", name, len(applied["sections"])
+        )
         return applied
 
     def export_current(self, name: str = "custom", description: str = "") -> str:
@@ -416,7 +448,8 @@ class TemplateRegistry:
         """
         t = Template(
             name=name,
-            description=description or f"Exported from AgentCost on {time.strftime('%Y-%m-%d')}",
+            description=description
+            or f"Exported from AgentCost on {time.strftime('%Y-%m-%d')}",
         )
         return t.to_yaml()
 

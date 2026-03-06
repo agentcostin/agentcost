@@ -44,11 +44,11 @@ class TestTrackerPlugin:
             def record_trace(self, event: dict) -> None:
                 self._traces.append(event)
 
-            def get_spend(self, scope: str, scope_id: str, period: str = "month") -> float:
+            def get_spend(
+                self, scope: str, scope_id: str, period: str = "month"
+            ) -> float:
                 return sum(
-                    t.get("cost", 0.0)
-                    for t in self._traces
-                    if t.get(scope) == scope_id
+                    t.get("cost", 0.0) for t in self._traces if t.get(scope) == scope_id
                 )
 
         tracker = InMemoryTracker()
@@ -102,7 +102,9 @@ class TestReactorPlugin:
         assert "create-jira-ticket" in actions
 
         # Call the action
-        result = actions["create-jira-ticket"]("budget.exceeded", {"message": "Over budget"})
+        result = actions["create-jira-ticket"](
+            "budget.exceeded", {"message": "Over budget"}
+        )
         assert result is True
         assert calls == [("budget.exceeded", "Over budget")]
 
@@ -112,7 +114,14 @@ class TestReactorPlugin:
 
 class TestPluginModule:
     def test_plugin_module_creation(self):
-        from agentcost.plugins import PluginModule, NotifierPlugin, PluginMeta, PluginType, NotifyEvent, SendResult
+        from agentcost.plugins import (
+            PluginModule,
+            NotifierPlugin,
+            PluginMeta,
+            PluginType,
+            NotifyEvent,
+            SendResult,
+        )
 
         class TestNotifier(NotifierPlugin):
             meta = PluginMeta(
@@ -158,6 +167,7 @@ class TestPluginModule:
 class TestRegistrySlots:
     def _make_registry(self):
         from agentcost.plugins import PluginRegistry
+
         return PluginRegistry()
 
     def test_empty_slots(self):
@@ -183,7 +193,9 @@ class TestRegistrySlots:
         )
 
         class DummyTracker(TrackerPlugin):
-            meta = PluginMeta(name="dummy-tracker", version="1.0", plugin_type=PluginType.TRACKER)
+            meta = PluginMeta(
+                name="dummy-tracker", version="1.0", plugin_type=PluginType.TRACKER
+            )
 
             def record_trace(self, event):
                 pass
@@ -207,7 +219,9 @@ class TestRegistrySlots:
         )
 
         class DummyReactor(ReactorPlugin):
-            meta = PluginMeta(name="dummy-reactor", version="1.0", plugin_type=PluginType.REACTOR)
+            meta = PluginMeta(
+                name="dummy-reactor", version="1.0", plugin_type=PluginType.REACTOR
+            )
 
             def get_actions(self):
                 return {"dummy-action": lambda et, d: True}
@@ -227,9 +241,15 @@ class TestRegistrySlots:
         )
 
         class T(TrackerPlugin):
-            meta = PluginMeta(name="rm-me", version="1.0", plugin_type=PluginType.TRACKER)
-            def record_trace(self, e): pass
-            def get_spend(self, s, si, p="month"): return 0.0
+            meta = PluginMeta(
+                name="rm-me", version="1.0", plugin_type=PluginType.TRACKER
+            )
+
+            def record_trace(self, e):
+                pass
+
+            def get_spend(self, s, si, p="month"):
+                return 0.0
 
         reg = PluginRegistry()
         reg.load(T())
@@ -247,11 +267,16 @@ class TestRegistrySlots:
         )
 
         class E(ExporterPlugin):
-            meta = PluginMeta(name="mod-exp", version="1.0", plugin_type=PluginType.EXPORTER)
+            meta = PluginMeta(
+                name="mod-exp", version="1.0", plugin_type=PluginType.EXPORTER
+            )
+
             def export(self, traces, fmt="json"):
                 return b"[]"
 
-        module = PluginModule(name="test-module", version="1.0", plugins=[E], slot="exporter")
+        module = PluginModule(
+            name="test-module", version="1.0", plugins=[E], slot="exporter"
+        )
         reg = PluginRegistry()
         reg.load_module(module)
         assert len(reg.exporters) == 1
@@ -267,7 +292,9 @@ class TestRegistrySlots:
         from agentcost.reactions import ReactionEngine
 
         class MyReactor(ReactorPlugin):
-            meta = PluginMeta(name="test-reactor", version="1.0", plugin_type=PluginType.REACTOR)
+            meta = PluginMeta(
+                name="test-reactor", version="1.0", plugin_type=PluginType.REACTOR
+            )
 
             def get_actions(self):
                 return {"custom-ping": lambda et, d: True}
@@ -288,8 +315,12 @@ class TestScaffoldNewTypes:
     def test_scaffold_tracker(self, tmp_path):
         from agentcost.plugins.scaffold import scaffold_plugin
 
-        path = scaffold_plugin("my-tracker", plugin_type="tracker", output_dir=str(tmp_path))
-        plugin_py = (tmp_path / "agentcost-my-tracker" / "my_tracker" / "plugin.py").read_text()
+        path = scaffold_plugin(
+            "my-tracker", plugin_type="tracker", output_dir=str(tmp_path)
+        )
+        plugin_py = (
+            tmp_path / "agentcost-my-tracker" / "my_tracker" / "plugin.py"
+        ).read_text()
         assert "TrackerPlugin" in plugin_py
         assert "record_trace" in plugin_py
         assert "get_spend" in plugin_py
@@ -297,8 +328,12 @@ class TestScaffoldNewTypes:
     def test_scaffold_reactor(self, tmp_path):
         from agentcost.plugins.scaffold import scaffold_plugin
 
-        path = scaffold_plugin("my-reactor", plugin_type="reactor", output_dir=str(tmp_path))
-        plugin_py = (tmp_path / "agentcost-my-reactor" / "my_reactor" / "plugin.py").read_text()
+        path = scaffold_plugin(
+            "my-reactor", plugin_type="reactor", output_dir=str(tmp_path)
+        )
+        plugin_py = (
+            tmp_path / "agentcost-my-reactor" / "my_reactor" / "plugin.py"
+        ).read_text()
         assert "ReactorPlugin" in plugin_py
         assert "get_actions" in plugin_py
 
@@ -307,7 +342,9 @@ class TestScaffoldNewTypes:
         from agentcost.plugins.scaffold import scaffold_plugin, PLUGIN_TEMPLATES
 
         for ptype in PLUGIN_TEMPLATES:
-            path = scaffold_plugin(f"test-{ptype}", plugin_type=ptype, output_dir=str(tmp_path))
+            path = scaffold_plugin(
+                f"test-{ptype}", plugin_type=ptype, output_dir=str(tmp_path)
+            )
             assert (tmp_path / f"agentcost-test-{ptype}" / "pyproject.toml").exists()
 
 
@@ -320,4 +357,13 @@ class TestPluginType:
 
         assert len(PluginType) == 8
         values = {pt.value for pt in PluginType}
-        assert values == {"notifier", "policy", "exporter", "provider", "tracker", "reactor", "runtime", "agent"}
+        assert values == {
+            "notifier",
+            "policy",
+            "exporter",
+            "provider",
+            "tracker",
+            "reactor",
+            "runtime",
+            "agent",
+        }

@@ -109,7 +109,9 @@ class HeartbeatTracker:
             self.end_cycle(agent_id)
 
         if agent_id in self._paused_agents:
-            logger.warning("Agent %s is paused — cycle started but spend blocked", agent_id)
+            logger.warning(
+                "Agent %s is paused — cycle started but spend blocked", agent_id
+            )
 
         cycle = HeartbeatCycle(
             cycle_id=uuid.uuid4().hex[:12],
@@ -145,7 +147,7 @@ class HeartbeatTracker:
         if avg > 0 and cycle.cost > avg * self._anomaly_multiplier:
             cycle.status = "anomaly"
             cycle.anomaly_reason = (
-                f"Cycle cost ${cycle.cost:.4f} is {cycle.cost/avg:.1f}x "
+                f"Cycle cost ${cycle.cost:.4f} is {cycle.cost / avg:.1f}x "
                 f"the rolling average ${avg:.4f}"
             )
             logger.warning("Anomaly: agent=%s %s", agent_id, cycle.anomaly_reason)
@@ -155,7 +157,7 @@ class HeartbeatTracker:
         history = self._history[agent_id]
         history.append(cycle)
         if len(history) > self._max_history:
-            self._history[agent_id] = history[-self._max_history:]
+            self._history[agent_id] = history[-self._max_history :]
 
         # Check budget threshold
         self._check_budget(agent_id)
@@ -163,7 +165,10 @@ class HeartbeatTracker:
         summary = cycle.to_dict()
         logger.debug(
             "Cycle ended: agent=%s cost=$%.4f calls=%d duration=%.1fs",
-            agent_id, cycle.cost, cycle.calls, cycle.duration_s,
+            agent_id,
+            cycle.cost,
+            cycle.calls,
+            cycle.duration_s,
         )
         return summary
 
@@ -182,6 +187,7 @@ class HeartbeatTracker:
         # Trigger lifecycle transition if agent plugin is loaded
         try:
             from ..plugins import registry
+
             registry.transition_agent(agent_id, "suspended", reason)
         except Exception:
             pass
@@ -189,11 +195,14 @@ class HeartbeatTracker:
         # Fire pause callback (for external orchestrators)
         if self._pause_callback:
             try:
-                self._pause_callback(agent_id, {
-                    "action": "pause",
-                    "reason": reason,
-                    "cumulative_spend": self._cumulative_spend.get(agent_id, 0),
-                })
+                self._pause_callback(
+                    agent_id,
+                    {
+                        "action": "pause",
+                        "reason": reason,
+                        "cumulative_spend": self._cumulative_spend.get(agent_id, 0),
+                    },
+                )
             except Exception as e:
                 logger.error("Pause callback failed: %s", e)
 
@@ -204,6 +213,7 @@ class HeartbeatTracker:
 
         try:
             from ..plugins import registry
+
             registry.transition_agent(agent_id, "resumed", "budget reset")
         except Exception:
             pass
@@ -234,7 +244,11 @@ class HeartbeatTracker:
             "anomaly_count": anomalies,
             "cumulative_spend": round(self._cumulative_spend.get(agent_id, 0), 6),
             "budget": budget,
-            "budget_used_pct": round(self._cumulative_spend.get(agent_id, 0) / budget * 100, 1) if budget > 0 else 0,
+            "budget_used_pct": round(
+                self._cumulative_spend.get(agent_id, 0) / budget * 100, 1
+            )
+            if budget > 0
+            else 0,
             "paused": agent_id in self._paused_agents,
             "active_cycle": self._active_cycles.get(agent_id, None) is not None,
         }
@@ -282,31 +296,41 @@ class HeartbeatTracker:
         elif pct >= 80:
             self._emit_budget_event("budget.warning", agent_id, spend, budget)
 
-    def _emit_budget_event(self, event_type: str, agent_id: str, spend: float, budget: float):
+    def _emit_budget_event(
+        self, event_type: str, agent_id: str, spend: float, budget: float
+    ):
         try:
             from ..events import get_event_bus
+
             bus = get_event_bus()
-            bus.emit(event_type, {
-                "agent_id": agent_id,
-                "spend": round(spend, 4),
-                "budget": round(budget, 4),
-                "usage_pct": round(spend / budget * 100, 1),
-                "source": "heartbeat",
-            })
+            bus.emit(
+                event_type,
+                {
+                    "agent_id": agent_id,
+                    "spend": round(spend, 4),
+                    "budget": round(budget, 4),
+                    "usage_pct": round(spend / budget * 100, 1),
+                    "source": "heartbeat",
+                },
+            )
         except Exception:
             pass
 
     def _emit_anomaly(self, agent_id: str, cycle: HeartbeatCycle):
         try:
             from ..events import get_event_bus
+
             bus = get_event_bus()
-            bus.emit("anomaly.cost_spike", {
-                "agent_id": agent_id,
-                "cycle_id": cycle.cycle_id,
-                "cost": round(cycle.cost, 6),
-                "reason": cycle.anomaly_reason,
-                "source": "heartbeat",
-            })
+            bus.emit(
+                "anomaly.cost_spike",
+                {
+                    "agent_id": agent_id,
+                    "cycle_id": cycle.cycle_id,
+                    "cost": round(cycle.cost, 6),
+                    "reason": cycle.anomaly_reason,
+                    "source": "heartbeat",
+                },
+            )
         except Exception:
             pass
 

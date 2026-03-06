@@ -89,7 +89,9 @@ class ClassificationResult:
     suggested_tier: str
     suggested_model: str
     confidence: float  # 0-1
-    signals: list[str] = field(default_factory=list)  # what triggered the classification
+    signals: list[str] = field(
+        default_factory=list
+    )  # what triggered the classification
 
     def to_dict(self) -> dict:
         return {
@@ -158,9 +160,9 @@ SIMPLE_PATTERNS = [
 ]
 
 # Length thresholds (character count)
-SHORT_PROMPT = 200    # likely simple
+SHORT_PROMPT = 200  # likely simple
 MEDIUM_PROMPT = 1000  # moderate
-LONG_PROMPT = 3000    # complex or reasoning
+LONG_PROMPT = 3000  # complex or reasoning
 
 
 class ComplexityRouter:

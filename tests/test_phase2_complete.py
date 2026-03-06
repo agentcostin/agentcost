@@ -64,7 +64,8 @@ class TestEightSlotArchitecture:
 
         class TestRuntime(RuntimePlugin):
             meta = PluginMeta(
-                name="test-runtime", version="0.1.0",
+                name="test-runtime",
+                version="0.1.0",
                 plugin_type=PluginType.RUNTIME,
             )
 
@@ -87,7 +88,8 @@ class TestEightSlotArchitecture:
 
         class TestAgent(AgentPlugin):
             meta = PluginMeta(
-                name="test-agent", version="0.1.0",
+                name="test-agent",
+                version="0.1.0",
                 plugin_type=PluginType.AGENT,
             )
             _states = {}
@@ -106,11 +108,17 @@ class TestEightSlotArchitecture:
         assert ap.get_workspace_config("proj") == {}  # default
 
     def test_registry_load_runtime(self):
-        from agentcost.plugins import PluginRegistry, RuntimePlugin, PluginMeta, PluginType
+        from agentcost.plugins import (
+            PluginRegistry,
+            RuntimePlugin,
+            PluginMeta,
+            PluginType,
+        )
 
         class MyRuntime(RuntimePlugin):
             meta = PluginMeta(
-                name="my-runtime", version="1.0.0",
+                name="my-runtime",
+                version="1.0.0",
                 plugin_type=PluginType.RUNTIME,
             )
 
@@ -126,11 +134,17 @@ class TestEightSlotArchitecture:
         assert reg.slots["runtime"] == ["my-runtime"]
 
     def test_registry_load_agent(self):
-        from agentcost.plugins import PluginRegistry, AgentPlugin, PluginMeta, PluginType
+        from agentcost.plugins import (
+            PluginRegistry,
+            AgentPlugin,
+            PluginMeta,
+            PluginType,
+        )
 
         class MyAgent(AgentPlugin):
             meta = PluginMeta(
-                name="my-agent", version="1.0.0",
+                name="my-agent",
+                version="1.0.0",
                 plugin_type=PluginType.AGENT,
             )
 
@@ -146,7 +160,13 @@ class TestEightSlotArchitecture:
         assert reg.slots["agent"] == ["my-agent"]
 
     def test_registry_unload_runtime_and_agent(self):
-        from agentcost.plugins import PluginRegistry, RuntimePlugin, AgentPlugin, PluginMeta, PluginType
+        from agentcost.plugins import (
+            PluginRegistry,
+            RuntimePlugin,
+            AgentPlugin,
+            PluginMeta,
+            PluginType,
+        )
 
         class R(RuntimePlugin):
             meta = PluginMeta(name="r1", version="1.0", plugin_type=PluginType.RUNTIME)
@@ -189,9 +209,13 @@ class TestBuiltinNotifiers:
         from agentcost.plugins import NotifyEvent
 
         slack = SlackNotifierPlugin()
-        result = slack.send(NotifyEvent(
-            event_type="budget.warning", severity="warning", message="test",
-        ))
+        result = slack.send(
+            NotifyEvent(
+                event_type="budget.warning",
+                severity="warning",
+                message="test",
+            )
+        )
         assert not result.success
         assert "webhook_url" in result.message
 
@@ -208,9 +232,13 @@ class TestBuiltinNotifiers:
         from agentcost.plugins import NotifyEvent
 
         wh = WebhookNotifierPlugin()
-        result = wh.send(NotifyEvent(
-            event_type="test", severity="info", message="hello",
-        ))
+        result = wh.send(
+            NotifyEvent(
+                event_type="test",
+                severity="info",
+                message="hello",
+            )
+        )
         assert not result.success
 
     def test_webhook_health(self):
@@ -226,9 +254,13 @@ class TestBuiltinNotifiers:
         from agentcost.plugins import NotifyEvent
 
         em = EmailNotifierPlugin()
-        result = em.send(NotifyEvent(
-            event_type="test", severity="info", message="hi",
-        ))
+        result = em.send(
+            NotifyEvent(
+                event_type="test",
+                severity="info",
+                message="hi",
+            )
+        )
         assert not result.success
 
     def test_email_stub_sends(self):
@@ -237,9 +269,13 @@ class TestBuiltinNotifiers:
 
         em = EmailNotifierPlugin()
         em.configure({"recipients": ["admin@example.com"]})
-        result = em.send(NotifyEvent(
-            event_type="budget.exceeded", severity="critical", message="over budget",
-        ))
+        result = em.send(
+            NotifyEvent(
+                event_type="budget.exceeded",
+                severity="critical",
+                message="over budget",
+            )
+        )
         assert result.success
         assert result.message == "stub"
 
@@ -248,9 +284,13 @@ class TestBuiltinNotifiers:
         from agentcost.plugins import NotifyEvent
 
         pd = PagerDutyNotifierPlugin()
-        result = pd.send(NotifyEvent(
-            event_type="test", severity="warning", message="test",
-        ))
+        result = pd.send(
+            NotifyEvent(
+                event_type="test",
+                severity="warning",
+                message="test",
+            )
+        )
         assert not result.success
 
     def test_pagerduty_stub_sends(self):
@@ -259,20 +299,30 @@ class TestBuiltinNotifiers:
 
         pd = PagerDutyNotifierPlugin()
         pd.configure({"routing_key": "abc123"})
-        result = pd.send(NotifyEvent(
-            event_type="budget.exceeded", severity="critical", message="budget blown",
-        ))
+        result = pd.send(
+            NotifyEvent(
+                event_type="budget.exceeded",
+                severity="critical",
+                message="budget blown",
+            )
+        )
         assert result.success
 
     def test_notifier_plugin_meta(self):
         from agentcost.plugins.builtins import (
-            SlackNotifierPlugin, WebhookNotifierPlugin,
-            EmailNotifierPlugin, PagerDutyNotifierPlugin,
+            SlackNotifierPlugin,
+            WebhookNotifierPlugin,
+            EmailNotifierPlugin,
+            PagerDutyNotifierPlugin,
         )
         from agentcost.plugins import PluginType
 
-        for cls in [SlackNotifierPlugin, WebhookNotifierPlugin,
-                     EmailNotifierPlugin, PagerDutyNotifierPlugin]:
+        for cls in [
+            SlackNotifierPlugin,
+            WebhookNotifierPlugin,
+            EmailNotifierPlugin,
+            PagerDutyNotifierPlugin,
+        ]:
             p = cls()
             assert p.meta.plugin_type == PluginType.NOTIFIER
             assert p.meta.version == "1.0.0"
@@ -488,11 +538,14 @@ class TestAgentLifecycle:
         lc = AgentLifecyclePlugin()
         assert lc.get_workspace_config("proj1") == {}
 
-        lc.set_workspace_config("proj1", {
-            "default_model": "gpt-4o-mini",
-            "budget_limit": 100.0,
-            "team": "engineering",
-        })
+        lc.set_workspace_config(
+            "proj1",
+            {
+                "default_model": "gpt-4o-mini",
+                "budget_limit": 100.0,
+                "team": "engineering",
+            },
+        )
         cfg = lc.get_workspace_config("proj1")
         assert cfg["default_model"] == "gpt-4o-mini"
         assert cfg["budget_limit"] == 100.0
@@ -518,11 +571,14 @@ class TestPagerDutyReactor:
 
         pd = PagerDutyReactorPlugin()
         pd.configure({"routing_key": "test-key-123"})
-        ok = pd._trigger_incident("budget.exceeded", {
-            "message": "Budget exceeded for project demo",
-            "severity": "critical",
-            "project": "demo",
-        })
+        ok = pd._trigger_incident(
+            "budget.exceeded",
+            {
+                "message": "Budget exceeded for project demo",
+                "severity": "critical",
+                "project": "demo",
+            },
+        )
         assert ok
         assert len(pd._incidents) == 1
 
@@ -586,29 +642,50 @@ class TestSDKBudgetEvents:
         trace_mod._emit_budget_event = capture_emit
         try:
             # Push to 79% — no event
-            tracker.record(TraceEvent(
-                trace_id="t1", project="budget-test", model="gpt-4o",
-                provider="openai", input_tokens=100, output_tokens=50,
-                cost=0.79, latency_ms=100,
-            ))
+            tracker.record(
+                TraceEvent(
+                    trace_id="t1",
+                    project="budget-test",
+                    model="gpt-4o",
+                    provider="openai",
+                    input_tokens=100,
+                    output_tokens=50,
+                    cost=0.79,
+                    latency_ms=100,
+                )
+            )
             assert len(events_captured) == 0
 
             # Push to 81% — warning event
-            tracker.record(TraceEvent(
-                trace_id="t2", project="budget-test", model="gpt-4o",
-                provider="openai", input_tokens=100, output_tokens=50,
-                cost=0.02, latency_ms=100,
-            ))
+            tracker.record(
+                TraceEvent(
+                    trace_id="t2",
+                    project="budget-test",
+                    model="gpt-4o",
+                    provider="openai",
+                    input_tokens=100,
+                    output_tokens=50,
+                    cost=0.02,
+                    latency_ms=100,
+                )
+            )
             assert len(events_captured) == 1
             assert events_captured[0][0] == "budget.warning"
             assert events_captured[0][1] == "budget-test"
 
             # Push to 105% — exceeded event
-            tracker.record(TraceEvent(
-                trace_id="t3", project="budget-test", model="gpt-4o",
-                provider="openai", input_tokens=100, output_tokens=50,
-                cost=0.25, latency_ms=100,
-            ))
+            tracker.record(
+                TraceEvent(
+                    trace_id="t3",
+                    project="budget-test",
+                    model="gpt-4o",
+                    provider="openai",
+                    input_tokens=100,
+                    output_tokens=50,
+                    cost=0.25,
+                    latency_ms=100,
+                )
+            )
             assert len(events_captured) == 2
             assert events_captured[1][0] == "budget.exceeded"
         finally:
@@ -632,31 +709,59 @@ class TestSDKBudgetEvents:
             t.set_budget(1.00)
 
             # Cross 80% twice
-            t.record(TraceEvent(
-                trace_id="a", project="once-test", model="m",
-                provider="p", input_tokens=0, output_tokens=0,
-                cost=0.85, latency_ms=0,
-            ))
-            t.record(TraceEvent(
-                trace_id="b", project="once-test", model="m",
-                provider="p", input_tokens=0, output_tokens=0,
-                cost=0.01, latency_ms=0,
-            ))
+            t.record(
+                TraceEvent(
+                    trace_id="a",
+                    project="once-test",
+                    model="m",
+                    provider="p",
+                    input_tokens=0,
+                    output_tokens=0,
+                    cost=0.85,
+                    latency_ms=0,
+                )
+            )
+            t.record(
+                TraceEvent(
+                    trace_id="b",
+                    project="once-test",
+                    model="m",
+                    provider="p",
+                    input_tokens=0,
+                    output_tokens=0,
+                    cost=0.01,
+                    latency_ms=0,
+                )
+            )
             # Warning should fire only once
             warning_count = events_captured.count("budget.warning")
             assert warning_count == 1
 
             # Cross 100% twice
-            t.record(TraceEvent(
-                trace_id="c", project="once-test", model="m",
-                provider="p", input_tokens=0, output_tokens=0,
-                cost=0.20, latency_ms=0,
-            ))
-            t.record(TraceEvent(
-                trace_id="d", project="once-test", model="m",
-                provider="p", input_tokens=0, output_tokens=0,
-                cost=0.10, latency_ms=0,
-            ))
+            t.record(
+                TraceEvent(
+                    trace_id="c",
+                    project="once-test",
+                    model="m",
+                    provider="p",
+                    input_tokens=0,
+                    output_tokens=0,
+                    cost=0.20,
+                    latency_ms=0,
+                )
+            )
+            t.record(
+                TraceEvent(
+                    trace_id="d",
+                    project="once-test",
+                    model="m",
+                    provider="p",
+                    input_tokens=0,
+                    output_tokens=0,
+                    cost=0.10,
+                    latency_ms=0,
+                )
+            )
             exceeded_count = events_captured.count("budget.exceeded")
             assert exceeded_count == 1
         finally:
@@ -710,8 +815,16 @@ class TestScaffoldNewSlots:
     def test_all_eight_templates(self):
         from agentcost.plugins.scaffold import PLUGIN_TEMPLATES
 
-        expected = {"notifier", "policy", "exporter", "provider",
-                    "tracker", "reactor", "runtime", "agent"}
+        expected = {
+            "notifier",
+            "policy",
+            "exporter",
+            "provider",
+            "tracker",
+            "reactor",
+            "runtime",
+            "agent",
+        }
         assert set(PLUGIN_TEMPLATES.keys()) == expected
 
     def test_scaffold_runtime(self):
@@ -756,10 +869,17 @@ class TestRegistryHelpers:
         assert reg.get_model_override("gpt-4o", {}) == "gpt-4o"
 
     def test_get_model_override_with_runtime(self):
-        from agentcost.plugins import PluginRegistry, RuntimePlugin, PluginMeta, PluginType
+        from agentcost.plugins import (
+            PluginRegistry,
+            RuntimePlugin,
+            PluginMeta,
+            PluginType,
+        )
 
         class Downgrader(RuntimePlugin):
-            meta = PluginMeta(name="downgrader", version="1.0", plugin_type=PluginType.RUNTIME)
+            meta = PluginMeta(
+                name="downgrader", version="1.0", plugin_type=PluginType.RUNTIME
+            )
 
             def get_model_override(self, model, ctx):
                 if model == "gpt-4o" and ctx.get("budget_pressure"):
@@ -775,7 +895,9 @@ class TestRegistryHelpers:
         # No pressure → no override
         assert reg.get_model_override("gpt-4o", {}) == "gpt-4o"
         # With pressure → downgrade
-        assert reg.get_model_override("gpt-4o", {"budget_pressure": True}) == "gpt-4o-mini"
+        assert (
+            reg.get_model_override("gpt-4o", {"budget_pressure": True}) == "gpt-4o-mini"
+        )
 
     def test_check_rate_limits_all_pass(self):
         from agentcost.plugins import PluginRegistry
@@ -784,10 +906,17 @@ class TestRegistryHelpers:
         assert reg.check_rate_limits("project", "demo")  # no plugins = pass
 
     def test_check_rate_limits_blocked(self):
-        from agentcost.plugins import PluginRegistry, RuntimePlugin, PluginMeta, PluginType
+        from agentcost.plugins import (
+            PluginRegistry,
+            RuntimePlugin,
+            PluginMeta,
+            PluginType,
+        )
 
         class Blocker(RuntimePlugin):
-            meta = PluginMeta(name="blocker", version="1.0", plugin_type=PluginType.RUNTIME)
+            meta = PluginMeta(
+                name="blocker", version="1.0", plugin_type=PluginType.RUNTIME
+            )
 
             def get_model_override(self, m, c):
                 return None

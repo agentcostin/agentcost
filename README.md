@@ -6,6 +6,7 @@
   <p align="center">
     <a href="https://pypi.org/project/agentcostin/"><img src="https://img.shields.io/pypi/v/agentcostin?color=blue" alt="PyPI"></a>
     <a href="https://www.npmjs.com/package/@agentcost/sdk"><img src="https://img.shields.io/npm/v/@agentcost/sdk?color=green" alt="npm"></a>
+    <a href="https://hub.docker.com/r/agentcostin/agentcost"><img src="https://img.shields.io/docker/pulls/agentcostin/agentcost?color=blue&label=docker%20pulls" alt="Docker Hub"></a>
     <a href="https://github.com/agentcostin/agentcost/actions"><img src="https://img.shields.io/github/actions/workflow/status/agentcostin/agentcost/ci.yml?branch=main" alt="CI"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen" alt="License"></a>
     <a href="https://discord.gg/agentcost"><img src="https://img.shields.io/discord/000000000?color=7289da&label=discord" alt="Discord"></a>
@@ -135,6 +136,45 @@ agentcost plugin install agentcost-slack-alerts
         └────────────┘     └─────────────┘     └─────────────┘
 ```
 
+## AI Gateway (with Response Caching)
+
+Zero-instrumentation cost tracking. Point your agents at the gateway instead of the provider:
+
+```python
+from openai import OpenAI
+
+# Just change the base URL — zero code changes to your agent
+client = OpenAI(
+    base_url="http://localhost:8200/v1",
+    api_key="ac_myproject_xxx",
+)
+
+# Every call is tracked, policy-checked, and cached automatically
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Hello!"}],
+    temperature=0,  # deterministic calls are cached
+)
+```
+
+The gateway provides automatic **response caching** for deterministic requests (temperature ≤ 0.2), with full cost savings tracking visible in the dashboard. Cache stats include hit rate, total cost saved, per-project and per-model breakdown.
+
+```bash
+# Start the gateway
+python -m agentcost.gateway --port 8200
+
+# Check cache performance
+curl http://localhost:8200/v1/gateway/cache/stats
+```
+
+| Feature | Description |
+|---------|-------------|
+| **Response Caching** | Exact-match cache for deterministic requests (configurable temperature threshold) |
+| **Cost Savings Tracking** | Per-request cost saved, aggregated by project and model |
+| **Policy Enforcement** | Pre-call policy checks before forwarding to providers |
+| **Provider Failover** | Automatic routing across OpenAI, Anthropic, Ollama |
+| **Rate Limiting** | Per-project RPM limits with token-bucket algorithm |
+
 ## Exporters
 
 Send cost data to your existing observability stack:
@@ -186,7 +226,21 @@ const traced = await ac.trace({
 
 ## Self-Hosting
 
-### Community Edition (Quick Start)
+### Docker Hub (Quickest)
+
+```bash
+# One command — pulls from Docker Hub, runs with SQLite, dashboard on :8100
+docker run -d -p 8100:8100 -v agentcost_data:/data agentcostin/agentcost:latest
+
+# Seed demo data
+curl -X POST http://localhost:8100/api/seed -H "Content-Type: application/json" -d '{"days": 14}'
+
+# → Open http://localhost:8100
+```
+
+> **Live Demo**: See AgentCost in action at [demo.agentcost.in](https://demo.agentcost.in) — no install required.
+
+### Community Edition (From Source)
 
 ```bash
 git clone https://github.com/agentcostin/agentcost.git

@@ -179,15 +179,17 @@ function Empty({icon,text}){return <div className="empty">{icon&&<span className
 
 function Overview({project}){
   const [data,setData]=useState(null);const [models,setModels]=useState([]);const [timeline,setTimeline]=useState([]);
-  const [bench,setBench]=useState(null);
+  const [bench,setBench]=useState(null);const [cacheData,setCacheData]=useState(null);
   const load=useCallback(async()=>{
     const q=project?`?project=${project}`:'';const q2=q?`${q}&`:'?';
-    const [s,m,t,lb]=await Promise.all([
+    const [s,m,t,lb,cs]=await Promise.all([
       api(`/api/summary${q}`),api(`/api/cost/by-model${q}`),
       api(`/api/cost/over-time${q2}interval=hour&since_hours=48`),
       api('/api/benchmarks/leaderboard'),
+      api('/api/gateway/cache/stats').catch(()=>null),
     ]);
     setData(s);setModels(m||[]);setTimeline(t||[]);
+    if(cs&&(cs.total_hits>0||cs.total_misses>0||cs.enabled)) setCacheData(cs);
     // Aggregate benchmark stats
     if(lb&&lb.length){
       const totIncome=lb.reduce((a,b)=>a+(b.total_income||0),0);
@@ -206,6 +208,12 @@ function Overview({project}){
       <Card title="Output Tokens" value={fmtN(data.total_output_tokens)}/>
       <Card title="Avg Latency" value={`${(data.avg_latency||0).toFixed(0)}ms`} sub={`${data.model_count||0} models`}/>
     </div>
+    {cacheData&&<div className="grid g4" style={{marginBottom:'1rem'}}>
+      <Card title="Cache Hit Rate" value={`${(cacheData.hit_rate_pct||0).toFixed(1)}%`} sub={`${fmtN(cacheData.total_hits||0)} hits / ${fmtN((cacheData.total_hits||0)+(cacheData.total_misses||0))} total`}/>
+      <Card title="Cost Saved (Cache)" value={fmt$(cacheData.total_cost_saved||0)} sub={`${fmtN(cacheData.entries||0)} entries cached`}/>
+      <Card title="Cache Hits" value={fmtN(cacheData.total_hits||0)} sub={`${fmtN(cacheData.total_misses||0)} misses`}/>
+      <Card title="Latency Saved" value={`${fmtN(cacheData.total_latency_saved_ms||0)}ms`} sub="total time saved"/>
+    </div>}
     {bench&&bench.runs>0&&<>
       <div className="grid g4" style={{marginBottom:'1rem'}}>
         <Card title="Benchmark Income" value={`$${bench.income.toFixed(2)}`} sub={`${bench.runs} runs`}/>

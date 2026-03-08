@@ -92,40 +92,171 @@ class GatewayConfig:
 # ── Response Cache ────────────────────────────────────────────────────────────
 
 
-class ResponseCache:
-    """Simple in-memory LRU cache for identical requests."""
+class CacheStats:
+    """Tracks cache performance metrics with per-project breakdown."""
 
-    def __init__(self, max_entries: int = 10000, ttl: int = 3600):
+    def __init__(self):
+        self.total_hits: int = 0
+        self.total_misses: int = 0
+        self.total_cost_saved: float = 0.0
+        self.total_latency_saved_ms: int = 0
+        self._per_project: Dict[str, dict] = {}
+        self._per_model: Dict[str, dict] = {}
+        self._started_at: float = time.time()
+
+    def record_hit(
+        self,
+        project: str,
+        model: str,
+        cost_saved: float,
+        latency_saved_ms: int = 0,
+    ):
+        self.total_hits += 1
+        self.total_cost_saved += cost_saved
+        self.total_latency_saved_ms += latency_saved_ms
+        # Per-project
+        ps = self._per_project.setdefault(
+            project, {"hits": 0, "misses": 0, "cost_saved": 0.0}
+        )
+        ps["hits"] += 1
+        ps["cost_saved"] += cost_saved
+        # Per-model
+        ms = self._per_model.setdefault(
+            model, {"hits": 0, "misses": 0, "cost_saved": 0.0}
+        )
+        ms["hits"] += 1
+        ms["cost_saved"] += cost_saved
+
+    def record_miss(self, project: str, model: str):
+        self.total_misses += 1
+        ps = self._per_project.setdefault(
+            project, {"hits": 0, "misses": 0, "cost_saved": 0.0}
+        )
+        ps["misses"] += 1
+        ms = self._per_model.setdefault(
+            model, {"hits": 0, "misses": 0, "cost_saved": 0.0}
+        )
+        ms["misses"] += 1
+
+    @property
+    def hit_rate(self) -> float:
+        total = self.total_hits + self.total_misses
+        return (self.total_hits / total * 100) if total > 0 else 0.0
+
+    def to_dict(self) -> dict:
+        return {
+            "total_hits": self.total_hits,
+            "total_misses": self.total_misses,
+            "hit_rate_pct": round(self.hit_rate, 2),
+            "total_cost_saved": round(self.total_cost_saved, 6),
+            "total_latency_saved_ms": self.total_latency_saved_ms,
+            "uptime_seconds": int(time.time() - self._started_at),
+            "by_project": {
+                k: {**v, "cost_saved": round(v["cost_saved"], 6)}
+                for k, v in self._per_project.items()
+            },
+            "by_model": {
+                k: {**v, "cost_saved": round(v["cost_saved"], 6)}
+                for k, v in sorted(
+                    self._per_model.items(),
+                    key=lambda x: x[1]["cost_saved"],
+                    reverse=True,
+                )[:20]
+            },
+        }
+
+    def reset(self):
+        self.total_hits = 0
+        self.total_misses = 0
+        self.total_cost_saved = 0.0
+        self.total_latency_saved_ms = 0
+        self._per_project.clear()
+        self._per_model.clear()
+        self._started_at = time.time()
+
+
+class ResponseCache:
+    """In-memory LRU cache with stats tracking and configurable temperature threshold.
+
+    By default, caches responses for requests with temperature <= 0.2
+    (deterministic or near-deterministic). Set cache_temp_threshold to
+    control which temperatures are cacheable.
+    """
+
+    def __init__(
+        self,
+        max_entries: int = 10000,
+        ttl: int = 3600,
+        temp_threshold: float = 0.2,
+    ):
         self._cache: Dict[str, tuple] = {}
         self._max = max_entries
         self._ttl = ttl
+        self._temp_threshold = temp_threshold
+        self.stats = CacheStats()
 
-    def _key(self, model: str, messages: list, temperature: float = 1.0) -> str:
+    def _key(
+        self,
+        model: str,
+        messages: list,
+        temperature: float = 1.0,
+        tools: list = None,
+    ) -> str:
         raw = json.dumps(
-            {"m": model, "msgs": messages, "t": temperature}, sort_keys=True
+            {
+                "m": model,
+                "msgs": messages,
+                "t": round(temperature, 2),
+                "tools": tools or [],
+            },
+            sort_keys=True,
         )
         return hashlib.sha256(raw.encode()).hexdigest()
 
+    def is_cacheable(self, temperature: float, stream: bool) -> bool:
+        """Check if a request qualifies for caching."""
+        return not stream and temperature <= self._temp_threshold
+
     def get(
-        self, model: str, messages: list, temperature: float = 1.0
+        self,
+        model: str,
+        messages: list,
+        temperature: float = 1.0,
+        tools: list = None,
     ) -> Optional[dict]:
-        k = self._key(model, messages, temperature)
+        k = self._key(model, messages, temperature, tools)
         entry = self._cache.get(k)
         if entry and (time.time() - entry[0]) < self._ttl:
-            logger.debug(f"Cache HIT for {model}")
+            logger.debug(f"Cache HIT for {model} (key={k[:12]}...)")
             return entry[1]
         if entry:
+            # TTL expired
             del self._cache[k]
         return None
 
     def put(
-        self, model: str, messages: list, temperature: float, response: dict
+        self,
+        model: str,
+        messages: list,
+        temperature: float,
+        response: dict,
+        tools: list = None,
     ) -> None:
-        k = self._key(model, messages, temperature)
+        k = self._key(model, messages, temperature, tools)
         if len(self._cache) >= self._max:
+            # Evict oldest entry
             oldest = min(self._cache, key=lambda x: self._cache[x][0])
             del self._cache[oldest]
         self._cache[k] = (time.time(), response)
+        logger.debug(
+            f"Cache PUT for {model} (key={k[:12]}..., entries={len(self._cache)})"
+        )
+
+    def clear(self) -> int:
+        """Clear all cached entries. Returns count of entries cleared."""
+        count = len(self._cache)
+        self._cache.clear()
+        return count
 
     @property
     def size(self) -> int:
@@ -229,7 +360,11 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
     )
 
     cache = (
-        ResponseCache(config.max_cache_entries, config.cache_ttl)
+        ResponseCache(
+            config.max_cache_entries,
+            config.cache_ttl,
+            temp_threshold=float(os.getenv("GATEWAY_CACHE_TEMP_THRESHOLD", "0.2")),
+        )
         if config.cache_enabled
         else None
     )
@@ -238,11 +373,20 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
     # ── Health ────────────────────────────────────────────────────────────
     @app.get("/health")
     async def health():
+        cache_info = {}
+        if cache:
+            cache_info = {
+                "cache_size": cache.size,
+                "cache_hits": cache.stats.total_hits,
+                "cache_misses": cache.stats.total_misses,
+                "cache_hit_rate_pct": round(cache.stats.hit_rate, 2),
+                "cache_cost_saved": round(cache.stats.total_cost_saved, 6),
+            }
         return {
             "status": "ok",
             "gateway": True,
             "providers": list(config.providers.keys()),
-            "cache_size": cache.size if cache else 0,
+            **cache_info,
         }
 
     # ── OpenAI-compatible: Chat Completions ───────────────────────────────
@@ -271,24 +415,34 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
         messages = body.get("messages", [])
         temperature = body.get("temperature", 1.0)
         stream = body.get("stream", False)
+        tools = body.get("tools")
 
-        # Cache check (non-streaming, temperature=0 only)
-        if cache and not stream and temperature == 0:
-            cached = cache.get(model, messages, temperature)
+        # Cache check (non-streaming, low temperature)
+        if cache and cache.is_cacheable(temperature, stream):
+            cached = cache.get(model, messages, temperature, tools)
             if cached:
-                # Log cache hit as trace
+                # Estimate what this call would have cost
+                usage = cached.get("usage", {})
+                inp_t = usage.get("prompt_tokens", 0)
+                out_t = usage.get("completion_tokens", 0)
+                cost_saved = estimate_cost(model, inp_t, out_t)
+                cache.stats.record_hit(project, model, cost_saved, latency_saved_ms=200)
+
+                # Log cache hit as trace (zero cost)
                 _log_trace(
                     config,
                     project,
                     model,
                     "cache",
-                    cached.get("usage", {}).get("prompt_tokens", 0),
-                    cached.get("usage", {}).get("completion_tokens", 0),
+                    inp_t,
+                    out_t,
                     0.0,
                     0,
-                    metadata={"cache": "hit"},
+                    metadata={"cache": "hit", "cost_saved": round(cost_saved, 6)},
                 )
                 return JSONResponse(cached)
+            else:
+                cache.stats.record_miss(project, model)
 
         # Resolve provider
         provider = resolve_provider(model, config)
@@ -335,9 +489,9 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
                 latency_ms,
             )
 
-            # Cache if deterministic
-            if cache and temperature == 0:
-                cache.put(model, messages, temperature, response_data)
+            # Cache if request qualifies
+            if cache and cache.is_cacheable(temperature, stream):
+                cache.put(model, messages, temperature, response_data, tools)
 
             return JSONResponse(response_data)
 
@@ -385,8 +539,40 @@ def create_gateway_app(config: Optional[GatewayConfig] = None) -> "FastAPI":  # 
             },
             "cache_enabled": config.cache_enabled,
             "cache_size": cache.size if cache else 0,
+            "cache_temp_threshold": cache._temp_threshold if cache else 0,
             "rate_limit_rpm": config.rate_limit_rpm,
         }
+
+    # ── Cache stats ──────────────────────────────────────────────────────
+    @app.get("/v1/gateway/cache/stats")
+    async def cache_stats():
+        """Detailed cache performance metrics with per-project and per-model breakdown."""
+        if not cache:
+            return {"enabled": False, "message": "Cache is disabled"}
+        return {
+            "enabled": True,
+            "entries": cache.size,
+            "max_entries": cache._max,
+            "ttl_seconds": cache._ttl,
+            "temp_threshold": cache._temp_threshold,
+            **cache.stats.to_dict(),
+        }
+
+    @app.post("/v1/gateway/cache/clear")
+    async def cache_clear():
+        """Clear all cached responses. Stats are preserved."""
+        if not cache:
+            return {"cleared": 0, "message": "Cache is disabled"}
+        count = cache.clear()
+        return {"cleared": count, "message": f"Cleared {count} cached entries"}
+
+    @app.post("/v1/gateway/cache/reset-stats")
+    async def cache_reset_stats():
+        """Reset cache stats counters. Cache entries are preserved."""
+        if not cache:
+            return {"message": "Cache is disabled"}
+        cache.stats.reset()
+        return {"message": "Cache stats reset"}
 
     return app
 

@@ -681,6 +681,41 @@ if _ENTERPRISE:
             return {"error": "Anomaly detection not available"}
 
 
+# ── Gateway Cache Stats (all editions) ────────────────────────────────────────
+
+
+@app.get("/api/gateway/cache/stats")
+async def gateway_cache_stats(user: AuthContext = Depends(get_optional_user)):
+    """Fetch cache stats from the AI Gateway (if running).
+
+    Returns cache hit/miss counts, cost saved, hit rate, and per-project/model breakdown.
+    If the gateway is not running, returns a placeholder with zeros.
+    """
+    gateway_url = os.getenv("AGENTCOST_GATEWAY_URL", "http://localhost:8200")
+    try:
+        import urllib.request
+        import json as _json
+
+        req = urllib.request.Request(
+            f"{gateway_url}/v1/gateway/cache/stats", method="GET"
+        )
+        resp = urllib.request.urlopen(req, timeout=3)
+        return _json.loads(resp.read().decode())
+    except Exception:
+        # Gateway not running — return empty stats
+        return {
+            "enabled": False,
+            "entries": 0,
+            "total_hits": 0,
+            "total_misses": 0,
+            "hit_rate_pct": 0,
+            "total_cost_saved": 0,
+            "total_latency_saved_ms": 0,
+            "by_project": {},
+            "by_model": {},
+        }
+
+
 # ── Seed endpoint (all editions) ─────────────────────────────────────────────
 
 

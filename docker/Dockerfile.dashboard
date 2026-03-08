@@ -47,7 +47,8 @@ CMD ["python", "-m", "agentcost.api.server"]
 
 # Labels
 LABEL org.opencontainers.image.title="AgentCost"
-LABEL org.opencontainers.image.description="AI Agent Cost Governance"
-LABEL org.opencontainers.image.url="https://agentcost.dev"
-LABEL org.opencontainers.image.source="https://github.com/agentcost/agentcost"
+LABEL org.opencontainers.image.description="Open-source AI cost governance — track, control, and optimize LLM spending"
+LABEL org.opencontainers.image.url="https://agentcost.in"
+LABEL org.opencontainers.image.source="https://github.com/agentcostin/agentcost"
+LABEL org.opencontainers.image.documentation="https://docs.agentcost.in"
 LABEL org.opencontainers.image.licenses="MIT"

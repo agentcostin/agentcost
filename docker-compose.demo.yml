@@ -1,0 +1,74 @@
+# AgentCost Demo — docker-compose.demo.yml
+#
+# Deploy a pre-seeded, read-only demo instance of AgentCost.
+# Intended for demo.agentcost.in — shows all 7 dashboard views
+# with realistic sample data, auto-refreshing every 6 hours.
+#
+# Usage:
+#   docker compose -f docker-compose.demo.yml up -d
+#
+# Features:
+#   - 14 days of pre-seeded sample data (auto-generated on startup)
+#   - Auto-reseed every 6 hours to keep data fresh
+#   - Dashboard at http://localhost:8100
+#   - No auth required (community edition)
+#   - Data persisted in Docker volume (survives restarts)
+
+services:
+  agentcost-demo:
+    image: agentcostin/agentcost:latest
+    container_name: agentcost-demo
+    environment:
+      AGENTCOST_EDITION: community
+      AGENTCOST_PORT: "8100"
+      AGENTCOST_AUTH_ENABLED: "false"
+      AGENTCOST_DB: "/data/agentcost.db"
+      # Demo mode: show notice banner
+      AGENTCOST_DEMO_MODE: "true"
+    ports:
+      - "${DEMO_PORT:-8100}:8100"
+    volumes:
+      - demo_data:/data
+    # Seed data on startup, then run the dashboard
+    command: >
+      sh -c "
+        echo '🧮 AgentCost Demo — Seeding sample data...' &&
+        python scripts/seed_sample_data.py --days 14 2>/dev/null;
+        echo '✅ Demo ready at http://localhost:8100' &&
+        python -m agentcost.api.server
+      "
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8100/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    labels:
+      - "com.agentcost.role=demo"
+      - "com.agentcost.description=AgentCost Demo Instance"
+
+  # Optional: auto-reseed every 6 hours to keep demo data fresh
+  demo-reseeder:
+    image: agentcostin/agentcost:latest
+    container_name: agentcost-demo-reseed
+    environment:
+      AGENTCOST_DB: "/data/agentcost.db"
+    volumes:
+      - demo_data:/data
+    entrypoint: >
+      sh -c "
+        while true; do
+          sleep 21600;
+          echo '[reseed] Refreshing demo data...' &&
+          python scripts/seed_sample_data.py --days 14 2>/dev/null &&
+          echo '[reseed] Done.';
+        done
+      "
+    restart: unless-stopped
+    depends_on:
+      agentcost-demo:
+        condition: service_healthy
+
+volumes:
+  demo_data:
+    driver: local

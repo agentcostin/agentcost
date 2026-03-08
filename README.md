@@ -6,8 +6,8 @@
   <p align="center">
     <a href="https://pypi.org/project/agentcostin/"><img src="https://img.shields.io/pypi/v/agentcostin?color=blue" alt="PyPI"></a>
     <a href="https://www.npmjs.com/package/@agentcost/sdk"><img src="https://img.shields.io/npm/v/@agentcost/sdk?color=green" alt="npm"></a>
-    <a href="https://hub.docker.com/r/agentcostin/agentcost"><img src="https://img.shields.io/docker/pulls/agentcostin/agentcost?color=blue&label=docker%20pulls" alt="Docker Hub"></a>
-    <a href="https://github.com/agentcostin/agentcost/actions"><img src="https://img.shields.io/github/actions/workflow/status/agentcostin/agentcost/ci.yml?branch=main" alt="CI"></a>
+    <a href="https://hub.docker.com/r/agentcost/agentcost"><img src="https://img.shields.io/docker/pulls/agentcost/agentcost?color=blue&label=docker%20pulls" alt="Docker Hub"></a>
+    <a href="https://github.com/agentcost/agentcost/actions"><img src="https://img.shields.io/github/actions/workflow/status/agentcost/agentcost/ci.yml?branch=main" alt="CI"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen" alt="License"></a>
     <a href="https://discord.gg/agentcost"><img src="https://img.shields.io/discord/000000000?color=7289da&label=discord" alt="Discord"></a>
   </p>
@@ -230,7 +230,7 @@ const traced = await ac.trace({
 
 ```bash
 # One command — pulls from Docker Hub, runs with SQLite, dashboard on :8100
-docker run -d -p 8100:8100 -v agentcost_data:/data agentcostin/agentcost:latest
+docker run -d -p 8100:8100 -v agentcost_data:/data agentcost/agentcost:latest
 
 # Seed demo data
 curl -X POST http://localhost:8100/api/seed -H "Content-Type: application/json" -d '{"days": 14}'
@@ -243,7 +243,7 @@ curl -X POST http://localhost:8100/api/seed -H "Content-Type: application/json" 
 ### Community Edition (From Source)
 
 ```bash
-git clone https://github.com/agentcostin/agentcost.git
+git clone https://github.com/agentcost/agentcost.git
 cd agentcost
 docker compose -f docker-compose.dev.yml up
 # → http://localhost:8100
@@ -299,7 +299,7 @@ Enterprise features are source-available under BSL 1.1. See [enterprise/LICENSE]
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions.
 
 ```bash
-git clone https://github.com/agentcostin/agentcost.git
+git clone https://github.com/agentcost/agentcost.git
 cd agentcost
 pip install -e ".[dev,server]"
 pytest tests/ -v
@@ -314,7 +314,7 @@ pytest tests/ -v
 
 <p align="center">
   <a href="https://agentcost.in/docs/">Documentation</a> ·
-  <a href="https://github.com/agentcostin/agentcost/issues">Issues</a> ·
+  <a href="https://github.com/agentcost/agentcost/issues">Issues</a> ·
   <a href="https://discord.gg/agentcost">Discord</a> ·
   <a href="https://twitter.com/agentcost">Twitter</a>
 </p>

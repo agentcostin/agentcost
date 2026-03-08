@@ -16,7 +16,7 @@
 
 services:
   agentcost-demo:
-    image: agentcostin/agentcost:latest
+    image: agentcost/agentcost:latest
     container_name: agentcost-demo
     environment:
       AGENTCOST_EDITION: community
@@ -49,7 +49,7 @@ services:
 
   # Optional: auto-reseed every 6 hours to keep demo data fresh
   demo-reseeder:
-    image: agentcostin/agentcost:latest
+    image: agentcost/agentcost:latest
     container_name: agentcost-demo-reseed
     environment:
       AGENTCOST_DB: "/data/agentcost.db"

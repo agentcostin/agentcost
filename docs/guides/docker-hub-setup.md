@@ -5,7 +5,7 @@
 ### 1. Create Docker Hub Account & Repository
 
 1. Sign up / log in at [hub.docker.com](https://hub.docker.com)
-2. Create a repository: `agentcostin/agentcost`
+2. Create a repository: `agentcost/agentcost`
 3. Set visibility to **Public**
 
 ### 2. Create Docker Hub Access Token
@@ -35,8 +35,8 @@ Either:
 
 ```bash
 # Pull and run
-docker pull agentcostin/agentcost:latest
-docker run -d -p 8100:8100 -v agentcost_data:/data agentcostin/agentcost:latest
+docker pull agentcost/agentcost:latest
+docker run -d -p 8100:8100 -v agentcost_data:/data agentcost/agentcost:latest
 
 # Seed demo data
 curl -X POST http://localhost:8100/api/seed \
@@ -55,7 +55,7 @@ curl -X POST http://localhost:8100/api/seed \
 ssh user@your-server
 
 # Clone and deploy
-git clone https://github.com/agentcostin/agentcost.git
+git clone https://github.com/agentcost/agentcost.git
 cd agentcost
 docker compose -f docker-compose.demo.yml up -d
 

@@ -39,9 +39,9 @@ jobs:
           push: true
           build-args: EDITION=community
           tags: |
-            ghcr.io/agentcostin/agentcost:latest
-            ghcr.io/agentcostin/agentcost:${{ steps.meta.outputs.version }}
-            ghcr.io/agentcostin/agentcost:community
+            ghcr.io/agentcost/agentcost:latest
+            ghcr.io/agentcost/agentcost:${{ steps.meta.outputs.version }}
+            ghcr.io/agentcost/agentcost:community
           labels: |
             org.opencontainers.image.version=${{ steps.meta.outputs.version }}
 
@@ -53,7 +53,7 @@ jobs:
           push: true
           build-args: EDITION=enterprise
           tags: |
-            ghcr.io/agentcostin/agentcost:enterprise
-            ghcr.io/agentcostin/agentcost:${{ steps.meta.outputs.version }}-enterprise
+            ghcr.io/agentcost/agentcost:enterprise
+            ghcr.io/agentcost/agentcost:${{ steps.meta.outputs.version }}-enterprise
           labels: |
             org.opencontainers.image.version=${{ steps.meta.outputs.version }}-enterprise

@@ -1,0 +1,9 @@
+{
+  "last_sync": "2026-03-09T08:01:19.696675+00:00",
+  "ref": "main",
+  "source": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json",
+  "model_count": 2691,
+  "added": 82,
+  "removed": 1,
+  "price_changed": 2
+}

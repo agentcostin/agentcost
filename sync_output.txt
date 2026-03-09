@@ -1,0 +1,20 @@
+Fetching from: https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json
+WARNINGS:
+  - Entry '1024-x-1024/50-steps/bedrock/amazon.nova-canvas-v1:0' missing cost fields
+  - Entry '1024-x-1024/50-steps/stability.stable-diffusion-xl-v1' missing cost fields
+  - Entry '1024-x-1024/dall-e-2' missing cost fields
+  - Entry '1024-x-1024/max-steps/stability.stable-diffusion-xl-v1' missing cost fields
+  - Entry '256-x-256/dall-e-2' missing cost fields
+  - Entry '512-x-512/50-steps/stability.stable-diffusion-xl-v0' missing cost fields
+  - Entry '512-x-512/dall-e-2' missing cost fields
+  - Entry '512-x-512/max-steps/stability.stable-diffusion-xl-v0' missing cost fields
+
+Diff summary:
+  Models before: 2610
+  Models after:  2691
+  Added:         82
+  Removed:       1
+  Price changed: 2
+  Price changes: mistral/mistral-large-latest, mistral/mistral-small-latest
+
+Synced 2691 models to model_prices.json

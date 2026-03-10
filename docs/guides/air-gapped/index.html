@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://agentcost.in/docs/guides/crewai/">
+        <link rel="canonical" href="https://agentcost.in/docs/guides/air-gapped/">
       
       
-        <link rel="prev" href="../langchain/">
+        <link rel="prev" href="../self-hosting/">
       
       
-        <link rel="next" href="../autogen/">
+        <link rel="next" href="../../reference/python-sdk/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>CrewAI - AgentCost</title>
+        <title>Air-Gapped Deployment - AgentCost</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#crewai-integration" class="md-skip">
+        <a href="#air-gapped-deployment" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CrewAI
+              Air-Gapped Deployment
             
           </span>
         </div>
@@ -1055,37 +1055,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    CrewAI
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../crewai/" class="md-nav__link">
         
   
   
@@ -1101,59 +1074,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-gets-tracked" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Gets Tracked
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1303,10 +1223,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../air-gapped/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Air-Gapped Deployment
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1322,6 +1269,170 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-transfer-the-docker-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Transfer the Docker image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-load-and-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Load and run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-instrument-your-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Instrument your code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pricing-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pricing Database
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pricing Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-costs-come-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where costs come from
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-pricing-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline pricing updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-premises-llm-cost-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On-Premises LLM Cost Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enterprise-edition-in-air-gapped-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Edition in Air-Gapped Environments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1677,10 +1788,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        How It Works
       
     </span>
   </a>
@@ -1688,10 +1799,99 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Basic Usage
+        Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-transfer-the-docker-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Transfer the Docker image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-load-and-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Load and run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-instrument-your-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Instrument your code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pricing-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pricing Database
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pricing Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-costs-come-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where costs come from
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-pricing-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline pricing updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-premises-llm-cost-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On-Premises LLM Cost Tracking
       
     </span>
   </a>
@@ -1699,10 +1899,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-gets-tracked" class="md-nav__link">
+  <a href="#enterprise-edition-in-air-gapped-environments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Gets Tracked
+        Enterprise Edition in Air-Gapped Environments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
       
     </span>
   </a>
@@ -1729,57 +1951,201 @@
   
 
 
-<h1 id="crewai-integration">CrewAI Integration</h1>
-<p>Track costs for CrewAI crews, agents, and tasks.</p>
-<h2 id="installation">Installation</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>agentcostin<span class="w"> </span>crewai
-</code></pre></div>
-<h2 id="basic-usage">Basic Usage</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">crewai</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="n">Crew</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk.integrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">crewai_callback</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Define agents</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">researcher</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Senior Researcher&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">goal</span><span class="o">=</span><span class="s2">&quot;Find the latest AI cost trends&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">backstory</span><span class="o">=</span><span class="s2">&quot;You are an expert in AI economics.&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">writer</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Writer&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">goal</span><span class="o">=</span><span class="s2">&quot;Summarize research findings&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">backstory</span><span class="o">=</span><span class="s2">&quot;You write clear, concise reports.&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Define tasks</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="n">research_task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Research AI infrastructure costs in 2026&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="n">agent</span><span class="o">=</span><span class="n">researcher</span><span class="p">,</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="p">)</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="n">write_task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Write a summary of the research findings&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    <span class="n">agent</span><span class="o">=</span><span class="n">writer</span><span class="p">,</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="p">)</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Create crew with AgentCost tracking</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="n">crew</span> <span class="o">=</span> <span class="n">Crew</span><span class="p">(</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    <span class="n">agents</span><span class="o">=</span><span class="p">[</span><span class="n">researcher</span><span class="p">,</span> <span class="n">writer</span><span class="p">],</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    <span class="n">tasks</span><span class="o">=</span><span class="p">[</span><span class="n">research_task</span><span class="p">,</span> <span class="n">write_task</span><span class="p">],</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">crewai_callback</span><span class="p">(</span><span class="s2">&quot;crewai-research&quot;</span><span class="p">)]</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="p">)</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="n">result</span> <span class="o">=</span> <span class="n">crew</span><span class="o">.</span><span class="n">kickoff</span><span class="p">()</span>
-</code></pre></div>
-<h2 id="what-gets-tracked">What Gets Tracked</h2>
-<p>Each LLM call within the crew is tracked with:</p>
+<h1 id="air-gapped-deployment">Air-Gapped Deployment</h1>
+<p>AgentCost is fully self-contained and runs without internet access. This guide covers deploying AgentCost in air-gapped, restricted, or on-premises environments where outbound connectivity is not available.</p>
+<h2 id="how-it-works">How It Works</h2>
+<p>AgentCost ships with everything it needs inside the Docker image:</p>
 <ul>
-<li>Which agent made the call</li>
-<li>Task context</li>
-<li>Model, tokens, cost, latency</li>
-<li>Error status</li>
+<li><strong>Pricing database</strong> — A vendored JSON file containing pricing for 2,610+ models from 83+ providers (OpenAI, Anthropic, Azure OpenAI, GCP Vertex AI, AWS Bedrock, Google Gemini, Mistral, Cohere, DeepSeek, and more). No external API calls are made to calculate costs.</li>
+<li><strong>Dashboard</strong> — The React dashboard is bundled as static files. No CDN dependencies.</li>
+<li><strong>Database</strong> — Community edition uses SQLite (single file, zero config). Enterprise supports PostgreSQL.</li>
+<li><strong>No telemetry</strong> — AgentCost does not phone home, send analytics, or make any outbound requests.</li>
 </ul>
-<p>View results in the dashboard: <code>agentcost dashboard</code></p>
+<h2 id="deployment">Deployment</h2>
+<h3 id="step-1-transfer-the-docker-image">Step 1: Transfer the Docker image</h3>
+<p>On a machine with internet access, pull and save the image:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>agentcost/agentcost:latest
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>docker<span class="w"> </span>save<span class="w"> </span>agentcost/agentcost:latest<span class="w"> </span>-o<span class="w"> </span>agentcost-image.tar
+</code></pre></div>
+<p>Transfer <code>agentcost-image.tar</code> to your air-gapped environment via USB, secure file transfer, or your approved media process.</p>
+<h3 id="step-2-load-and-run">Step 2: Load and run</h3>
+<p>On the air-gapped machine:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>load<span class="w"> </span>-i<span class="w"> </span>agentcost-image.tar
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span>agentcost<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--restart<span class="w"> </span>unless-stopped<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">8100</span>:8100<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-v<span class="w"> </span>agentcost_data:/data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>agentcost/agentcost:latest
+</code></pre></div>
+<p>The dashboard is available at <code>http://&lt;host&gt;:8100</code>.</p>
+<h3 id="step-3-instrument-your-code">Step 3: Instrument your code</h3>
+<p>Your application code connects to the local AgentCost instance. No external endpoints involved:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">trace</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Point your LLM client at your internal endpoint (Azure OpenAI, etc.)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">client</span> <span class="o">=</span> <span class="n">trace</span><span class="p">(</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">OpenAI</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://your-internal-openai.company.com/v1&quot;</span><span class="p">),</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">project</span><span class="o">=</span><span class="s2">&quot;my-app&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">agentcost_url</span><span class="o">=</span><span class="s2">&quot;http://agentcost-host:8100&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">)</span>
+</code></pre></div>
+<p>All cost tracking happens locally — traces are stored in the local database, costs are calculated from the local pricing file.</p>
+<h2 id="pricing-database">Pricing Database</h2>
+<h3 id="where-costs-come-from">Where costs come from</h3>
+<p>AgentCost vendors the pricing database from the <a href="https://github.com/BerriAI/litellm">LiteLLM</a> open-source project. This is a community-maintained JSON file that covers:</p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI (direct API)</td>
+<td>All GPT-4.1, GPT-5.x, o3, o4-mini models</td>
+</tr>
+<tr>
+<td>Anthropic (direct API)</td>
+<td>Claude Opus 4.6, Sonnet 4.6, Haiku 4.5</td>
+</tr>
+<tr>
+<td>Azure OpenAI</td>
+<td>All deployed models with Azure-specific pricing</td>
+</tr>
+<tr>
+<td>GCP Vertex AI</td>
+<td>Gemini 3.x, PaLM, Claude on Vertex</td>
+</tr>
+<tr>
+<td>AWS Bedrock</td>
+<td>Claude, Titan, Llama, Mistral on Bedrock</td>
+</tr>
+<tr>
+<td>Google Gemini</td>
+<td>Gemini 3 Pro, Flash, and variants</td>
+</tr>
+<tr>
+<td>Mistral</td>
+<td>All Mistral and Mixtral models</td>
+</tr>
+<tr>
+<td>Cohere</td>
+<td>Command, Embed models</td>
+</tr>
+<tr>
+<td>DeepSeek</td>
+<td>DeepSeek-V3, DeepSeek-R1</td>
+</tr>
+<tr>
+<td>Open-source (Ollama, vLLM)</td>
+<td>Tracked as $0 cost (infrastructure cost only)</td>
+</tr>
+</tbody>
+</table>
+<p>The file is located at <code>agentcost/cost/model_prices.json</code> inside the Docker image and the Python package.</p>
+<h3 id="offline-pricing-updates">Offline pricing updates</h3>
+<p>When model pricing changes, you can update the pricing database without internet access:</p>
+<p><strong>Option A: New Docker image</strong></p>
+<p>Pull the latest image on an internet-connected machine, transfer it as described in Step 1. The updated pricing database is included in every new release.</p>
+<p><strong>Option B: Manual file update</strong></p>
+<ol>
+<li>On an internet-connected machine, download the latest pricing file:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-o<span class="w"> </span>model_prices.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>https://raw.githubusercontent.com/agentcostin/agentcost/main/agentcost/cost/model_prices.json
+</code></pre></div>
+<ol>
+<li>
+<p>Transfer the file to your air-gapped environment.</p>
+</li>
+<li>
+<p>Copy it into the running container:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>cp<span class="w"> </span>model_prices.json<span class="w"> </span>agentcost:/app/agentcost/cost/model_prices.json
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>docker<span class="w"> </span>restart<span class="w"> </span>agentcost
+</code></pre></div>
+<p>Pricing is effective immediately after restart.</p>
+<p><strong>Option C: Custom pricing overrides</strong></p>
+<p>For models with internal or negotiated pricing (e.g., your Azure OpenAI enterprise agreement), you can set custom costs via the AgentCost API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://agentcost-host:8100/api/models/pricing<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s1">    &quot;model&quot;: &quot;azure/gpt-4.1&quot;,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s1">    &quot;input_cost_per_token&quot;: 0.0000018,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;output_cost_per_token&quot;: 0.0000072</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>Custom pricing overrides take precedence over the vendored database.</p>
+<h2 id="on-premises-llm-cost-tracking">On-Premises LLM Cost Tracking</h2>
+<p>For self-hosted models (Ollama, vLLM, TGI, etc.), AgentCost tracks token usage, latency, and call volume — costs are recorded as $0.00 since there's no per-token charge. This is useful for:</p>
+<ul>
+<li><strong>Usage analytics</strong> — who's using which models, how much, and how often</li>
+<li><strong>Capacity planning</strong> — token volume trends help plan GPU scaling</li>
+<li><strong>Comparison</strong> — see the cost delta between your self-hosted models and equivalent cloud APIs</li>
+</ul>
+<p>To track infrastructure costs for on-premises LLMs (GPU hours, electricity, etc.), you can set a custom per-token cost that reflects your amortized infrastructure cost:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://agentcost-host:8100/api/models/pricing<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s1">    &quot;model&quot;: &quot;ollama/llama3.2:70b&quot;,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s1">    &quot;input_cost_per_token&quot;: 0.0000005,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">    &quot;output_cost_per_token&quot;: 0.0000010</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h2 id="enterprise-edition-in-air-gapped-environments">Enterprise Edition in Air-Gapped Environments</h2>
+<p>The enterprise edition adds governance features that are especially relevant for restricted environments:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Why It Matters in Air-Gapped</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SSO/SAML</strong></td>
+<td>Integrate with your internal identity provider (ADFS, Okta on-prem, Keycloak)</td>
+</tr>
+<tr>
+<td><strong>Policy Engine</strong></td>
+<td>Enforce which models can be used, cap costs per project</td>
+</tr>
+<tr>
+<td><strong>Approval Workflows</strong></td>
+<td>Require human approval for expensive model usage</td>
+</tr>
+<tr>
+<td><strong>Audit Logs</strong></td>
+<td>Hash-chained compliance trail for regulatory requirements</td>
+</tr>
+<tr>
+<td><strong>Budget Enforcement</strong></td>
+<td>Auto-downgrade models when budgets are hit — critical when chargebacks are involved</td>
+</tr>
+<tr>
+<td><strong>Anomaly Detection</strong></td>
+<td>Catch runaway agents without relying on external monitoring</td>
+</tr>
+</tbody>
+</table>
+<p>Enterprise licensing works offline — the license key is validated locally using HMAC-SHA256 signatures. No license server or internet access required.</p>
+<h2 id="architecture-summary">Architecture Summary</h2>
+<p><img alt="Air-Gapped Network Architecture" src="../images/air-gapped-network-architecture-diagram.png" /></p>
+<h2 id="faq">FAQ</h2>
+<p><strong>Does AgentCost make any outbound network calls?</strong>
+No. All cost calculations use the local pricing database. No telemetry, no analytics, no license server calls.</p>
+<p><strong>How often does the pricing database need updating?</strong>
+Major pricing changes happen a few times per year. For most deployments, updating quarterly is sufficient. If you need exact-to-the-penny accuracy for billing, update monthly.</p>
+<p><strong>Can I run AgentCost on Kubernetes?</strong>
+Yes. The Docker image works in any container runtime — Docker, Kubernetes, OpenShift, ECS. Use a PersistentVolume for the <code>/data</code> directory to retain the SQLite database across pod restarts.</p>
+<p><strong>What about PostgreSQL in air-gapped?</strong>
+Enterprise edition supports PostgreSQL. Deploy PostgreSQL within your air-gapped network and set the <code>DATABASE_URL</code> environment variable. The Docker Compose file includes a PostgreSQL configuration.</p>
+<hr />
+<p><strong>Questions about air-gapped deployment?</strong> Contact us at <a href="mailto:care@agentcost.in">care@agentcost.in</a> or open an issue on <a href="https://github.com/agentcostin/agentcost/issues">GitHub</a>.</p>
 
 
 

@@ -9,14 +9,14 @@ theme:
   name: material
   palette:
     - scheme: default
-      primary: indigo
-      accent: amber
+      primary: deep orange
+      accent: deep orange
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
-      primary: indigo
-      accent: amber
+      primary: deep orange
+      accent: deep orange
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -95,3 +95,6 @@ extra:
       link: https://twitter.com/agentcost
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/agentcostin/
+
+extra_css:
+  - stylesheets/custom.css

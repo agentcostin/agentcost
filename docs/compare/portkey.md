@@ -41,8 +41,6 @@ Portkey is the closest competitor to AgentCost in the AI infrastructure space. B
 | **OTel Support** | ✅ | ✅ Export to OTel/Prometheus |
 | **Self-Hosting** | ✅ Open-source gateway (MIT) | ✅ Docker Compose, single command |
 | **Pricing** | Free (10K logs) → $49/mo → Enterprise | Free (MIT core), Enterprise BSL 1.1 |
-| **Funding** | $15M Series A (Feb 2026) | Bootstrapped |
-| **GitHub Stars** | ~10,600 (gateway) | Growing |
 
 ## Where Portkey Wins
 

@@ -2,7 +2,7 @@
 
 **Last updated:** March 2026
 
-Langfuse is an excellent open-source LLM observability platform — the most popular in its category with ~22,700 GitHub stars. AgentCost is a cost governance platform. They solve different problems, and understanding the difference helps you pick the right tool (or use both).
+Langfuse is an excellent open-source LLM observability platform — the most popular in its category. AgentCost is a cost governance platform. They solve different problems, and understanding the difference helps you pick the right tool (or use both).
 
 !!! info "TL;DR"
     **Langfuse** = best-in-class LLM observability (tracing, evals, prompt management).
@@ -44,7 +44,7 @@ Langfuse is an excellent open-source LLM observability platform — the most pop
 
 **Integration ecosystem.** With 50+ framework integrations and native OpenTelemetry support, Langfuse connects to virtually every LLM stack. The OpenAI SDK auto-instrumentation means zero-code tracing for many teams.
 
-**Community and ecosystem.** At ~22,700 GitHub stars and 26M+ SDK installs/month, Langfuse has the largest open-source community in this space. After being acquired by ClickHouse in January 2026, it has significant resources behind its development.
+**Community and ecosystem.** Langfuse has the largest open-source community in the LLM observability space. After being acquired by ClickHouse in January 2026, it has significant resources behind its development.
 
 **Prompt management.** Full prompt versioning, A/B testing, and a playground for iterating on prompts — capabilities AgentCost does not offer.
 

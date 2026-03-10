@@ -58,6 +58,7 @@ nav:
     - Plugins: guides/plugins.md
     - Exporters: guides/exporters.md
     - Self-Hosting: guides/self-hosting.md
+    - Air-Gapped Deployment: guides/air-gapped.md
   - Reference:
     - Python SDK: reference/python-sdk.md
     - TypeScript SDK: reference/typescript-sdk.md

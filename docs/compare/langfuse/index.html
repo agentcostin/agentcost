@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -721,6 +721,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../litellm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vs LiteLLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -942,6 +970,34 @@
     
   
     Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/cursor-costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cursor Cost Control
   
 
     
@@ -1689,7 +1745,7 @@
 
 <h1 id="agentcost-vs-langfuse">AgentCost vs Langfuse</h1>
 <p><strong>Last updated:</strong> March 2026</p>
-<p>Langfuse is an excellent open-source LLM observability platform — the most popular in its category with ~22,700 GitHub stars. AgentCost is a cost governance platform. They solve different problems, and understanding the difference helps you pick the right tool (or use both).</p>
+<p>Langfuse is an excellent open-source LLM observability platform — the most popular in its category. AgentCost is a cost governance platform. They solve different problems, and understanding the difference helps you pick the right tool (or use both).</p>
 <div class="admonition info">
 <p class="admonition-title">TL;DR</p>
 <p><strong>Langfuse</strong> = best-in-class LLM observability (tracing, evals, prompt management).
@@ -1831,7 +1887,7 @@ Langfuse tells you <em>what happened</em>. AgentCost tells you <em>what to do ab
 <h2 id="where-langfuse-wins">Where Langfuse Wins</h2>
 <p><strong>Observability depth.</strong> Langfuse has the most mature tracing system in the open-source LLM space. Its trace → span → generation hierarchy provides deep visibility into complex agent workflows. The annotation queues, LLM-as-judge evaluations, and prompt playground are genuinely best-in-class.</p>
 <p><strong>Integration ecosystem.</strong> With 50+ framework integrations and native OpenTelemetry support, Langfuse connects to virtually every LLM stack. The OpenAI SDK auto-instrumentation means zero-code tracing for many teams.</p>
-<p><strong>Community and ecosystem.</strong> At ~22,700 GitHub stars and 26M+ SDK installs/month, Langfuse has the largest open-source community in this space. After being acquired by ClickHouse in January 2026, it has significant resources behind its development.</p>
+<p><strong>Community and ecosystem.</strong> Langfuse has the largest open-source community in the LLM observability space. After being acquired by ClickHouse in January 2026, it has significant resources behind its development.</p>
 <p><strong>Prompt management.</strong> Full prompt versioning, A/B testing, and a playground for iterating on prompts — capabilities AgentCost does not offer.</p>
 <h2 id="where-agentcost-wins">Where AgentCost Wins</h2>
 <p><strong>Cost governance.</strong> This is the core difference. Langfuse can tell you that your GPT-4o calls cost $847 last week. AgentCost can tell you that at current trajectory you will exceed your $2,000 monthly budget by day 19, that 63% of those calls were simple queries that could run on GPT-4o-mini at 1/20th the cost, and automatically downgrade them.</p>

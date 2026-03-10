@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://agentcost.in/docs/reference/python-sdk/">
+        <link rel="canonical" href="https://agentcost.in/docs/compare/litellm/">
       
       
-        <link rel="prev" href="../../guides/self-hosting/">
+        <link rel="prev" href="../portkey/">
       
       
-        <link rel="next" href="../typescript-sdk/">
+        <link rel="next" href="../../getting-started/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Python SDK - AgentCost</title>
+        <title>vs LiteLLM - AgentCost</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#python-sdk-reference" class="md-skip">
+        <a href="#agentcost-vs-litellm" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Python SDK
+              vs LiteLLM
             
           </span>
         </div>
@@ -242,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../compare/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -302,13 +304,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../reference/python-sdk/" class="md-tabs__link">
           
   
   
@@ -454,28 +454,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -493,7 +496,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -511,7 +514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../compare/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -539,7 +542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../compare/langfuse/" class="md-nav__link">
+      <a href="../langfuse/" class="md-nav__link">
         
   
   
@@ -567,7 +570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../compare/helicone/" class="md-nav__link">
+      <a href="../helicone/" class="md-nav__link">
         
   
   
@@ -595,7 +598,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../compare/portkey/" class="md-nav__link">
+      <a href="../portkey/" class="md-nav__link">
         
   
   
@@ -620,10 +623,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../compare/litellm/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vs LiteLLM
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -639,6 +669,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-they-compare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How They Compare
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-litellm-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where LiteLLM Wins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-agentcost-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where AgentCost Wins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#they-work-best-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        They Work Best Together
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1225,31 +1330,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1267,7 +1369,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1282,37 +1384,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Python SDK
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../reference/python-sdk/" class="md-nav__link">
         
   
   
@@ -1328,142 +1403,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#trace" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        trace()
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#get_tracker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        get_tracker()
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#costtracker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CostTracker
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="CostTracker">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#summary-dict" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        .summary() → dict
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reset" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        .reset()
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#traceevent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TraceEvent
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#costforecaster" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CostForecaster
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#costestimator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CostEstimator
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#costoptimizer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CostOptimizer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usageanalytics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UsageAnalytics
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1476,7 +1415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../typescript-sdk/" class="md-nav__link">
+      <a href="../../reference/typescript-sdk/" class="md-nav__link">
         
   
   
@@ -1504,7 +1443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/" class="md-nav__link">
+      <a href="../../reference/api/" class="md-nav__link">
         
   
   
@@ -1532,7 +1471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
+      <a href="../../reference/cli/" class="md-nav__link">
         
   
   
@@ -1730,10 +1669,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#trace" class="md-nav__link">
+  <a href="#how-they-compare" class="md-nav__link">
     <span class="md-ellipsis">
       
-        trace()
+        How They Compare
       
     </span>
   </a>
@@ -1741,10 +1680,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#get_tracker" class="md-nav__link">
+  <a href="#where-litellm-wins" class="md-nav__link">
     <span class="md-ellipsis">
       
-        get_tracker()
+        Where LiteLLM Wins
       
     </span>
   </a>
@@ -1752,49 +1691,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#costtracker" class="md-nav__link">
+  <a href="#where-agentcost-wins" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CostTracker
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="CostTracker">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#summary-dict" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        .summary() → dict
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reset" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        .reset()
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#traceevent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TraceEvent
+        Where AgentCost Wins
       
     </span>
   </a>
@@ -1802,10 +1702,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#costforecaster" class="md-nav__link">
+  <a href="#they-work-best-together" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CostForecaster
+        They Work Best Together
       
     </span>
   </a>
@@ -1813,32 +1713,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#costestimator" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CostEstimator
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#costoptimizer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CostOptimizer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usageanalytics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UsageAnalytics
+        Quick Start
       
     </span>
   </a>
@@ -1865,176 +1743,213 @@
   
 
 
-<h1 id="python-sdk-reference">Python SDK Reference</h1>
-<h2 id="trace">trace()</h2>
-<p>The primary way to integrate AgentCost. Wraps an OpenAI, Anthropic, or LiteLLM client to automatically track costs.</p>
+<h1 id="agentcost-vs-litellm">AgentCost vs LiteLLM</h1>
+<p><strong>Last updated:</strong> March 2026</p>
+<p>LiteLLM is the most popular open-source LLM proxy — a unified API that routes calls to 100+ providers through an OpenAI-compatible interface. AgentCost actually uses LiteLLM's pricing database under the hood (2,610+ models). But they solve fundamentally different problems: LiteLLM routes your calls, AgentCost governs whether you should be making those calls in the first place.</p>
+<div class="admonition info">
+<p class="admonition-title">TL;DR</p>
+<p><strong>LiteLLM</strong> = unified LLM proxy (route calls to any provider through one API, with cost tracking).
+<strong>AgentCost</strong> = cost governance platform (forecasting, budget enforcement, smart routing, policy engine).
+LiteLLM is the plumbing. AgentCost is the control room.</p>
+</div>
+<h2 id="how-they-compare">How They Compare</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>LiteLLM</th>
+<th>AgentCost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Unified LLM Proxy</strong></td>
+<td>✅ Core feature — 100+ providers via one API</td>
+<td>✅ AI gateway (OpenAI, Anthropic, Ollama)</td>
+</tr>
+<tr>
+<td><strong>Provider Coverage</strong></td>
+<td>✅ 100+ providers</td>
+<td>Gateway: 3 providers; Pricing DB: 83+ providers</td>
+</tr>
+<tr>
+<td><strong>Cost Tracking</strong></td>
+<td>✅ Per-request, per-key, per-team</td>
+<td>✅ Per-request, per-project, per-model, per-goal</td>
+</tr>
+<tr>
+<td><strong>Model Pricing Database</strong></td>
+<td>✅ 2,600+ models (AgentCost vendors this)</td>
+<td>✅ 2,610+ models (vendored from LiteLLM + overrides)</td>
+</tr>
+<tr>
+<td><strong>Virtual Keys / Budgets</strong></td>
+<td>✅ Per-key spending limits</td>
+<td>✅ Per-project, per-team, per-cost-center budgets</td>
+</tr>
+<tr>
+<td><strong>Cost Forecasting</strong></td>
+<td>❌</td>
+<td>✅ Linear, EMA, ensemble — predicts budget exhaustion</td>
+</tr>
+<tr>
+<td><strong>Budget Enforcement with Auto-Downgrade</strong></td>
+<td>❌ (blocks at limit)</td>
+<td>✅ ALLOW → WARN → auto-DOWNGRADE → BLOCK pipeline</td>
+</tr>
+<tr>
+<td><strong>Complexity-Based Routing</strong></td>
+<td>❌</td>
+<td>✅ Auto-classify prompts as SIMPLE/MEDIUM/COMPLEX/REASONING</td>
+</tr>
+<tr>
+<td><strong>Smart Model Routing</strong></td>
+<td>✅ Fallbacks, load balancing, lowest-latency</td>
+<td>✅ Cost-optimized routing based on quality threshold</td>
+</tr>
+<tr>
+<td><strong>Policy Engine</strong></td>
+<td>❌</td>
+<td>✅ JSON rules with priority evaluation and dry-run</td>
+</tr>
+<tr>
+<td><strong>Approval Workflows</strong></td>
+<td>❌</td>
+<td>✅ Human-in-the-loop for policy exceptions</td>
+</tr>
+<tr>
+<td><strong>Event-Driven Reactions</strong></td>
+<td>❌</td>
+<td>✅ 11 action types, YAML-configurable, cooldowns</td>
+</tr>
+<tr>
+<td><strong>Cost Optimizer</strong></td>
+<td>❌</td>
+<td>✅ Model downgrade recommendations with savings estimates</td>
+</tr>
+<tr>
+<td><strong>Agent Scorecards</strong></td>
+<td>❌</td>
+<td>✅ Monthly A–F grading with recommendations</td>
+</tr>
+<tr>
+<td><strong>Goal-Aware Attribution</strong></td>
+<td>❌</td>
+<td>✅ Map spend to business objectives with rollup</td>
+</tr>
+<tr>
+<td><strong>Governance Templates</strong></td>
+<td>❌</td>
+<td>✅ Pre-built profiles (startup, enterprise, soc2, agency)</td>
+</tr>
+<tr>
+<td><strong>Heartbeat Agent Monitoring</strong></td>
+<td>❌</td>
+<td>✅ Per-cycle cost tracking with auto-pause</td>
+</tr>
+<tr>
+<td><strong>Anomaly Detection</strong></td>
+<td>❌</td>
+<td>✅ ML-based cost/latency spike detection</td>
+</tr>
+<tr>
+<td><strong>Chargeback Reports</strong></td>
+<td>❌</td>
+<td>✅ Cost center allocations, per-team spend</td>
+</tr>
+<tr>
+<td><strong>CI/CD Cost Checks</strong></td>
+<td>❌</td>
+<td>✅ GitHub Actions to fail builds on cost regression</td>
+</tr>
+<tr>
+<td><strong>Response Caching</strong></td>
+<td>✅ Redis-based</td>
+<td>✅ In-memory exact-match with cost savings tracking</td>
+</tr>
+<tr>
+<td><strong>Guardrails</strong></td>
+<td>✅ Via integrations (Lakera, Presidio)</td>
+<td>✅ Policy engine with JSON rules</td>
+</tr>
+<tr>
+<td><strong>Dashboard</strong></td>
+<td>✅ Admin UI</td>
+<td>✅ 7-tab React dashboard</td>
+</tr>
+<tr>
+<td><strong>SSO/RBAC</strong></td>
+<td>✅ Enterprise</td>
+<td>✅ Enterprise (any OIDC/SAML provider)</td>
+</tr>
+<tr>
+<td><strong>Audit Logs</strong></td>
+<td>✅</td>
+<td>✅ Hash-chained compliance trail</td>
+</tr>
+<tr>
+<td><strong>OTel Support</strong></td>
+<td>✅</td>
+<td>✅ Export to OTel/Prometheus</td>
+</tr>
+<tr>
+<td><strong>Self-Hosting</strong></td>
+<td>✅ Docker</td>
+<td>✅ Docker, one-command install</td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>Apache 2.0</td>
+<td>MIT (core), BSL 1.1 (enterprise)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="where-litellm-wins">Where LiteLLM Wins</h2>
+<p><strong>Provider coverage.</strong> LiteLLM supports 100+ LLM providers through a single API. If you need to call Bedrock, Azure OpenAI, Vertex AI, Together, Fireworks, Groq, and a dozen others through one interface, LiteLLM is the established standard. AgentCost's gateway currently supports OpenAI, Anthropic, and Ollama directly.</p>
+<p><strong>Proxy maturity.</strong> LiteLLM has been in production at thousands of companies as a proxy layer. Its fallback chains, load balancing, cooldown logic, and retry mechanisms are battle-tested. AgentCost's gateway is functional but younger.</p>
+<p><strong>Key management at scale.</strong> LiteLLM's virtual key system with per-key budgets, team assignments, and admin UI is mature. It handles the operational complexity of managing API keys across large organizations.</p>
+<p><strong>Caching.</strong> LiteLLM supports Redis-based caching with semantic similarity matching. AgentCost currently offers in-memory exact-match caching.</p>
+<p><strong>Community size.</strong> LiteLLM has widespread adoption, a large community, more integrations, and more battle-tested edge cases handled.</p>
+<h2 id="where-agentcost-wins">Where AgentCost Wins</h2>
+<p><strong>Cost forecasting.</strong> This is the capability that separates governance from tracking. LiteLLM tells you what each key spent today. AgentCost predicts what each project will spend over the next 7, 14, and 30 days using three forecasting methods, and tells you the exact date your budget will be exhausted. Only 15% of companies can forecast AI costs within 10% accuracy — AgentCost addresses this directly.</p>
+<p><strong>Budget enforcement with auto-downgrade.</strong> LiteLLM blocks requests when a key's budget is exceeded. AgentCost's four-stage gate (ALLOW → WARN at 80% → auto-DOWNGRADE at 90% → BLOCK at 100%) is fundamentally different: instead of cutting off a production feature when the budget hits, it automatically routes to a cheaper model. Your users keep getting responses while costs drop. The downgrade chains are per-provider: Claude Opus 4.6 → Sonnet 4.6 → Haiku 4.5, or GPT-4.1 → GPT-4.1-mini → GPT-4.1-nano.</p>
+<p><strong>Complexity-based routing.</strong> LiteLLM routes based on model availability, latency, and load balancing rules you define. AgentCost analyzes each prompt and classifies it as SIMPLE, MEDIUM, COMPLEX, or REASONING — then routes to the cheapest model that can handle that complexity. Simple factual queries never touch premium models. This typically saves 40-60% with no quality loss on the downgraded calls.</p>
+<p><strong>Policy engine and approval workflows.</strong> JSON-based rules that evaluate on every request: block specific models, cap per-call costs, require human approval above thresholds. LiteLLM has no equivalent policy system.</p>
+<p><strong>Event-driven automation.</strong> When budget-exceeded fires, execute notify → log → block-calls → suspend-agent, with cooldowns and escalation. Fifteen default reaction rules ship out of the box, configurable via YAML.</p>
+<p><strong>Organizational governance.</strong> Agent scorecards, goal-aware cost attribution, governance templates, chargeback reports, CI/CD cost checks — these target the CFO, CIO, and compliance team. LiteLLM is a developer tool. AgentCost bridges developers and organizational cost management.</p>
+<h2 id="they-work-best-together">They Work Best Together</h2>
+<p>LiteLLM and AgentCost are complementary, not competitive:</p>
+<ul>
+<li><strong>LiteLLM</strong> as the proxy layer: unified API, provider routing, fallbacks, key management</li>
+<li><strong>AgentCost</strong> as the governance layer: forecasting, budget enforcement, policy controls, organizational reporting</li>
+</ul>
+<p>If you're already running LiteLLM, adding AgentCost takes one line:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">trace</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">trace</span><span class="p">(</span><span class="n">openai_client</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s2">&quot;my-app&quot;</span><span class="p">,</span> <span class="n">agent_id</span><span class="o">=</span><span class="s2">&quot;chatbot&quot;</span><span class="p">,</span> <span class="n">session_id</span><span class="o">=</span><span class="s2">&quot;conv-123&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Point at your LiteLLM proxy, wrap with AgentCost</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">client</span> <span class="o">=</span> <span class="n">trace</span><span class="p">(</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">OpenAI</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://litellm-proxy:4000&quot;</span><span class="p">),</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">project</span><span class="o">=</span><span class="s2">&quot;my-app&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># LiteLLM routes the call. AgentCost tracks, forecasts, and enforces.</span>
 </code></pre></div>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>client</code></td>
-<td><code>OpenAI \| Anthropic \| Any</code></td>
-<td>required</td>
-<td>The LLM client to wrap</td>
-</tr>
-<tr>
-<td><code>project</code></td>
-<td><code>str</code></td>
-<td><code>"default"</code></td>
-<td>Project name for grouping</td>
-</tr>
-<tr>
-<td><code>agent_id</code></td>
-<td><code>str \| None</code></td>
-<td><code>None</code></td>
-<td>Agent identifier</td>
-</tr>
-<tr>
-<td><code>session_id</code></td>
-<td><code>str \| None</code></td>
-<td><code>None</code></td>
-<td>Session identifier</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> A wrapped client with the same interface as the original.</p>
-<h2 id="get_tracker">get_tracker()</h2>
-<p>Retrieve the cost tracker for a project to check accumulated costs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tracker</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">tracker</span> <span class="o">=</span> <span class="n">get_tracker</span><span class="p">(</span><span class="s2">&quot;my-app&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">summary</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<p>Or use AgentCost's gateway alongside LiteLLM — the gateway logs traces to the AgentCost dashboard while LiteLLM handles provider routing.</p>
+<h2 id="quick-start">Quick Start</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">AgentCost</label><label for="__tabbed_1_2">LiteLLM</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">8100</span>:8100<span class="w"> </span>agentcost/agentcost:latest
 </code></pre></div>
-<p><strong>Returns:</strong> <code>CostTracker</code> instance.</p>
-<h2 id="costtracker">CostTracker</h2>
-<p>Tracks costs for a specific project.</p>
-<h3 id="summary-dict">.summary() → dict</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;my-app&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s2">&quot;total_cost&quot;</span><span class="p">:</span> <span class="mf">0.0523</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="s2">&quot;total_calls&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="s2">&quot;total_input_tokens&quot;</span><span class="p">:</span> <span class="mi">4500</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s2">&quot;total_output_tokens&quot;</span><span class="p">:</span> <span class="mi">2100</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="s2">&quot;cost_by_model&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">:</span> <span class="mf">0.0450</span><span class="p">,</span> <span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">:</span> <span class="mf">0.0073</span><span class="p">},</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="s2">&quot;error_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">4000</span>:4000<span class="w"> </span>ghcr.io/berriai/litellm:latest
 </code></pre></div>
-<h3 id="reset">.reset()</h3>
-<p>Clear accumulated cost data for this project.</p>
-<h2 id="traceevent">TraceEvent</h2>
-<p>Data class representing a single traced LLM call.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk.trace</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraceEvent</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">event</span> <span class="o">=</span> <span class="n">TraceEvent</span><span class="p">(</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">trace_id</span><span class="o">=</span><span class="s2">&quot;abc123&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">project</span><span class="o">=</span><span class="s2">&quot;my-app&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">input_tokens</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">output_tokens</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">cost</span><span class="o">=</span><span class="mf">0.0035</span><span class="p">,</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">latency_ms</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">status</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">agent_id</span><span class="o">=</span><span class="s2">&quot;chatbot&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="n">session_id</span><span class="o">=</span><span class="s2">&quot;conv-123&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;2026-03-01T10:30:00&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;custom&quot;</span><span class="p">:</span> <span class="s2">&quot;data&quot;</span><span class="p">},</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p">)</span>
-</code></pre></div>
-<h2 id="costforecaster">CostForecaster</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.forecast</span><span class="w"> </span><span class="kn">import</span> <span class="n">CostForecaster</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">forecaster</span> <span class="o">=</span> <span class="n">CostForecaster</span><span class="p">()</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">forecaster</span><span class="o">.</span><span class="n">add_from_traces</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span>  <span class="c1"># list of trace dicts</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">prediction</span> <span class="o">=</span> <span class="n">forecaster</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">days_ahead</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ensemble&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Methods:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>add_from_traces(traces)</code></td>
-<td>Load historical traces</td>
-</tr>
-<tr>
-<td><code>add_daily_cost(cost)</code></td>
-<td>Add a single daily cost value</td>
-</tr>
-<tr>
-<td><code>predict(days_ahead, method)</code></td>
-<td>Forecast future costs</td>
-</tr>
-<tr>
-<td><code>predict_budget_exhaustion(budget)</code></td>
-<td>Estimate when budget runs out</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Methods for <code>method</code> parameter:</strong> <code>"linear"</code>, <code>"ema"</code>, <code>"ensemble"</code> (default)</p>
-<h2 id="costestimator">CostEstimator</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">CostEstimator</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">estimator</span> <span class="o">=</span> <span class="n">CostEstimator</span><span class="p">()</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">est</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello world&quot;</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;chat&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Methods:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>estimate(model, prompt, task_type, max_output_tokens)</code></td>
-<td>Estimate cost for a prompt</td>
-</tr>
-<tr>
-<td><code>estimate_messages(model, messages, task_type, max_output_tokens)</code></td>
-<td>Estimate cost for chat messages</td>
-</tr>
-<tr>
-<td><code>compare_models(prompt, models, task_type)</code></td>
-<td>Compare costs across models</td>
-</tr>
-</tbody>
-</table>
-<h2 id="costoptimizer">CostOptimizer</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.optimizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">CostOptimizer</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">optimizer</span> <span class="o">=</span> <span class="n">CostOptimizer</span><span class="p">()</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">optimizer</span><span class="o">.</span><span class="n">add_traces</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">report</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">analyze</span><span class="p">()</span>
-</code></pre></div>
-<h2 id="usageanalytics">UsageAnalytics</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.analytics</span><span class="w"> </span><span class="kn">import</span> <span class="n">UsageAnalytics</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">analytics</span> <span class="o">=</span> <span class="n">UsageAnalytics</span><span class="p">()</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">analytics</span><span class="o">.</span><span class="n">add_traces</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">analytics</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">analytics</span><span class="o">.</span><span class="n">top_spenders</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">analytics</span><span class="o">.</span><span class="n">token_efficiency</span><span class="p">()</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">analytics</span><span class="o">.</span><span class="n">chargeback_report</span><span class="p">(</span><span class="n">group_by</span><span class="o">=</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
-</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<p><strong>Try it yourself:</strong> <a href="https://demo.agentcost.in">Live Demo</a> · <a href="https://github.com/agentcostin/agentcost">GitHub</a> · <a href="https://docs.agentcost.in">Docs</a></p>
 
 
 

@@ -13,6 +13,8 @@
   </p>
 </p>
 
+> **[Watch the 2-min demo →](https://www.youtube.com/watch?v=T1i2aFB5New)** | **[Live demo →](https://demo.agentcost.in)**
+
 ---
 
 **AI costs are invisible, unpredictable, and uncontrolled.** Teams deploy agents across OpenAI, Anthropic, Google, and open-source models with no idea what they're actually spending — or whether cheaper models would work just as well. AgentCost fixes that with a vendored pricing database of **2,610+ models from 40+ providers**, automatic cost-tier classification, and intelligent model routing.
@@ -51,15 +53,15 @@ agentcost dashboard
 
 The dashboard gives you seven intelligence views:
 
-| View | What it shows |
-|------|---------------|
-| **Overview** | Total spend, call volume, error rate, cost-over-time charts |
-| **Cost Breakdown** | Spend by model, project, and provider with trend analysis |
-| **Forecasting** | Predicted costs for next 7/14/30 days, budget exhaustion alerts |
-| **Optimizer** | Model downgrade recommendations with estimated savings |
-| **Analytics** | Token efficiency, top spenders, chargeback reports |
-| **Estimator** | Pre-call cost estimation across 2,610+ models |
-| **Models** | Search/filter all models by provider, tier, cost range, context window |
+| View               | What it shows                                                          |
+| ------------------ | ---------------------------------------------------------------------- |
+| **Overview**       | Total spend, call volume, error rate, cost-over-time charts            |
+| **Cost Breakdown** | Spend by model, project, and provider with trend analysis              |
+| **Forecasting**    | Predicted costs for next 7/14/30 days, budget exhaustion alerts        |
+| **Optimizer**      | Model downgrade recommendations with estimated savings                 |
+| **Analytics**      | Token efficiency, top spenders, chargeback reports                     |
+| **Estimator**      | Pre-call cost estimation across 2,610+ models                          |
+| **Models**         | Search/filter all models by provider, tier, cost range, context window |
 
 ## Framework Support
 
@@ -167,13 +169,13 @@ python -m agentcost.gateway --port 8200
 curl http://localhost:8200/v1/gateway/cache/stats
 ```
 
-| Feature | Description |
-|---------|-------------|
-| **Response Caching** | Exact-match cache for deterministic requests (configurable temperature threshold) |
-| **Cost Savings Tracking** | Per-request cost saved, aggregated by project and model |
-| **Policy Enforcement** | Pre-call policy checks before forwarding to providers |
-| **Provider Failover** | Automatic routing across OpenAI, Anthropic, Ollama |
-| **Rate Limiting** | Per-project RPM limits with token-bucket algorithm |
+| Feature                   | Description                                                                       |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| **Response Caching**      | Exact-match cache for deterministic requests (configurable temperature threshold) |
+| **Cost Savings Tracking** | Per-request cost saved, aggregated by project and model                           |
+| **Policy Enforcement**    | Pre-call policy checks before forwarding to providers                             |
+| **Provider Failover**     | Automatic routing across OpenAI, Anthropic, Ollama                                |
+| **Rate Limiting**         | Per-project RPM limits with token-bucket algorithm                                |
 
 ## Exporters
 
@@ -212,15 +214,18 @@ npm install @agentcost/sdk
 ```typescript
 import { AgentCost } from "@agentcost/sdk";
 
-const ac = new AgentCost({ project: "my-app", apiUrl: "http://localhost:8500" });
+const ac = new AgentCost({
+    project: "my-app",
+    apiUrl: "http://localhost:8500",
+});
 
 // Trace any LLM call
 const traced = await ac.trace({
-  model: "gpt-4o",
-  inputTokens: 150,
-  outputTokens: 80,
-  cost: 0.0035,
-  latencyMs: 450,
+    model: "gpt-4o",
+    inputTokens: 150,
+    outputTokens: 80,
+    cost: 0.0035,
+    latencyMs: 450,
 });
 ```
 
@@ -265,18 +270,18 @@ export KEYCLOAK_URL=http://localhost:8180
 
 For teams and organizations that need governance:
 
-| Feature | Description |
-|---------|-------------|
-| **SSO/SAML** | Any OIDC/SAML provider (Okta, Auth0, Azure AD, Keycloak) |
-| **Organizations** | Multi-tenant team management with roles |
-| **Budget Enforcement** | Cost centers, allocations, pre-call validation |
-| **Policy Engine** | JSON rules: block models, cap costs, require approval |
-| **Approval Workflows** | Human-in-the-loop for policy exceptions |
-| **Notifications** | Slack, email, webhook, PagerDuty alerts |
-| **Agent Scorecards** | Monthly agent grading (A–F) with recommendations |
-| **Audit Log** | Hash-chained compliance trail |
-| **Anomaly Detection** | ML-based cost/latency spike detection |
-| **AI Gateway** | Transparent LLM proxy with policy enforcement |
+| Feature                | Description                                              |
+| ---------------------- | -------------------------------------------------------- |
+| **SSO/SAML**           | Any OIDC/SAML provider (Okta, Auth0, Azure AD, Keycloak) |
+| **Organizations**      | Multi-tenant team management with roles                  |
+| **Budget Enforcement** | Cost centers, allocations, pre-call validation           |
+| **Policy Engine**      | JSON rules: block models, cap costs, require approval    |
+| **Approval Workflows** | Human-in-the-loop for policy exceptions                  |
+| **Notifications**      | Slack, email, webhook, PagerDuty alerts                  |
+| **Agent Scorecards**   | Monthly agent grading (A–F) with recommendations         |
+| **Audit Log**          | Hash-chained compliance trail                            |
+| **Anomaly Detection**  | ML-based cost/latency spike detection                    |
+| **AI Gateway**         | Transparent LLM proxy with policy enforcement            |
 
 Enterprise features are source-available under BSL 1.1. See [enterprise/LICENSE](enterprise/LICENSE).
 
@@ -284,15 +289,15 @@ Enterprise features are source-available under BSL 1.1. See [enterprise/LICENSE]
 
 ## Configuration
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `AGENTCOST_PORT` | `8500` | Server port |
-| `AGENTCOST_EDITION` | `auto` | `community`, `enterprise`, or `auto` |
-| `AGENTCOST_AUTH_ENABLED` | `false` | Enable SSO (enterprise) |
-| `AGENTCOST_DB_URL` | SQLite | PostgreSQL connection string |
-| `OIDC_ISSUER_URL` | — | OIDC provider URL (e.g., https://auth.example.com/realms/app) |
-| `OIDC_CLIENT_ID` | agentcost-api | OIDC client ID |
-| `OIDC_CLIENT_SECRET` | — | OIDC client secret |
+| Variable                 | Default       | Description                                                   |
+| ------------------------ | ------------- | ------------------------------------------------------------- |
+| `AGENTCOST_PORT`         | `8500`        | Server port                                                   |
+| `AGENTCOST_EDITION`      | `auto`        | `community`, `enterprise`, or `auto`                          |
+| `AGENTCOST_AUTH_ENABLED` | `false`       | Enable SSO (enterprise)                                       |
+| `AGENTCOST_DB_URL`       | SQLite        | PostgreSQL connection string                                  |
+| `OIDC_ISSUER_URL`        | —             | OIDC provider URL (e.g., https://auth.example.com/realms/app) |
+| `OIDC_CLIENT_ID`         | agentcost-api | OIDC client ID                                                |
+| `OIDC_CLIENT_SECRET`     | —             | OIDC client secret                                            |
 
 ## Contributing
 

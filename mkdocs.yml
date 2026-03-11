@@ -59,6 +59,7 @@ nav:
     - Exporters: guides/exporters.md
     - Self-Hosting: guides/self-hosting.md
     - Air-Gapped Deployment: guides/air-gapped.md
+    - Integration into Existing Projects: guides/agentcost-integration-into-existing-projects.md
   - Reference:
     - Python SDK: reference/python-sdk.md
     - TypeScript SDK: reference/typescript-sdk.md

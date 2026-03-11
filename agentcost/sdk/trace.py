@@ -358,9 +358,21 @@ def trace(
     project: str = "default",
     persist: bool = True,
     goal_id: str | None = None,
+    prompt_id: str | None = None,
+    prompt_version: int | None = None,
 ) -> Any:
-    """Wrap an OpenAI or Anthropic client with automatic cost tracking."""
+    """Wrap an OpenAI or Anthropic client with automatic cost tracking.
+
+    If prompt_id and prompt_version are set, every trace event will include
+    them in metadata for prompt-level cost analytics.
+    """
     ct = type(client).__module__
+    _extra_meta = {}
+    if prompt_id:
+        _extra_meta["prompt_id"] = prompt_id
+    if prompt_version is not None:
+        _extra_meta["prompt_version"] = prompt_version
+
     if "openai" in ct or hasattr(client, "chat"):
         prov = "openai"
         if hasattr(client, "_base_url"):
@@ -371,9 +383,13 @@ def trace(
                 prov = "groq"
             elif "11434" in b or "ollama" in b.lower():
                 prov = "ollama"
-        return _TracedOpenAI(client, project, prov, persist, goal_id)
+        traced = _TracedOpenAI(client, project, prov, persist, goal_id)
+        traced._prompt_meta = _extra_meta
+        return traced
     elif "anthropic" in ct or hasattr(client, "messages"):
-        return _TracedAnthropic(client, project, persist, goal_id)
+        traced = _TracedAnthropic(client, project, persist, goal_id)
+        traced._prompt_meta = _extra_meta
+        return traced
     else:
         raise TypeError(
             f"Unsupported client: {type(client).__name__}. Use openai.OpenAI or anthropic.Anthropic"

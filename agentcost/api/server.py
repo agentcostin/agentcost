@@ -151,6 +151,16 @@ except ImportError:
     pass
 
 
+# ── Prompt Management (open-source — available in all editions) ──────────────
+
+try:
+    from ..prompts.routes import router as prompt_router
+
+    app.include_router(prompt_router)
+except ImportError:
+    pass
+
+
 @app.on_event("startup")
 async def _start_reaction_engine():
     """Start the reaction engine and wire it to the EventBus."""

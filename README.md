@@ -51,7 +51,7 @@ curl -X POST http://localhost:8500/api/seed -H "Content-Type: application/json" 
 agentcost dashboard
 ```
 
-The dashboard gives you seven intelligence views:
+The dashboard gives you eight intelligence views:
 
 | View               | What it shows                                                          |
 | ------------------ | ---------------------------------------------------------------------- |
@@ -62,6 +62,7 @@ The dashboard gives you seven intelligence views:
 | **Analytics**      | Token efficiency, top spenders, chargeback reports                     |
 | **Estimator**      | Pre-call cost estimation across 2,610+ models                          |
 | **Models**         | Search/filter all models by provider, tier, cost range, context window |
+| **Prompts**        | Version, deploy, and track cost of system prompts per version          |
 
 ## Framework Support
 
@@ -84,6 +85,35 @@ agent = AssistantAgent("assistant", llm_config={..., "callbacks": [autogen_callb
 from agentcost.sdk.integrations import llamaindex_callback
 service_context = ServiceContext.from_defaults(callback_manager=llamaindex_callback("my-project"))
 ```
+
+## Prompt Management
+
+Store, version, deploy, and track the cost of your system prompts — with automatic cost analytics per version.
+
+```python
+from agentcost.sdk import get_prompt, trace
+from openai import OpenAI
+
+# Create and version prompts
+from agentcost.prompts import get_prompt_service
+svc = get_prompt_service()
+svc.create_prompt("support-bot", content="You are a helpful agent for {{product}}.")
+svc.create_version("support-bot", content="You are a concise agent for {{product}}. Be brief.")
+svc.deploy("support-bot", version=2, environment="production")
+
+# Use in your app — prompt version is tagged on every trace
+prompt = get_prompt("support-bot", environment="production", variables={"product": "AgentCost"})
+
+client = trace(OpenAI(), project="support",
+               prompt_id=prompt["prompt_id"], prompt_version=prompt["version"])
+response = client.chat.completions.create(
+    model=prompt.get("model") or "gpt-4.1",
+    messages=[{"role": "system", "content": prompt["content"]},
+              {"role": "user", "content": "How do I set a budget?"}]
+)
+```
+
+Every prompt change creates an immutable version. Deploy V2 to staging while V1 runs in production. Compare cost per call between versions to answer *"did the new prompt cost more or less?"* See the [Prompt Management Guide](https://agentcost.in/docs/guides/prompts/).
 
 ## CLI
 

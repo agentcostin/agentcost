@@ -37,7 +37,7 @@ Portkey is the closest competitor to AgentCost in the AI infrastructure space. B
 | **Audit Logs** | ✅ | ✅ Hash-chained compliance trail |
 | **SSO/RBAC** | ✅ | ✅ Any OIDC/SAML provider |
 | **MCP Gateway** | ✅ Tool access control | ❌ (planned) |
-| **Prompt Management** | ✅ Versioning, templates | ❌ |
+| **Prompt Management** | ✅ Versioning, templates | ✅ Versioning, deployment, cost-per-version analytics |
 | **OTel Support** | ✅ | ✅ Export to OTel/Prometheus |
 | **Self-Hosting** | ✅ Open-source gateway (MIT) | ✅ Docker Compose, single command |
 | **Pricing** | Free (10K logs) → $49/mo → Enterprise | Free (MIT core), Enterprise BSL 1.1 |
@@ -52,7 +52,7 @@ Portkey is the closest competitor to AgentCost in the AI infrastructure space. B
 
 **MCP Gateway.** Portkey recently launched an MCP Gateway for controlling tool access in agentic workflows. AgentCost has MCP support planned but not yet implemented.
 
-**Prompt management.** Portkey includes prompt versioning and templates. AgentCost does not have prompt management.
+**Prompt management.** Both platforms offer prompt versioning. AgentCost adds environment-based deployment and cost-per-version analytics — linking prompt changes directly to cost impact.
 
 **Enterprise backing.** Portkey's $15M Series A (February 2026), Gartner Cool Vendor recognition, and 24,000+ organizations provide enterprise credibility that early-stage tools cannot match.
 

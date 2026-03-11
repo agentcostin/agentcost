@@ -32,7 +32,7 @@ Helicone is an open-source LLM observability platform built around an AI Gateway
 | **Cost Optimizer** | ❌ | ✅ Model downgrade recommendations with savings estimates |
 | **Chargeback Reports** | ❌ | ✅ Cost center allocations, per-team spend |
 | **CI/CD Cost Checks** | ❌ | ✅ GitHub Actions to fail builds on cost regression |
-| **Prompt Management** | ✅ Prompt versioning | ❌ |
+| **Prompt Management** | ✅ Prompt versioning | ✅ Versioning, deployment, cost-per-version analytics |
 | **Evaluation** | Basic (experiments) | Basic (benchmarking) |
 | **Rate Limiting** | ✅ Per-key | ✅ Per-project token bucket |
 | **Provider Failover** | ✅ Automatic | ✅ Automatic |
@@ -49,7 +49,7 @@ Helicone is an open-source LLM observability platform built around an AI Gateway
 
 **Simpler setup for pure observability.** If you only need cost visibility and a gateway, Helicone's one-line base URL change is hard to beat for simplicity. No SDK integration, no wrapper — just change the URL and you're logging.
 
-**Prompt management.** Helicone includes prompt versioning and experiments. AgentCost does not have prompt management.
+**Prompt management.** Both platforms now offer prompt versioning. AgentCost adds environment-based deployment (dev/staging/production) and automatic cost-per-version analytics.
 
 **Broader model coverage for gateway routing.** Helicone's gateway supports 100+ providers with intelligent failover and circuit breaking.
 

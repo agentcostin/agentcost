@@ -21,7 +21,7 @@ Langfuse is an excellent open-source LLM observability platform — the most pop
 | **Smart Model Routing** | ❌ | ✅ Complexity router (SIMPLE → economy, REASONING → premium) |
 | **Policy Engine** | ❌ | ✅ JSON rules — block models, cap costs, require approval |
 | **Approval Workflows** | ❌ | ✅ Human-in-the-loop for policy exceptions |
-| **Prompt Management** | ✅ Versioning, A/B testing, playground | ❌ |
+| **Prompt Management** | ✅ Versioning, A/B testing, playground | ✅ Versioning, deployment, cost-per-version analytics |
 | **LLM-as-Judge Evals** | ✅ Annotation queues, scoring | ❌ |
 | **AI Gateway / Proxy** | ❌ (recommends LiteLLM) | ✅ OpenAI-compatible with caching + policy enforcement |
 | **Response Caching** | ❌ | ✅ Exact-match with cost savings tracking |
@@ -46,7 +46,7 @@ Langfuse is an excellent open-source LLM observability platform — the most pop
 
 **Community and ecosystem.** Langfuse has the largest open-source community in the LLM observability space. After being acquired by ClickHouse in January 2026, it has significant resources behind its development.
 
-**Prompt management.** Full prompt versioning, A/B testing, and a playground for iterating on prompts — capabilities AgentCost does not offer.
+**Prompt management.** Full prompt versioning, A/B testing, and a playground for iterating on prompts. AgentCost now offers prompt versioning with environment-based deployment and cost-per-version analytics, though Langfuse's playground and A/B testing are more mature.
 
 ## Where AgentCost Wins
 
@@ -62,7 +62,7 @@ Langfuse is an excellent open-source LLM observability platform — the most pop
 
 ## Can You Use Both?
 
-Yes, and it is a natural combination. Use Langfuse for deep tracing, evaluations, and prompt management. Use AgentCost for cost forecasting, budget enforcement, routing, and policy controls. They serve different audiences within the same organization — Langfuse for the ML/prompt engineering team, AgentCost for the platform team, finance, and compliance.
+Yes, and it is a natural combination. Use Langfuse for deep tracing, evaluations, and its prompt playground. Use AgentCost for cost forecasting, budget enforcement, routing, policy controls, and prompt cost analytics. They serve different audiences within the same organization — Langfuse for the ML/prompt engineering team, AgentCost for the platform team, finance, and compliance.
 
 ## Quick Start
 

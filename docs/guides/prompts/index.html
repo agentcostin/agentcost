@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://agentcost.in/docs/guides/air-gapped/">
+        <link rel="canonical" href="https://agentcost.in/docs/guides/prompts/">
       
       
-        <link rel="prev" href="../self-hosting/">
+        <link rel="prev" href="../dashboard/">
       
       
-        <link rel="next" href="../agentcost-integration-into-existing-projects/">
+        <link rel="next" href="../case-study/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Air-Gapped Deployment - AgentCost</title>
+        <title>Prompt Management - AgentCost</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#air-gapped-deployment" class="md-skip">
+        <a href="#prompt-management-versioning" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Air-Gapped Deployment
+              Prompt Management
             
           </span>
         </div>
@@ -859,10 +859,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../prompts/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Management
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -878,6 +905,203 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-manage-prompts-in-agentcost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Manage Prompts in AgentCost?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-new-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a new version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-to-an-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy to an environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-in-your-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use in your application
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Templates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-diffing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Diffing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-based-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment-Based Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-analytics-per-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Analytics Per Version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolve-by-name-or-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolve by Name or ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1251,37 +1475,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Air-Gapped Deployment
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../air-gapped/" class="md-nav__link">
         
   
   
@@ -1297,170 +1494,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How It Works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deployment
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Deployment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-transfer-the-docker-image" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 1: Transfer the Docker image
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-load-and-run" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: Load and run
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-instrument-your-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Instrument your code
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pricing-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pricing Database
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pricing Database">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#where-costs-come-from" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where costs come from
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#offline-pricing-updates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Offline pricing updates
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#on-premises-llm-cost-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        On-Premises LLM Cost Tracking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enterprise-edition-in-air-gapped-environments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Enterprise Edition in Air-Gapped Environments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#faq" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FAQ
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1844,10 +1877,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#why-manage-prompts-in-agentcost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        Why Manage Prompts in AgentCost?
       
     </span>
   </a>
@@ -1855,22 +1888,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Deployment
+        Quick Start
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Deployment">
+    <nav class="md-nav" aria-label="Quick Start">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-transfer-the-docker-image" class="md-nav__link">
+  <a href="#create-a-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Transfer the Docker image
+        Create a prompt
       
     </span>
   </a>
@@ -1878,10 +1911,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-load-and-run" class="md-nav__link">
+  <a href="#create-a-new-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Load and run
+        Create a new version
       
     </span>
   </a>
@@ -1889,10 +1922,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-instrument-your-code" class="md-nav__link">
+  <a href="#deploy-to-an-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Instrument your code
+        Deploy to an environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-in-your-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use in your application
       
     </span>
   </a>
@@ -1905,22 +1949,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pricing-database" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pricing Database
+        Features
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Pricing Database">
+    <nav class="md-nav" aria-label="Features">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#where-costs-come-from" class="md-nav__link">
+  <a href="#variable-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where costs come from
+        Variable Templates
       
     </span>
   </a>
@@ -1928,10 +1972,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#offline-pricing-updates" class="md-nav__link">
+  <a href="#version-diffing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Offline pricing updates
+        Version Diffing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-based-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment-Based Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-analytics-per-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Analytics Per Version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolve-by-name-or-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolve by Name or ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Recommendations
       
     </span>
   </a>
@@ -1944,10 +2032,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#on-premises-llm-cost-tracking" class="md-nav__link">
+  <a href="#api-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        On-Premises LLM Cost Tracking
+        API Reference
       
     </span>
   </a>
@@ -1955,32 +2043,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enterprise-edition-in-air-gapped-environments" class="md-nav__link">
+  <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enterprise Edition in Air-Gapped Environments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#faq" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FAQ
+        Best Practices
       
     </span>
   </a>
@@ -2007,201 +2073,232 @@
   
 
 
-<h1 id="air-gapped-deployment">Air-Gapped Deployment</h1>
-<p>AgentCost is fully self-contained and runs without internet access. This guide covers deploying AgentCost in air-gapped, restricted, or on-premises environments where outbound connectivity is not available.</p>
-<h2 id="how-it-works">How It Works</h2>
-<p>AgentCost ships with everything it needs inside the Docker image:</p>
-<ul>
-<li><strong>Pricing database</strong> — A vendored JSON file containing pricing for 2,610+ models from 83+ providers (OpenAI, Anthropic, Azure OpenAI, GCP Vertex AI, AWS Bedrock, Google Gemini, Mistral, Cohere, DeepSeek, and more). No external API calls are made to calculate costs.</li>
-<li><strong>Dashboard</strong> — The React dashboard is bundled as static files. No CDN dependencies.</li>
-<li><strong>Database</strong> — Community edition uses SQLite (single file, zero config). Enterprise supports PostgreSQL.</li>
-<li><strong>No telemetry</strong> — AgentCost does not phone home, send analytics, or make any outbound requests.</li>
-</ul>
-<h2 id="deployment">Deployment</h2>
-<h3 id="step-1-transfer-the-docker-image">Step 1: Transfer the Docker image</h3>
-<p>On a machine with internet access, pull and save the image:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>agentcost/agentcost:latest
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>docker<span class="w"> </span>save<span class="w"> </span>agentcost/agentcost:latest<span class="w"> </span>-o<span class="w"> </span>agentcost-image.tar
+<h1 id="prompt-management-versioning">Prompt Management &amp; Versioning</h1>
+<p>AgentCost includes a built-in prompt management system that lets you store, version, deploy, and track the cost of your system prompts — all from the same platform that governs your LLM spending.</p>
+<h2 id="why-manage-prompts-in-agentcost">Why Manage Prompts in AgentCost?</h2>
+<p>Most teams manage prompts in one of three ways: hardcoded in source code, stored in a shared Google Doc, or scattered across a prompt management tool that has no connection to cost data. The result is that when you change a prompt, you have no idea whether the new version costs more or less to run.</p>
+<p>AgentCost solves this by connecting prompts directly to cost tracking. When you deploy V2 of your support prompt, you can see exactly how it compares to V1 in cost per call, token usage, and latency — because the traces are tagged with the prompt version automatically.</p>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-prompt">Create a prompt</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_prompt_service</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">svc</span> <span class="o">=</span> <span class="n">get_prompt_service</span><span class="p">()</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">svc</span><span class="o">.</span><span class="n">create_prompt</span><span class="p">(</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="s2">&quot;support-bot&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">project</span><span class="o">=</span><span class="s2">&quot;support&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;You are a helpful support agent for {{product}}. Be concise and accurate.&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Main support chatbot system prompt&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;support&quot;</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4.1&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
 </code></pre></div>
-<p>Transfer <code>agentcost-image.tar</code> to your air-gapped environment via USB, secure file transfer, or your approved media process.</p>
-<h3 id="step-2-load-and-run">Step 2: Load and run</h3>
-<p>On the air-gapped machine:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>load<span class="w"> </span>-i<span class="w"> </span>agentcost-image.tar
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span>agentcost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--restart<span class="w"> </span>unless-stopped<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">8100</span>:8100<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-v<span class="w"> </span>agentcost_data:/data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>agentcost/agentcost:latest
+<p>Or via the API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8100/api/prompts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s1">    &quot;name&quot;: &quot;support-bot&quot;,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s1">    &quot;project&quot;: &quot;support&quot;,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;content&quot;: &quot;You are a helpful support agent for {{product}}. Be concise and accurate.&quot;,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;tags&quot;: [&quot;support&quot;, &quot;production&quot;],</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;model&quot;: &quot;gpt-4.1&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
-<p>The dashboard is available at <code>http://&lt;host&gt;:8100</code>.</p>
-<h3 id="step-3-instrument-your-code">Step 3: Instrument your code</h3>
-<p>Your application code connects to the local AgentCost instance. No external endpoints involved:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">trace</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Point your LLM client at your internal endpoint (Azure OpenAI, etc.)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">client</span> <span class="o">=</span> <span class="n">trace</span><span class="p">(</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">OpenAI</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://your-internal-openai.company.com/v1&quot;</span><span class="p">),</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">project</span><span class="o">=</span><span class="s2">&quot;my-app&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">agentcost_url</span><span class="o">=</span><span class="s2">&quot;http://agentcost-host:8100&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">)</span>
+<h3 id="create-a-new-version">Create a new version</h3>
+<p>Every edit creates an immutable version. Previous versions are never overwritten.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">svc</span><span class="o">.</span><span class="n">create_version</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;support-bot&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;You are a concise support agent for {{product}}. Keep responses under 3 sentences.&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">commit_message</span><span class="o">=</span><span class="s2">&quot;Shorter replies to reduce output tokens&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">author</span><span class="o">=</span><span class="s2">&quot;rajneesh&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
 </code></pre></div>
-<p>All cost tracking happens locally — traces are stored in the local database, costs are calculated from the local pricing file.</p>
-<h2 id="pricing-database">Pricing Database</h2>
-<h3 id="where-costs-come-from">Where costs come from</h3>
-<p>AgentCost vendors the pricing database from the <a href="https://github.com/BerriAI/litellm">LiteLLM</a> open-source project. This is a community-maintained JSON file that covers:</p>
+<h3 id="deploy-to-an-environment">Deploy to an environment</h3>
+<p>Deployments track which version is active in each environment. You can have V2 in staging while V1 is still running in production.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">svc</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span><span class="s2">&quot;support-bot&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;staging&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># After testing, promote to production</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">svc</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span><span class="s2">&quot;support-bot&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;production&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="use-in-your-application">Use in your application</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_prompt</span><span class="p">,</span> <span class="n">trace</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Resolve the production prompt, fill variables</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">prompt</span> <span class="o">=</span> <span class="n">get_prompt</span><span class="p">(</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="s2">&quot;support-bot&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;production&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">variables</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;product&quot;</span><span class="p">:</span> <span class="s2">&quot;AgentCost&quot;</span><span class="p">}</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Trace with prompt version tagging — cost analytics per version</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="n">client</span> <span class="o">=</span> <span class="n">trace</span><span class="p">(</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">OpenAI</span><span class="p">(),</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="n">project</span><span class="o">=</span><span class="s2">&quot;support&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">prompt_id</span><span class="o">=</span><span class="n">prompt</span><span class="p">[</span><span class="s2">&quot;prompt_id&quot;</span><span class="p">],</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="n">prompt_version</span><span class="o">=</span><span class="n">prompt</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="p">)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="n">model</span><span class="o">=</span><span class="n">prompt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;gpt-4.1&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]},</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">user_message</span><span class="p">},</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>    <span class="p">]</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="p">)</span>
+</code></pre></div>
+<p>Every trace is now tagged with the prompt ID and version. This means you can answer questions like "did V2 of our support prompt reduce costs?" directly from the AgentCost dashboard.</p>
+<h2 id="features">Features</h2>
+<h3 id="variable-templates">Variable Templates</h3>
+<p>Prompts support <code>{{variable}}</code> placeholders that are automatically extracted and filled at resolve time:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">svc</span><span class="o">.</span><span class="n">create_prompt</span><span class="p">(</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;email-writer&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Write a {{tone}} email to {{recipient}} about {{topic}}.&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">result</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="s2">&quot;email-writer&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">variables</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tone&quot;</span><span class="p">:</span> <span class="s2">&quot;professional&quot;</span><span class="p">,</span> <span class="s2">&quot;recipient&quot;</span><span class="p">:</span> <span class="s2">&quot;the engineering team&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;Q1 costs&quot;</span><span class="p">},</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># → &quot;Write a professional email to the engineering team about Q1 costs.&quot;</span>
+</code></pre></div>
+<p>Variables are extracted automatically — no manual declaration needed.</p>
+<h3 id="version-diffing">Version Diffing</h3>
+<p>Compare any two versions side by side:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:8100/api/prompts/support-bot/diff?v1=1&amp;v2=3&quot;</span>
+</code></pre></div>
+<p>Returns a unified diff showing exactly what changed between versions:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gd">--- v1</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="gi">+++ v3</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="gd">-You are a helpful support agent for {{product}}. Be concise and accurate.</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="gi">+You are a concise support agent for {{product}}. Keep responses under 3 sentences. Always include a link to relevant docs.</span>
+</code></pre></div>
+<h3 id="environment-based-deployment">Environment-Based Deployment</h3>
+<p>Deploy different versions to different environments:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">svc</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span><span class="s2">&quot;support-bot&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;development&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">svc</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span><span class="s2">&quot;support-bot&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;staging&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">svc</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span><span class="s2">&quot;support-bot&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;production&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>When your application calls <code>get_prompt("support-bot", environment="production")</code>, it always gets the version deployed to production — even if newer versions exist in staging.</p>
+<p>If no deployment exists for an environment, the latest version is returned as a fallback.</p>
+<h3 id="cost-analytics-per-version">Cost Analytics Per Version</h3>
+<p>Track how much each prompt version costs to run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Cost stats for a specific version</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>http://localhost:8100/api/prompts/support-bot/versions/2/cost
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Compare costs between two versions</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:8100/api/prompts/support-bot/cost/compare?v1=1&amp;v2=2&quot;</span>
+</code></pre></div>
+<p>This requires traces to be tagged with <code>prompt_id</code> and <code>prompt_version</code> (automatic when using <code>get_prompt()</code> + <code>trace()</code>).</p>
+<h3 id="resolve-by-name-or-id">Resolve by Name or ID</h3>
+<p>Prompts can be referenced by name or ID:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Both work</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">svc</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;support-bot&quot;</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;production&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">svc</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;a1b2c3d4e5f6&quot;</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;production&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="model-recommendations">Model Recommendations</h3>
+<p>Each prompt version can specify a recommended model:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">svc</span><span class="o">.</span><span class="n">create_version</span><span class="p">(</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="s2">&quot;support-bot&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-haiku-4-5&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;max_tokens&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">},</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">commit_message</span><span class="o">=</span><span class="s2">&quot;Switch to Haiku for cost savings&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="p">)</span>
+</code></pre></div>
+<p>Your application can then use the recommended model:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">prompt</span> <span class="o">=</span> <span class="n">get_prompt</span><span class="p">(</span><span class="s2">&quot;support-bot&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">model</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;gpt-4.1&quot;</span>  <span class="c1"># use recommended or fallback</span>
+</code></pre></div>
+<h2 id="api-reference">API Reference</h2>
 <table>
 <thead>
 <tr>
-<th>Provider</th>
-<th>Coverage</th>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>OpenAI (direct API)</td>
-<td>All GPT-4.1, GPT-5.x, o3, o4-mini models</td>
+<td><code>POST</code></td>
+<td><code>/api/prompts</code></td>
+<td>Create a prompt with first version</td>
 </tr>
 <tr>
-<td>Anthropic (direct API)</td>
-<td>Claude Opus 4.6, Sonnet 4.6, Haiku 4.5</td>
+<td><code>GET</code></td>
+<td><code>/api/prompts</code></td>
+<td>List all prompts (filter by project, tag)</td>
 </tr>
 <tr>
-<td>Azure OpenAI</td>
-<td>All deployed models with Azure-specific pricing</td>
+<td><code>GET</code></td>
+<td><code>/api/prompts/summary</code></td>
+<td>Prompt management statistics</td>
 </tr>
 <tr>
-<td>GCP Vertex AI</td>
-<td>Gemini 3.x, PaLM, Claude on Vertex</td>
+<td><code>GET</code></td>
+<td><code>/api/prompts/{id}</code></td>
+<td>Get prompt with latest version + deployments</td>
 </tr>
 <tr>
-<td>AWS Bedrock</td>
-<td>Claude, Titan, Llama, Mistral on Bedrock</td>
+<td><code>DELETE</code></td>
+<td><code>/api/prompts/{id}</code></td>
+<td>Delete prompt and all versions</td>
 </tr>
 <tr>
-<td>Google Gemini</td>
-<td>Gemini 3 Pro, Flash, and variants</td>
+<td><code>POST</code></td>
+<td><code>/api/prompts/{id}/versions</code></td>
+<td>Create a new version</td>
 </tr>
 <tr>
-<td>Mistral</td>
-<td>All Mistral and Mixtral models</td>
+<td><code>GET</code></td>
+<td><code>/api/prompts/{id}/versions</code></td>
+<td>List all versions (newest first)</td>
 </tr>
 <tr>
-<td>Cohere</td>
-<td>Command, Embed models</td>
+<td><code>GET</code></td>
+<td><code>/api/prompts/{id}/versions/{v}</code></td>
+<td>Get specific version</td>
 </tr>
 <tr>
-<td>DeepSeek</td>
-<td>DeepSeek-V3, DeepSeek-R1</td>
+<td><code>GET</code></td>
+<td><code>/api/prompts/{id}/diff?v1=1&amp;v2=2</code></td>
+<td>Diff two versions</td>
 </tr>
 <tr>
-<td>Open-source (Ollama, vLLM)</td>
-<td>Tracked as $0 cost (infrastructure cost only)</td>
+<td><code>POST</code></td>
+<td><code>/api/prompts/{id}/deploy</code></td>
+<td>Deploy version to environment</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/prompts/{id}/deployments</code></td>
+<td>List deployments</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/prompts/{id}/resolve</code></td>
+<td>Resolve prompt for usage</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/prompts/{id}/versions/{v}/cost</code></td>
+<td>Cost stats for a version</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/prompts/{id}/cost/compare?v1=1&amp;v2=2</code></td>
+<td>Compare costs</td>
 </tr>
 </tbody>
 </table>
-<p>The file is located at <code>agentcost/cost/model_prices.json</code> inside the Docker image and the Python package.</p>
-<h3 id="offline-pricing-updates">Offline pricing updates</h3>
-<p>When model pricing changes, you can update the pricing database without internet access:</p>
-<p><strong>Option A: New Docker image</strong></p>
-<p>Pull the latest image on an internet-connected machine, transfer it as described in Step 1. The updated pricing database is included in every new release.</p>
-<p><strong>Option B: Manual file update</strong></p>
-<ol>
-<li>On an internet-connected machine, download the latest pricing file:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-o<span class="w"> </span>model_prices.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>https://raw.githubusercontent.com/agentcostin/agentcost/main/agentcost/cost/model_prices.json
-</code></pre></div>
-<ol>
-<li>
-<p>Transfer the file to your air-gapped environment.</p>
-</li>
-<li>
-<p>Copy it into the running container:</p>
-</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>cp<span class="w"> </span>model_prices.json<span class="w"> </span>agentcost:/app/agentcost/cost/model_prices.json
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>docker<span class="w"> </span>restart<span class="w"> </span>agentcost
-</code></pre></div>
-<p>Pricing is effective immediately after restart.</p>
-<p><strong>Option C: Custom pricing overrides</strong></p>
-<p>For models with internal or negotiated pricing (e.g., your Azure OpenAI enterprise agreement), you can set custom costs via the AgentCost API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://agentcost-host:8100/api/models/pricing<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s1">    &quot;model&quot;: &quot;azure/gpt-4.1&quot;,</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s1">    &quot;input_cost_per_token&quot;: 0.0000018,</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;output_cost_per_token&quot;: 0.0000072</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">  }&#39;</span>
-</code></pre></div>
-<p>Custom pricing overrides take precedence over the vendored database.</p>
-<h2 id="on-premises-llm-cost-tracking">On-Premises LLM Cost Tracking</h2>
-<p>For self-hosted models (Ollama, vLLM, TGI, etc.), AgentCost tracks token usage, latency, and call volume — costs are recorded as $0.00 since there's no per-token charge. This is useful for:</p>
-<ul>
-<li><strong>Usage analytics</strong> — who's using which models, how much, and how often</li>
-<li><strong>Capacity planning</strong> — token volume trends help plan GPU scaling</li>
-<li><strong>Comparison</strong> — see the cost delta between your self-hosted models and equivalent cloud APIs</li>
-</ul>
-<p>To track infrastructure costs for on-premises LLMs (GPU hours, electricity, etc.), you can set a custom per-token cost that reflects your amortized infrastructure cost:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://agentcost-host:8100/api/models/pricing<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s1">    &quot;model&quot;: &quot;ollama/llama3.2:70b&quot;,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s1">    &quot;input_cost_per_token&quot;: 0.0000005,</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">    &quot;output_cost_per_token&quot;: 0.0000010</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">  }&#39;</span>
-</code></pre></div>
-<h2 id="enterprise-edition-in-air-gapped-environments">Enterprise Edition in Air-Gapped Environments</h2>
-<p>The enterprise edition adds governance features that are especially relevant for restricted environments:</p>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Why It Matters in Air-Gapped</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>SSO/SAML</strong></td>
-<td>Integrate with your internal identity provider (ADFS, Okta on-prem, Keycloak)</td>
-</tr>
-<tr>
-<td><strong>Policy Engine</strong></td>
-<td>Enforce which models can be used, cap costs per project</td>
-</tr>
-<tr>
-<td><strong>Approval Workflows</strong></td>
-<td>Require human approval for expensive model usage</td>
-</tr>
-<tr>
-<td><strong>Audit Logs</strong></td>
-<td>Hash-chained compliance trail for regulatory requirements</td>
-</tr>
-<tr>
-<td><strong>Budget Enforcement</strong></td>
-<td>Auto-downgrade models when budgets are hit — critical when chargebacks are involved</td>
-</tr>
-<tr>
-<td><strong>Anomaly Detection</strong></td>
-<td>Catch runaway agents without relying on external monitoring</td>
-</tr>
-</tbody>
-</table>
-<p>Enterprise licensing works offline — the license key is validated locally using HMAC-SHA256 signatures. No license server or internet access required.</p>
-<h2 id="architecture-summary">Architecture Summary</h2>
-<p><img alt="Air-Gapped Network Architecture" src="../images/air-gapped-network-architecture-diagram.png" /></p>
-<h2 id="faq">FAQ</h2>
-<p><strong>Does AgentCost make any outbound network calls?</strong>
-No. All cost calculations use the local pricing database. No telemetry, no analytics, no license server calls.</p>
-<p><strong>How often does the pricing database need updating?</strong>
-Major pricing changes happen a few times per year. For most deployments, updating quarterly is sufficient. If you need exact-to-the-penny accuracy for billing, update monthly.</p>
-<p><strong>Can I run AgentCost on Kubernetes?</strong>
-Yes. The Docker image works in any container runtime — Docker, Kubernetes, OpenShift, ECS. Use a PersistentVolume for the <code>/data</code> directory to retain the SQLite database across pod restarts.</p>
-<p><strong>What about PostgreSQL in air-gapped?</strong>
-Enterprise edition supports PostgreSQL. Deploy PostgreSQL within your air-gapped network and set the <code>DATABASE_URL</code> environment variable. The Docker Compose file includes a PostgreSQL configuration.</p>
-<hr />
-<p><strong>Questions about air-gapped deployment?</strong> Contact us at <a href="mailto:care@agentcost.in">care@agentcost.in</a> or open an issue on <a href="https://github.com/agentcostin/agentcost/issues">GitHub</a>.</p>
+<h2 id="best-practices">Best Practices</h2>
+<p><strong>Name prompts descriptively.</strong> Use names like <code>support-bot</code>, <code>code-reviewer-system</code>, <code>email-summarizer</code> — not <code>prompt1</code> or <code>test</code>.</p>
+<p><strong>Write commit messages.</strong> Every version should have a commit message explaining why the change was made. This creates an audit trail: "shortened system prompt to reduce input tokens" or "added retrieval instructions for RAG pipeline."</p>
+<p><strong>Test in staging before production.</strong> Deploy to staging, run your test suite, check cost/quality metrics, then promote to production.</p>
+<p><strong>Tag traces with prompt versions.</strong> Use <code>get_prompt()</code> + <code>trace(prompt_id=..., prompt_version=...)</code> so cost analytics are automatic. Without tagging, you can still manage prompts but won't get per-version cost comparison.</p>
+<p><strong>Use variables for dynamic content.</strong> Instead of creating separate prompts for each customer or product, use <code>{{variables}}</code> and fill them at resolve time.</p>
+<p><strong>Review cost comparison after major changes.</strong> After deploying a new version, check the cost comparison endpoint to verify the change didn't increase costs unexpectedly.</p>
 
 
 

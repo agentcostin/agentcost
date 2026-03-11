@@ -964,6 +964,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/prompts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/case-study/" class="md-nav__link">
         
   
@@ -1863,7 +1891,7 @@ Langfuse tells you <em>what happened</em>. AgentCost tells you <em>what to do ab
 <tr>
 <td><strong>Prompt Management</strong></td>
 <td>✅ Versioning, A/B testing, playground</td>
-<td>❌</td>
+<td>✅ Versioning, deployment, cost-per-version analytics</td>
 </tr>
 <tr>
 <td><strong>LLM-as-Judge Evals</strong></td>
@@ -1946,7 +1974,7 @@ Langfuse tells you <em>what happened</em>. AgentCost tells you <em>what to do ab
 <p><strong>Observability depth.</strong> Langfuse has the most mature tracing system in the open-source LLM space. Its trace → span → generation hierarchy provides deep visibility into complex agent workflows. The annotation queues, LLM-as-judge evaluations, and prompt playground are genuinely best-in-class.</p>
 <p><strong>Integration ecosystem.</strong> With 50+ framework integrations and native OpenTelemetry support, Langfuse connects to virtually every LLM stack. The OpenAI SDK auto-instrumentation means zero-code tracing for many teams.</p>
 <p><strong>Community and ecosystem.</strong> Langfuse has the largest open-source community in the LLM observability space. After being acquired by ClickHouse in January 2026, it has significant resources behind its development.</p>
-<p><strong>Prompt management.</strong> Full prompt versioning, A/B testing, and a playground for iterating on prompts — capabilities AgentCost does not offer.</p>
+<p><strong>Prompt management.</strong> Full prompt versioning, A/B testing, and a playground for iterating on prompts. AgentCost now offers prompt versioning with environment-based deployment and cost-per-version analytics, though Langfuse's playground and A/B testing are more mature.</p>
 <h2 id="where-agentcost-wins">Where AgentCost Wins</h2>
 <p><strong>Cost governance.</strong> This is the core difference. Langfuse can tell you that your GPT-4o calls cost $847 last week. AgentCost can tell you that at current trajectory you will exceed your $2,000 monthly budget by day 19, that 63% of those calls were simple queries that could run on GPT-4o-mini at 1/20th the cost, and automatically downgrade them.</p>
 <p><strong>Budget enforcement.</strong> Langfuse has no concept of budgets. AgentCost enforces budgets in real-time with a four-stage gate: ALLOW → WARN (80%) → DOWNGRADE (90%) → BLOCK (100%). When a junior engineer runs a loop at 3am, AgentCost stops the bleeding automatically.</p>
@@ -1954,7 +1982,7 @@ Langfuse tells you <em>what happened</em>. AgentCost tells you <em>what to do ab
 <p><strong>Policy and compliance.</strong> JSON-based policy rules, approval workflows for exceptions, hash-chained audit logs, and governance templates for SOC 2 compliance. For regulated industries, this is not optional.</p>
 <p><strong>AI gateway with caching.</strong> The OpenAI-compatible proxy tracks costs with zero instrumentation and caches deterministic requests — delivering measurable cost savings visible in the dashboard.</p>
 <h2 id="can-you-use-both">Can You Use Both?</h2>
-<p>Yes, and it is a natural combination. Use Langfuse for deep tracing, evaluations, and prompt management. Use AgentCost for cost forecasting, budget enforcement, routing, and policy controls. They serve different audiences within the same organization — Langfuse for the ML/prompt engineering team, AgentCost for the platform team, finance, and compliance.</p>
+<p>Yes, and it is a natural combination. Use Langfuse for deep tracing, evaluations, and its prompt playground. Use AgentCost for cost forecasting, budget enforcement, routing, policy controls, and prompt cost analytics. They serve different audiences within the same organization — Langfuse for the ML/prompt engineering team, AgentCost for the platform team, finance, and compliance.</p>
 <h2 id="quick-start">Quick Start</h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">AgentCost</label><label for="__tabbed_1_2">Langfuse</label></div>
 <div class="tabbed-content">

@@ -975,6 +975,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/prompts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/case-study/" class="md-nav__link">
         
   
@@ -1940,7 +1968,7 @@ Helicone shows you the cost dashboard. AgentCost shows you the dashboard <em>and
 <tr>
 <td><strong>Prompt Management</strong></td>
 <td>✅ Prompt versioning</td>
-<td>❌</td>
+<td>✅ Versioning, deployment, cost-per-version analytics</td>
 </tr>
 <tr>
 <td><strong>Evaluation</strong></td>
@@ -1983,7 +2011,7 @@ Helicone shows you the cost dashboard. AgentCost shows you the dashboard <em>and
 <p><strong>Gateway performance.</strong> Helicone's Rust-based gateway adds only 8ms P50 latency — significantly faster than any Python-based proxy. For latency-sensitive applications making thousands of calls per second, this matters.</p>
 <p><strong>Semantic caching.</strong> Helicone caches not just identical requests but semantically similar ones using embedding-based matching. AgentCost currently offers exact-match caching. For workloads with many near-duplicate prompts, Helicone's semantic cache delivers better hit rates.</p>
 <p><strong>Simpler setup for pure observability.</strong> If you only need cost visibility and a gateway, Helicone's one-line base URL change is hard to beat for simplicity. No SDK integration, no wrapper — just change the URL and you're logging.</p>
-<p><strong>Prompt management.</strong> Helicone includes prompt versioning and experiments. AgentCost does not have prompt management.</p>
+<p><strong>Prompt management.</strong> Both platforms now offer prompt versioning. AgentCost adds environment-based deployment (dev/staging/production) and automatic cost-per-version analytics.</p>
 <p><strong>Broader model coverage for gateway routing.</strong> Helicone's gateway supports 100+ providers with intelligent failover and circuit breaking.</p>
 <h2 id="where-agentcost-wins">Where AgentCost Wins</h2>
 <p><strong>Cost forecasting.</strong> Helicone tells you what you spent today. AgentCost predicts what you will spend in 7, 14, and 30 days using three forecasting methods (linear regression, exponential moving average, and ensemble). It tells you exactly when your budget will be exhausted before it happens.</p>

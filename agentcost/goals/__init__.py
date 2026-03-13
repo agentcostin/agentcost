@@ -8,6 +8,8 @@ Goals form a tree: goal → parent → grandparent. Cost rolls up
 through the hierarchy so top-level OKRs show total cost including
 all sub-goals.
 
+Now persisted to database (SQLite/PostgreSQL) — survives restarts.
+
 Usage:
     from agentcost.goals import GoalService, Goal
 
@@ -26,11 +28,39 @@ from __future__ import annotations
 
 import logging
 import time
-import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 logger = logging.getLogger("agentcost.goals")
+
+
+_SCHEMA = """
+CREATE TABLE IF NOT EXISTS goals (
+    id              TEXT PRIMARY KEY,
+    name            TEXT NOT NULL,
+    description     TEXT DEFAULT '',
+    project         TEXT DEFAULT '',
+    parent_goal_id  TEXT DEFAULT '',
+    status          TEXT DEFAULT 'active',
+    budget          REAL DEFAULT 0,
+    org_id          TEXT DEFAULT 'default',
+    created_at      REAL NOT NULL,
+    updated_at      REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_goals_project ON goals(project);
+CREATE INDEX IF NOT EXISTS idx_goals_parent ON goals(parent_goal_id);
+CREATE INDEX IF NOT EXISTS idx_goals_org ON goals(org_id);
+
+CREATE TABLE IF NOT EXISTS goal_spend (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    goal_id         TEXT NOT NULL,
+    cost            REAL NOT NULL DEFAULT 0,
+    trace_id        TEXT,
+    timestamp       REAL NOT NULL,
+    org_id          TEXT DEFAULT 'default'
+);
+CREATE INDEX IF NOT EXISTS idx_gs_goal ON goal_spend(goal_id);
+"""
 
 
 @dataclass
@@ -42,8 +72,8 @@ class Goal:
     description: str = ""
     project: str = ""
     parent_goal_id: str = ""
-    status: str = "active"  # active, completed, cancelled
-    budget: float = 0.0  # 0 = no limit
+    status: str = "active"
+    budget: float = 0.0
     created_at: float = 0.0
     updated_at: float = 0.0
 
@@ -68,16 +98,16 @@ class Goal:
 
 
 class GoalService:
-    """Manages goals and cost attribution.
+    """Manages goals and cost attribution. Persisted to database."""
 
-    Stores goals in memory (production: backed by DB via GoalStore).
-    Tracks spend per goal via trace events tagged with goal_id.
-    """
+    def __init__(self, db=None):
+        from ..data.connection import get_db
 
-    def __init__(self):
-        self._goals: dict[str, Goal] = {}
-        self._spend: dict[str, float] = {}  # goal_id → total spend
-        self._call_counts: dict[str, int] = {}  # goal_id → call count
+        self.db = db or get_db()
+        self._init()
+
+    def _init(self):
+        self.db.executescript(_SCHEMA)
 
     def create_goal(
         self,
@@ -88,116 +118,107 @@ class GoalService:
         parent_goal_id: str = "",
         budget: float = 0.0,
     ) -> Goal:
-        """Create a new goal."""
-        if goal_id in self._goals:
+        existing = self.db.fetch_one("SELECT id FROM goals WHERE id=?", (goal_id,))
+        if existing:
             raise ValueError(f"Goal '{goal_id}' already exists")
-        if parent_goal_id and parent_goal_id not in self._goals:
-            raise ValueError(f"Parent goal '{parent_goal_id}' not found")
+        if parent_goal_id:
+            parent = self.db.fetch_one("SELECT id FROM goals WHERE id=?", (parent_goal_id,))
+            if not parent:
+                raise ValueError(f"Parent goal '{parent_goal_id}' not found")
 
-        goal = Goal(
-            id=goal_id,
-            name=name,
-            description=description,
-            project=project,
-            parent_goal_id=parent_goal_id,
-            budget=budget,
+        goal = Goal(id=goal_id, name=name, description=description, project=project,
+                    parent_goal_id=parent_goal_id, budget=budget)
+        self.db.execute(
+            """INSERT INTO goals (id, name, description, project, parent_goal_id,
+               status, budget, org_id, created_at, updated_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (goal.id, goal.name, goal.description, goal.project,
+             goal.parent_goal_id, goal.status, goal.budget,
+             "default", goal.created_at, goal.updated_at),
         )
-        self._goals[goal_id] = goal
-        self._spend[goal_id] = 0.0
-        self._call_counts[goal_id] = 0
         logger.info("Created goal: %s (%s)", goal_id, name)
         return goal
 
     def get_goal(self, goal_id: str) -> Goal | None:
-        return self._goals.get(goal_id)
+        row = self.db.fetch_one("SELECT * FROM goals WHERE id=?", (goal_id,))
+        return self._row_to_goal(row) if row else None
 
-    def list_goals(
-        self, project: str = "", status: str = "", parent_goal_id: str | None = None
-    ) -> list[Goal]:
-        """List goals with optional filters."""
-        goals = list(self._goals.values())
+    def list_goals(self, project: str = "", status: str = "",
+                   parent_goal_id: str | None = None) -> list[Goal]:
+        sql = "SELECT * FROM goals WHERE 1=1"
+        params: list = []
         if project:
-            goals = [g for g in goals if g.project == project]
+            sql += " AND project=?"
+            params.append(project)
         if status:
-            goals = [g for g in goals if g.status == status]
+            sql += " AND status=?"
+            params.append(status)
         if parent_goal_id is not None:
-            goals = [g for g in goals if g.parent_goal_id == parent_goal_id]
-        return goals
+            sql += " AND parent_goal_id=?"
+            params.append(parent_goal_id)
+        sql += " ORDER BY created_at DESC"
+        return [self._row_to_goal(r) for r in self.db.fetch_all(sql, params)]
 
     def update_goal(self, goal_id: str, **kwargs) -> Goal | None:
-        """Update goal fields."""
-        goal = self._goals.get(goal_id)
+        goal = self.get_goal(goal_id)
         if not goal:
             return None
         for key, val in kwargs.items():
             if hasattr(goal, key) and key not in ("id", "created_at"):
                 setattr(goal, key, val)
         goal.updated_at = time.time()
+        self.db.execute(
+            """UPDATE goals SET name=?, description=?, project=?, parent_goal_id=?,
+               status=?, budget=?, updated_at=? WHERE id=?""",
+            (goal.name, goal.description, goal.project, goal.parent_goal_id,
+             goal.status, goal.budget, goal.updated_at, goal.id),
+        )
         return goal
 
     def delete_goal(self, goal_id: str) -> bool:
-        if goal_id in self._goals:
-            del self._goals[goal_id]
-            self._spend.pop(goal_id, None)
-            self._call_counts.pop(goal_id, None)
-            return True
-        return False
+        existing = self.db.fetch_one("SELECT id FROM goals WHERE id=?", (goal_id,))
+        if not existing:
+            return False
+        self.db.execute("DELETE FROM goal_spend WHERE goal_id=?", (goal_id,))
+        self.db.execute("DELETE FROM goals WHERE id=?", (goal_id,))
+        return True
 
-    # ── Cost Attribution ──────────────────────────────────────────
-
-    def record_spend(self, goal_id: str, cost: float) -> None:
-        """Record spend against a goal. Called by SDK on each trace."""
-        if goal_id in self._spend:
-            self._spend[goal_id] += cost
-            self._call_counts[goal_id] = self._call_counts.get(goal_id, 0) + 1
+    def record_spend(self, goal_id: str, cost: float, trace_id: str = "") -> None:
+        existing = self.db.fetch_one("SELECT id FROM goals WHERE id=?", (goal_id,))
+        if existing:
+            self.db.execute(
+                "INSERT INTO goal_spend (goal_id, cost, trace_id, timestamp, org_id) VALUES (?, ?, ?, ?, ?)",
+                (goal_id, cost, trace_id, time.time(), "default"),
+            )
 
     def get_goal_cost(self, goal_id: str, include_children: bool = True) -> dict:
-        """Get cost for a goal, optionally including all sub-goals.
-
-        Returns:
-            {
-                "goal_id": str,
-                "direct_cost": float,
-                "children_cost": float,
-                "total_cost": float,
-                "call_count": int,
-                "budget": float,
-                "budget_used_pct": float,
-            }
-        """
-        direct = self._spend.get(goal_id, 0.0)
-        calls = self._call_counts.get(goal_id, 0)
+        direct = self._get_direct_cost(goal_id)
+        direct_calls = self._get_call_count(goal_id)
         children_cost = 0.0
         children_calls = 0
-
         if include_children:
             for child in self._get_all_descendants(goal_id):
-                children_cost += self._spend.get(child.id, 0.0)
-                children_calls += self._call_counts.get(child.id, 0)
-
+                children_cost += self._get_direct_cost(child.id)
+                children_calls += self._get_call_count(child.id)
         total = direct + children_cost
-        goal = self._goals.get(goal_id)
+        goal = self.get_goal(goal_id)
         budget = goal.budget if goal else 0.0
         used_pct = (total / budget * 100) if budget > 0 else 0.0
-
         return {
             "goal_id": goal_id,
             "direct_cost": round(direct, 6),
             "children_cost": round(children_cost, 6),
             "total_cost": round(total, 6),
-            "call_count": calls + children_calls,
+            "call_count": direct_calls + children_calls,
             "budget": budget,
             "budget_used_pct": round(used_pct, 1),
         }
 
     def get_ancestry(self, goal_id: str) -> list[Goal]:
-        """Get the full ancestry chain: goal → parent → grandparent → ..."""
-        chain = []
-        current = goal_id
-        visited = set()
+        chain, current, visited = [], goal_id, set()
         while current and current not in visited:
             visited.add(current)
-            goal = self._goals.get(current)
+            goal = self.get_goal(current)
             if not goal:
                 break
             chain.append(goal)
@@ -205,64 +226,63 @@ class GoalService:
         return chain
 
     def get_children(self, goal_id: str) -> list[Goal]:
-        """Get direct children of a goal."""
-        return [g for g in self._goals.values() if g.parent_goal_id == goal_id]
+        rows = self.db.fetch_all("SELECT * FROM goals WHERE parent_goal_id=?", (goal_id,))
+        return [self._row_to_goal(r) for r in rows]
 
     def _get_all_descendants(self, goal_id: str) -> list[Goal]:
-        """Recursively get all descendants."""
-        descendants = []
-        stack = [goal_id]
+        descendants, stack = [], [goal_id]
         while stack:
-            parent = stack.pop()
-            children = self.get_children(parent)
+            children = self.get_children(stack.pop())
             descendants.extend(children)
             stack.extend(c.id for c in children)
         return descendants
 
     def check_goal_budget(self, goal_id: str) -> dict:
-        """Check if goal spend is within budget.
-
-        Returns:
-            {"allowed": bool, "reason": str, "budget_used_pct": float}
-        """
         cost_data = self.get_goal_cost(goal_id, include_children=True)
-        goal = self._goals.get(goal_id)
+        goal = self.get_goal(goal_id)
         if not goal or goal.budget <= 0:
             return {"allowed": True, "reason": "no budget set", "budget_used_pct": 0.0}
-
         if cost_data["total_cost"] >= goal.budget:
-            return {
-                "allowed": False,
-                "reason": f"Goal budget exceeded: ${cost_data['total_cost']:.2f} / ${goal.budget:.2f}",
-                "budget_used_pct": cost_data["budget_used_pct"],
-            }
-        return {
-            "allowed": True,
-            "reason": "within budget",
-            "budget_used_pct": cost_data["budget_used_pct"],
-        }
+            return {"allowed": False,
+                    "reason": f"Goal budget exceeded: ${cost_data['total_cost']:.2f} / ${goal.budget:.2f}",
+                    "budget_used_pct": cost_data["budget_used_pct"]}
+        return {"allowed": True, "reason": "within budget",
+                "budget_used_pct": cost_data["budget_used_pct"]}
 
     def get_summary(self) -> list[dict]:
-        """Summary of all goals with costs."""
-        result = []
-        for goal in self._goals.values():
-            cost_data = self.get_goal_cost(goal.id)
-            result.append(
-                {
-                    **goal.to_dict(),
-                    **cost_data,
-                }
-            )
-        return result
+        return [{**g.to_dict(), **self.get_goal_cost(g.id)} for g in self.list_goals()]
 
+    def _get_direct_cost(self, goal_id: str) -> float:
+        row = self.db.fetch_one(
+            "SELECT COALESCE(SUM(cost), 0) as total FROM goal_spend WHERE goal_id=?", (goal_id,))
+        return row["total"] if row else 0.0
 
-# ── Singleton ─────────────────────────────────────────────────────────────────
+    def _get_call_count(self, goal_id: str) -> int:
+        row = self.db.fetch_one(
+            "SELECT COUNT(*) as cnt FROM goal_spend WHERE goal_id=?", (goal_id,))
+        return row["cnt"] if row else 0
+
+    def _row_to_goal(self, row) -> Goal:
+        return Goal(id=row["id"], name=row["name"],
+                    description=row.get("description", ""),
+                    project=row.get("project", ""),
+                    parent_goal_id=row.get("parent_goal_id", ""),
+                    status=row.get("status", "active"),
+                    budget=row.get("budget", 0.0),
+                    created_at=row.get("created_at", 0),
+                    updated_at=row.get("updated_at", 0))
+
 
 _global_service: Optional[GoalService] = None
 
 
-def get_goal_service() -> GoalService:
+def get_goal_service(db=None) -> GoalService:
     global _global_service
     if _global_service is None:
-        _global_service = GoalService()
+        _global_service = GoalService(db=db)
     return _global_service
+
+
+def reset_goal_service() -> None:
+    global _global_service
+    _global_service = None

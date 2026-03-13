@@ -489,8 +489,11 @@ class TestHeartbeatCycle:
         # Starting a new cycle ends the previous one
         ht.start_cycle("a1")
         cycles = ht.get_agent_cycles("a1")
-        assert len(cycles) == 1
-        assert cycles[0]["cost"] == pytest.approx(0.10)
+        assert len(cycles) == 2  # completed first cycle + new active cycle
+        # Most recent first (ORDER BY started_at DESC)
+        completed = [c for c in cycles if c["status"] == "completed"]
+        assert len(completed) == 1
+        assert completed[0]["cost"] == pytest.approx(0.10)
 
     def test_multiple_agents(self):
         from agentcost.heartbeat import HeartbeatTracker

@@ -10,17 +10,6 @@ from agentcost.data.connection import set_db, reset_db
 from agentcost.prompts import PromptService, get_prompt_service, reset_prompt_service
 
 
-@pytest.fixture(autouse=True)
-def fresh_db(tmp_path):
-    """Use a temp SQLite database for each test."""
-    db_path = str(tmp_path / "test.db")
-    adapter = SQLiteAdapter(db_path=db_path)
-    set_db(adapter)
-    reset_prompt_service()
-    yield
-    reset_db()
-
-
 @pytest.fixture
 def svc():
     return get_prompt_service()

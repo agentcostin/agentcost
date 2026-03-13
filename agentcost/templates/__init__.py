@@ -308,11 +308,57 @@ BUILTIN_TEMPLATES: dict[str, dict] = {
 }
 
 
-class TemplateRegistry:
-    """Manages governance templates — built-in and user-uploaded."""
+_TEMPLATE_SCHEMA = """
+CREATE TABLE IF NOT EXISTS templates (
+    id              TEXT PRIMARY KEY,
+    name            TEXT NOT NULL,
+    description     TEXT DEFAULT '',
+    version         TEXT DEFAULT '1.0.0',
+    author          TEXT DEFAULT 'AgentCost',
+    tags            TEXT DEFAULT '[]',
+    tier_restrictions TEXT DEFAULT '{}',
+    budgets         TEXT DEFAULT '[]',
+    policies        TEXT DEFAULT '[]',
+    reactions       TEXT DEFAULT '{}',
+    cost_centers    TEXT DEFAULT '[]',
+    notifications   TEXT DEFAULT '[]',
+    goals           TEXT DEFAULT '[]',
+    settings        TEXT DEFAULT '{}',
+    source          TEXT DEFAULT 'builtin',
+    org_id          TEXT DEFAULT 'default',
+    created_at      REAL NOT NULL,
+    updated_at      REAL NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_tpl_name_org ON templates(name, org_id);
 
-    def __init__(self):
+CREATE TABLE IF NOT EXISTS template_applications (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    template_name   TEXT NOT NULL,
+    applied_by      TEXT DEFAULT '',
+    org_id          TEXT DEFAULT 'default',
+    applied_at      REAL NOT NULL,
+    rollback_data   TEXT DEFAULT '{}'
+);
+CREATE INDEX IF NOT EXISTS idx_ta_org ON template_applications(org_id);
+"""
+
+
+class TemplateRegistry:
+    """Manages governance templates — built-in and user-uploaded.
+
+    Built-in templates are loaded from BUILTIN_TEMPLATES dict.
+    Custom templates and application history are persisted to database.
+    """
+
+    def __init__(self, db=None):
         self._templates: dict[str, Template] = {}
+        self._db = None
+        try:
+            from ..data.connection import get_db
+            self._db = db or get_db()
+            self._db.executescript(_TEMPLATE_SCHEMA)
+        except Exception:
+            pass  # Fall back to in-memory only
         self._load_builtins()
 
     def _load_builtins(self):
@@ -439,6 +485,20 @@ class TemplateRegistry:
         logger.info(
             "Applied template '%s': %d sections", name, len(applied["sections"])
         )
+
+        # Persist application record
+        if self._db:
+            try:
+                import json as _json
+                self._db.execute(
+                    """INSERT INTO template_applications
+                       (template_name, applied_by, org_id, applied_at, rollback_data)
+                       VALUES (?, ?, ?, ?, ?)""",
+                    (name, "", "default", time.time(), _json.dumps(applied)),
+                )
+            except Exception as e:
+                logger.debug("Failed to persist template application: %s", e)
+
         return applied
 
     def export_current(self, name: str = "custom", description: str = "") -> str:

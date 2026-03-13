@@ -18,3 +18,4 @@ python3-saml>=1.16.0
 # Optional integrations (install as needed)
 # langchain-core>=0.1.0
 # langchain-openai>=0.0.5
+pyyaml

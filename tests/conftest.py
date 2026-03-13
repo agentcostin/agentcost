@@ -20,24 +20,28 @@ def fresh_test_db(tmp_path):
     # Reset all module singletons that cache DB references
     try:
         from agentcost.goals import reset_goal_service
+
         reset_goal_service()
     except (ImportError, AttributeError):
         pass
 
     try:
         from agentcost.heartbeat import reset_heartbeat_tracker
+
         reset_heartbeat_tracker()
     except (ImportError, AttributeError):
         pass
 
     try:
         from agentcost.reactions.engine import reset_reaction_engine
+
         reset_reaction_engine()
     except (ImportError, AttributeError):
         pass
 
     try:
         from agentcost.prompts import reset_prompt_service
+
         reset_prompt_service()
     except (ImportError, AttributeError):
         pass

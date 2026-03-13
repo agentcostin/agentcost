@@ -122,19 +122,36 @@ class GoalService:
         if existing:
             raise ValueError(f"Goal '{goal_id}' already exists")
         if parent_goal_id:
-            parent = self.db.fetch_one("SELECT id FROM goals WHERE id=?", (parent_goal_id,))
+            parent = self.db.fetch_one(
+                "SELECT id FROM goals WHERE id=?", (parent_goal_id,)
+            )
             if not parent:
                 raise ValueError(f"Parent goal '{parent_goal_id}' not found")
 
-        goal = Goal(id=goal_id, name=name, description=description, project=project,
-                    parent_goal_id=parent_goal_id, budget=budget)
+        goal = Goal(
+            id=goal_id,
+            name=name,
+            description=description,
+            project=project,
+            parent_goal_id=parent_goal_id,
+            budget=budget,
+        )
         self.db.execute(
             """INSERT INTO goals (id, name, description, project, parent_goal_id,
                status, budget, org_id, created_at, updated_at)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (goal.id, goal.name, goal.description, goal.project,
-             goal.parent_goal_id, goal.status, goal.budget,
-             "default", goal.created_at, goal.updated_at),
+            (
+                goal.id,
+                goal.name,
+                goal.description,
+                goal.project,
+                goal.parent_goal_id,
+                goal.status,
+                goal.budget,
+                "default",
+                goal.created_at,
+                goal.updated_at,
+            ),
         )
         logger.info("Created goal: %s (%s)", goal_id, name)
         return goal
@@ -143,8 +160,9 @@ class GoalService:
         row = self.db.fetch_one("SELECT * FROM goals WHERE id=?", (goal_id,))
         return self._row_to_goal(row) if row else None
 
-    def list_goals(self, project: str = "", status: str = "",
-                   parent_goal_id: str | None = None) -> list[Goal]:
+    def list_goals(
+        self, project: str = "", status: str = "", parent_goal_id: str | None = None
+    ) -> list[Goal]:
         sql = "SELECT * FROM goals WHERE 1=1"
         params: list = []
         if project:
@@ -170,8 +188,16 @@ class GoalService:
         self.db.execute(
             """UPDATE goals SET name=?, description=?, project=?, parent_goal_id=?,
                status=?, budget=?, updated_at=? WHERE id=?""",
-            (goal.name, goal.description, goal.project, goal.parent_goal_id,
-             goal.status, goal.budget, goal.updated_at, goal.id),
+            (
+                goal.name,
+                goal.description,
+                goal.project,
+                goal.parent_goal_id,
+                goal.status,
+                goal.budget,
+                goal.updated_at,
+                goal.id,
+            ),
         )
         return goal
 
@@ -226,7 +252,9 @@ class GoalService:
         return chain
 
     def get_children(self, goal_id: str) -> list[Goal]:
-        rows = self.db.fetch_all("SELECT * FROM goals WHERE parent_goal_id=?", (goal_id,))
+        rows = self.db.fetch_all(
+            "SELECT * FROM goals WHERE parent_goal_id=?", (goal_id,)
+        )
         return [self._row_to_goal(r) for r in rows]
 
     def _get_all_descendants(self, goal_id: str) -> list[Goal]:
@@ -243,34 +271,45 @@ class GoalService:
         if not goal or goal.budget <= 0:
             return {"allowed": True, "reason": "no budget set", "budget_used_pct": 0.0}
         if cost_data["total_cost"] >= goal.budget:
-            return {"allowed": False,
-                    "reason": f"Goal budget exceeded: ${cost_data['total_cost']:.2f} / ${goal.budget:.2f}",
-                    "budget_used_pct": cost_data["budget_used_pct"]}
-        return {"allowed": True, "reason": "within budget",
-                "budget_used_pct": cost_data["budget_used_pct"]}
+            return {
+                "allowed": False,
+                "reason": f"Goal budget exceeded: ${cost_data['total_cost']:.2f} / ${goal.budget:.2f}",
+                "budget_used_pct": cost_data["budget_used_pct"],
+            }
+        return {
+            "allowed": True,
+            "reason": "within budget",
+            "budget_used_pct": cost_data["budget_used_pct"],
+        }
 
     def get_summary(self) -> list[dict]:
         return [{**g.to_dict(), **self.get_goal_cost(g.id)} for g in self.list_goals()]
 
     def _get_direct_cost(self, goal_id: str) -> float:
         row = self.db.fetch_one(
-            "SELECT COALESCE(SUM(cost), 0) as total FROM goal_spend WHERE goal_id=?", (goal_id,))
+            "SELECT COALESCE(SUM(cost), 0) as total FROM goal_spend WHERE goal_id=?",
+            (goal_id,),
+        )
         return row["total"] if row else 0.0
 
     def _get_call_count(self, goal_id: str) -> int:
         row = self.db.fetch_one(
-            "SELECT COUNT(*) as cnt FROM goal_spend WHERE goal_id=?", (goal_id,))
+            "SELECT COUNT(*) as cnt FROM goal_spend WHERE goal_id=?", (goal_id,)
+        )
         return row["cnt"] if row else 0
 
     def _row_to_goal(self, row) -> Goal:
-        return Goal(id=row["id"], name=row["name"],
-                    description=row.get("description", ""),
-                    project=row.get("project", ""),
-                    parent_goal_id=row.get("parent_goal_id", ""),
-                    status=row.get("status", "active"),
-                    budget=row.get("budget", 0.0),
-                    created_at=row.get("created_at", 0),
-                    updated_at=row.get("updated_at", 0))
+        return Goal(
+            id=row["id"],
+            name=row["name"],
+            description=row.get("description", ""),
+            project=row.get("project", ""),
+            parent_goal_id=row.get("parent_goal_id", ""),
+            status=row.get("status", "active"),
+            budget=row.get("budget", 0.0),
+            created_at=row.get("created_at", 0),
+            updated_at=row.get("updated_at", 0),
+        )
 
 
 _global_service: Optional[GoalService] = None

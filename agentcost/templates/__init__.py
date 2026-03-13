@@ -355,6 +355,7 @@ class TemplateRegistry:
         self._db = None
         try:
             from ..data.connection import get_db
+
             self._db = db or get_db()
             self._db.executescript(_TEMPLATE_SCHEMA)
         except Exception:
@@ -490,6 +491,7 @@ class TemplateRegistry:
         if self._db:
             try:
                 import json as _json
+
                 self._db.execute(
                     """INSERT INTO template_applications
                        (template_name, applied_by, org_id, applied_at, rollback_data)

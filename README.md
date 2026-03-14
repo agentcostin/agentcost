@@ -142,24 +142,24 @@ agentcost plugin install agentcost-slack-alerts
 ```
                     ┌─────────────────────────────────────────────┐
                     │              Your Application               │
-                    └─────┬──────────┬──────────┬────────────────┘
-                          │          │          │
-                    ┌─────▼──┐ ┌─────▼──┐ ┌────▼───┐
-                    │ Python │ │ Node.js│ │ Proxy  │
-                    │  SDK   │ │  SDK   │ │Gateway │
-                    └───┬────┘ └───┬────┘ └───┬────┘
-                        │          │          │
-                        └──────────┼──────────┘
-                                   │
-                    ┌──────────────▼──────────────┐
-                    │     AgentCost API Server     │
-                    │         (FastAPI)            │
-                    ├─────────────────────────────┤
-                    │  Traces │ Forecasts │ Optim  │
-                    │  Budget │ Analytics │ Estim  │
-                    ├─────────────────────────────┤
-                    │   SQLite / PostgreSQL        │
-                    └──────────────┬──────────────┘
+                    └─────┬──────────┬──────────┬───────┬────────┘
+                          │          │          │       │
+                    ┌─────▼──┐ ┌─────▼──┐ ┌────▼───┐ ┌─▼──────┐
+                    │ Python │ │ Node.js│ │ Proxy  │ │  OTel  │
+                    │  SDK   │ │  SDK   │ │Gateway │ │Ingest  │
+                    └───┬────┘ └───┬────┘ └───┬────┘ └───┬────┘
+                        │          │          │          │
+                        └──────────┼──────────┼──────────┘
+                                   │          │
+                    ┌──────────────▼──────────▼───────┐
+                    │     AgentCost API Server         │
+                    │         (FastAPI)                │
+                    ├──────────────────────────────────┤
+                    │  Traces │ Prompts  │ Feedback    │
+                    │  Budget │ Forecast │ Optimizer   │
+                    ├──────────────────────────────────┤
+                    │   SQLite / PostgreSQL             │
+                    └──────────────┬───────────────────┘
                                    │
               ┌────────────────────┼────────────────────┐
               │                    │                    │
@@ -210,15 +210,28 @@ curl http://localhost:8200/v1/gateway/cache/stats
 
 ## Exporters
 
-Send cost data to your existing observability stack:
+## Exporters & OTel Collector
+
+Send cost data **out** to your observability stack, or receive spans **in** from your existing OTel instrumentation:
 
 ```python
-# OpenTelemetry (Datadog, Jaeger, Grafana Tempo)
+# Export to OpenTelemetry (Datadog, Jaeger, Grafana Tempo)
 from agentcost.otel import install_otel_exporter
 install_otel_exporter(endpoint="http://localhost:4317")
 
 # Prometheus (Grafana, AlertManager)
 # Enabled automatically at /metrics when server is running
+```
+
+**Already using Traceloop, OpenLLMetry, or OpenInference?** Just point your OTel exporter at AgentCost — no re-instrumentation needed:
+
+```bash
+# Zero code changes — just set the endpoint
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:8100
+
+# AgentCost accepts OTLP/HTTP spans on POST /v1/traces
+# LLM spans are auto-detected, cost is auto-calculated from 2,610+ model pricing
+# Non-LLM spans (HTTP, DB, etc.) are silently skipped
 ```
 
 ## Plugin System

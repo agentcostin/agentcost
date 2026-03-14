@@ -34,7 +34,7 @@ Langfuse is an excellent open-source LLM observability platform — the most pop
 | **CI/CD Cost Checks** | ❌ | ✅ GitHub Actions to fail builds on cost regression |
 | **SSO/SAML** | ✅ (Enterprise tier) | ✅ (Enterprise tier) |
 | **Audit Logs** | ✅ (Enterprise tier) | ✅ Hash-chained compliance trail |
-| **OTel Support** | ✅ Native OTLP endpoint | ✅ Export to OTel/Prometheus |
+| **OTel Support** | ✅ Native OTLP endpoint | ✅ Bidirectional — export to OTel/Prometheus + accept incoming OTLP spans |
 | **Self-Hosting** | ✅ Docker, Kubernetes, Helm | ✅ Docker Compose, single command |
 | **Pricing** | Free (50K units) → $29/mo → $199/mo | Free (MIT core), Enterprise BSL 1.1 |
 
@@ -42,7 +42,7 @@ Langfuse is an excellent open-source LLM observability platform — the most pop
 
 **Observability depth.** Langfuse has the most mature tracing system in the open-source LLM space. Its trace → span → generation hierarchy provides deep visibility into complex agent workflows. The annotation queues, LLM-as-judge evaluations, and prompt playground are genuinely best-in-class. AgentCost now supports user feedback (thumbs up/down with comments and tags) on traces, with quality analytics per model and per prompt version — but Langfuse's annotation queues and LLM-as-judge pipelines are more comprehensive.
 
-**Integration ecosystem.** With 50+ framework integrations and native OpenTelemetry support, Langfuse connects to virtually every LLM stack. The OpenAI SDK auto-instrumentation means zero-code tracing for many teams.
+**Integration ecosystem.** With 50+ framework integrations and native OpenTelemetry support, Langfuse connects to virtually every LLM stack. AgentCost now also accepts incoming OTLP spans (POST /v1/traces) — teams using Traceloop, OpenLLMetry, or OpenInference can point their OTel exporter at AgentCost with zero code changes. LLM spans are auto-detected and cost is auto-calculated.
 
 **Community and ecosystem.** Langfuse has the largest open-source community in the LLM observability space. After being acquired by ClickHouse in January 2026, it has significant resources behind its development.
 

@@ -37,7 +37,7 @@ Helicone is an open-source LLM observability platform built around an AI Gateway
 | **Rate Limiting** | ✅ Per-key | ✅ Per-project token bucket |
 | **Provider Failover** | ✅ Automatic | ✅ Automatic |
 | **SSO/SAML** | ✅ (Team/Enterprise tier) | ✅ (Enterprise tier) |
-| **OTel Support** | ❌ | ✅ Export to OTel/Prometheus |
+| **OTel Support** | ❌ | ✅ Bidirectional — export to OTel/Prometheus + accept incoming OTLP spans |
 | **Self-Hosting** | ✅ Docker, Kubernetes | ✅ Docker Compose, single command |
 | **Pricing** | Free (10K req) → $20/seat/mo | Free (MIT core), Enterprise BSL 1.1 |
 

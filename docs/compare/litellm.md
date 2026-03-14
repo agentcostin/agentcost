@@ -38,7 +38,7 @@ LiteLLM is the most popular open-source LLM proxy — a unified API that routes 
 | **Dashboard** | ✅ Admin UI | ✅ 7-tab React dashboard |
 | **SSO/RBAC** | ✅ Enterprise | ✅ Enterprise (any OIDC/SAML provider) |
 | **Audit Logs** | ✅ | ✅ Hash-chained compliance trail |
-| **OTel Support** | ✅ | ✅ Export to OTel/Prometheus |
+| **OTel Support** | ✅ | ✅ Bidirectional — export to OTel/Prometheus + accept incoming OTLP spans |
 | **Self-Hosting** | ✅ Docker | ✅ Docker, one-command install |
 | **License** | Apache 2.0 | MIT (core), BSL 1.1 (enterprise) |
 

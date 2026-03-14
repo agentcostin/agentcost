@@ -46,13 +46,14 @@ nav:
   - Guides:
     - Dashboard: guides/dashboard.md
     - Prompt Management: guides/prompts.md
+    - User Feedback: guides/feedback.md
+    - Semantic Caching: guides/semantic-caching.md
     - Case Study: guides/case-study.md
     - Cursor Cost Control: guides/cursor-costs.md
     - Cost Intelligence: guides/intelligence.md
     - Goal Attribution: guides/goals.md
     - Governance Templates: guides/templates.md
     - Heartbeat Monitoring: guides/heartbeat.md
-    - Semantic Caching: guides/semantic-caching.md
     - LangChain: guides/langchain.md
     - CrewAI: guides/crewai.md
     - AutoGen: guides/autogen.md

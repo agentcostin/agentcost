@@ -22,7 +22,7 @@ Langfuse is an excellent open-source LLM observability platform — the most pop
 | **Policy Engine** | ❌ | ✅ JSON rules — block models, cap costs, require approval |
 | **Approval Workflows** | ❌ | ✅ Human-in-the-loop for policy exceptions |
 | **Prompt Management** | ✅ Versioning, A/B testing, playground | ✅ Versioning, deployment, cost-per-version analytics |
-| **LLM-as-Judge Evals** | ✅ Annotation queues, scoring | ❌ |
+| **LLM-as-Judge Evals** | ✅ Annotation queues, scoring | ✅ User feedback (thumbs up/down), per-model and per-prompt quality analytics |
 | **AI Gateway / Proxy** | ❌ (recommends LiteLLM) | ✅ OpenAI-compatible with caching + policy enforcement |
 | **Response Caching** | ❌ | ✅ Exact-match with cost savings tracking |
 | **Anomaly Detection** | ❌ | ✅ ML-based cost/latency spike detection |
@@ -40,7 +40,7 @@ Langfuse is an excellent open-source LLM observability platform — the most pop
 
 ## Where Langfuse Wins
 
-**Observability depth.** Langfuse has the most mature tracing system in the open-source LLM space. Its trace → span → generation hierarchy provides deep visibility into complex agent workflows. The annotation queues, LLM-as-judge evaluations, and prompt playground are genuinely best-in-class.
+**Observability depth.** Langfuse has the most mature tracing system in the open-source LLM space. Its trace → span → generation hierarchy provides deep visibility into complex agent workflows. The annotation queues, LLM-as-judge evaluations, and prompt playground are genuinely best-in-class. AgentCost now supports user feedback (thumbs up/down with comments and tags) on traces, with quality analytics per model and per prompt version — but Langfuse's annotation queues and LLM-as-judge pipelines are more comprehensive.
 
 **Integration ecosystem.** With 50+ framework integrations and native OpenTelemetry support, Langfuse connects to virtually every LLM stack. The OpenAI SDK auto-instrumentation means zero-code tracing for many teams.
 

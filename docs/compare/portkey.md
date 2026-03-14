@@ -15,7 +15,7 @@ Portkey is the closest competitor to AgentCost in the AI infrastructure space. B
 |-----------|---------|-----------|
 | **AI Gateway / Proxy** | ✅ Rust-based, <1ms overhead, 200+ LLMs | ✅ Python/FastAPI, OpenAI-compatible |
 | **Model Routing** | ✅ Conditional, load-balanced, fallback chains | ✅ Complexity-based (SIMPLE/MEDIUM/COMPLEX/REASONING) |
-| **Response Caching** | ✅ Exact + semantic caching | ✅ Exact-match with cost savings tracking |
+| **Response Caching** | ✅ Exact + semantic caching | ✅ Exact-match + semantic caching with cost savings tracking |
 | **Guardrails** | ✅ 50+ guardrails (incl. Prisma AIRS) | ✅ Policy engine with JSON rules |
 | **Model Pricing DB** | ✅ 2,300+ models | ✅ 2,610+ models from 83+ providers |
 | **Cost Tracking** | ✅ Per-request, per-key | ✅ Per-request, per-project, per-model |

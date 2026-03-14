@@ -16,7 +16,7 @@ Helicone is an open-source LLM observability platform built around an AI Gateway
 | **AI Gateway / Proxy** | ✅ Rust-based, 8ms P50 latency | ✅ Python/FastAPI, OpenAI-compatible |
 | **One-Line Integration** | ✅ Change base URL only | ✅ `trace(OpenAI())` wrapper or gateway |
 | **Cost Tracking** | ✅ 300+ models | ✅ 2,610+ models from 83+ providers |
-| **Response Caching** | ✅ Exact + semantic caching | ✅ Exact-match with cost savings tracking |
+| **Response Caching** | ✅ Exact + semantic caching | ✅ Exact-match + semantic caching with cost savings tracking |
 | **Cost Forecasting** | ❌ | ✅ Linear, EMA, ensemble — predicts budget exhaustion |
 | **Budget Enforcement** | ❌ | ✅ Pre-call validation, auto-block at limits |
 | **Auto-Downgrade** | ❌ | ✅ Budget gate with automatic model downgrade chains |
@@ -45,7 +45,7 @@ Helicone is an open-source LLM observability platform built around an AI Gateway
 
 **Gateway performance.** Helicone's Rust-based gateway adds only 8ms P50 latency — significantly faster than any Python-based proxy. For latency-sensitive applications making thousands of calls per second, this matters.
 
-**Semantic caching.** Helicone caches not just identical requests but semantically similar ones using embedding-based matching. AgentCost currently offers exact-match caching. For workloads with many near-duplicate prompts, Helicone's semantic cache delivers better hit rates.
+**Semantic caching.** Both platforms now offer semantic caching — matching similar prompts, not just identical ones. Helicone uses cloud-based embedding matching. AgentCost uses n-gram Jaccard similarity (zero dependencies, fully local) with optional sentence-transformers upgrade for higher quality. AgentCost's approach works in air-gapped environments since prompts never leave your infrastructure.
 
 **Simpler setup for pure observability.** If you only need cost visibility and a gateway, Helicone's one-line base URL change is hard to beat for simplicity. No SDK integration, no wrapper — just change the URL and you're logging.
 

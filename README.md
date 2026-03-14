@@ -51,7 +51,7 @@ curl -X POST http://localhost:8500/api/seed -H "Content-Type: application/json" 
 agentcost dashboard
 ```
 
-The dashboard gives you eight intelligence views:
+The dashboard gives you nine intelligence views:
 
 | View               | What it shows                                                          |
 | ------------------ | ---------------------------------------------------------------------- |
@@ -63,6 +63,7 @@ The dashboard gives you eight intelligence views:
 | **Estimator**      | Pre-call cost estimation across 2,610+ models                          |
 | **Models**         | Search/filter all models by provider, tier, cost range, context window |
 | **Prompts**        | Version, deploy, and track cost of system prompts per version          |
+| **Feedback**       | User thumbs up/down on traces, quality per model and prompt version    |
 
 ## Framework Support
 
@@ -168,7 +169,7 @@ agentcost plugin install agentcost-slack-alerts
         └────────────┘     └─────────────┘     └─────────────┘
 ```
 
-## AI Gateway (with Response Caching)
+## AI Gateway (with Semantic Caching)
 
 Zero-instrumentation cost tracking. Point your agents at the gateway instead of the provider:
 
@@ -201,7 +202,7 @@ curl http://localhost:8200/v1/gateway/cache/stats
 
 | Feature                   | Description                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------- |
-| **Response Caching**      | Exact-match cache for deterministic requests (configurable temperature threshold) |
+| **Response Caching**      | Exact-match + semantic caching — similar prompts hit the cache, not just identical ones |
 | **Cost Savings Tracking** | Per-request cost saved, aggregated by project and model                           |
 | **Policy Enforcement**    | Pre-call policy checks before forwarding to providers                             |
 | **Provider Failover**     | Automatic routing across OpenAI, Anthropic, Ollama                                |

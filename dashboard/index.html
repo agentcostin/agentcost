@@ -48,8 +48,18 @@ body{font-family:var(--font);background:var(--bg-0);color:var(--text-1);font-siz
 .sidebar-footer .status{display:flex;align-items:center;gap:.4rem}
 .sidebar-footer .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
 .sidebar-footer .dot.off{background:var(--red)}
+.fb-btn{cursor:pointer;opacity:.4;transition:all .15s;font-size:.9rem;user-select:none;display:inline-block}
+.fb-btn:hover{opacity:1;transform:scale(1.2)}
+.fb-btn.voted{opacity:1;transform:scale(1.1)}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg-3);border:1px solid var(--border-h);color:var(--text-0);padding:.6rem 1.2rem;border-radius:var(--radius);font-size:.8rem;font-weight:500;z-index:9999;animation:toastIn .3s ease,toastOut .3s ease 2.2s forwards;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.toast.positive{border-left:3px solid var(--green)}
+.toast.negative{border-left:3px solid var(--red)}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastOut{from{opacity:1}to{opacity:0}}
+.feedback-bar{background:var(--bg-1);border-top:1px solid var(--border);padding:.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;font-size:.76rem;color:var(--text-2);flex-shrink:0}
 
-.main{flex:1;overflow-y:auto;background:var(--bg-0)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg-0)}
+.main-content{flex:1;overflow-y:auto}
 .main-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-1);position:sticky;top:0;z-index:10}
 .main-header h2{font-size:1.1rem;font-weight:600;color:var(--text-0)}
 .main-header .controls{display:flex;gap:.5rem;align-items:center}
@@ -323,20 +333,87 @@ function Benchmarks(){
 
 function Traces({project}){
   const [traces,setTraces]=useState([]);
+  const [voted,setVoted]=useState({});  // traceId → score
+  const [toast,setToast]=useState(null);
   const load=useCallback(async()=>{const q=project?`?project=${project}&limit=200`:'?limit=200';setTraces(await api(`/api/traces${q}`)||[]);},[project]);
   useEffect(()=>{load();const i=setInterval(load,5000);return()=>clearInterval(i);},[load]);
+  const sendFeedback=async(traceId,score)=>{
+    await apiPost('/api/feedback',{trace_id:traceId,score,source:'dashboard'});
+    setVoted(v=>({...v,[traceId]:score}));
+    setToast({score,key:Date.now()});
+    setTimeout(()=>setToast(null),2500);
+  };
   if(!traces.length) return <Empty icon="📡" text="No traces yet. Use the SDK to start tracking."/>;
-  return <div className="card" style={{overflow:'auto'}}>
-    <table><thead><tr><th>Time</th><th>Model</th><th>Provider</th><th>Project</th><th>Tokens</th><th>Cost</th><th>Latency</th><th>Status</th></tr></thead>
-    <tbody>{traces.map((t,i)=><tr key={i}>
+  return <><div className="card" style={{overflow:'auto'}}>
+    <table><thead><tr><th>Time</th><th>Model</th><th>Provider</th><th>Project</th><th>Tokens</th><th>Cost</th><th>Latency</th><th>Status</th><th style={{width:70,textAlign:'center'}}>Quality</th></tr></thead>
+    <tbody>{traces.map((t,i)=>{const v=voted[t.trace_id];return <tr key={i}>
       <td style={{fontFamily:'var(--mono)',fontSize:'.72rem'}}>{fmtTime(t.timestamp)}</td>
       <td style={{color:'var(--text-0)'}}>{t.model}</td><td>{t.provider}</td><td>{t.project}</td>
       <td>{fmtN(t.input_tokens)}→{fmtN(t.output_tokens)}</td>
       <td style={{color:'var(--green)',fontFamily:'var(--mono)'}}>{fmt$(t.cost)}</td>
       <td>{t.latency_ms?.toFixed(0)}ms</td>
       <td><span className={`badge ${t.status==='success'?'ok':'err'}`}>{t.status}</span></td>
-    </tr>)}</tbody></table>
-  </div>;
+      <td style={{textAlign:'center'}}>{v!=null
+        ?<span style={{fontSize:'.8rem'}}>{v===1?'👍':'👎'} <span style={{fontSize:'.65rem',color:'var(--text-3)'}}>sent</span></span>
+        :<>{' '}<span className="fb-btn" title="Thumbs up" onClick={()=>sendFeedback(t.trace_id,1)}>👍</span>{' '}<span className="fb-btn" title="Thumbs down" onClick={()=>sendFeedback(t.trace_id,-1)}>👎</span></>
+      }</td>
+    </tr>})}</tbody></table>
+  </div>
+  {toast&&<div key={toast.key} className={`toast ${toast.score===1?'positive':'negative'}`}>{toast.score===1?'👍 Thanks! Positive feedback recorded':'👎 Thanks! Negative feedback recorded'}</div>}
+  </>;
+}
+
+/* ── Feedback & Quality ──────────────────────────────────────────────────── */
+
+function FeedbackView({project}){
+  const [summary,setSummary]=useState(null);const [models,setModels]=useState([]);const [recent,setRecent]=useState([]);
+  const load=useCallback(async()=>{
+    const [s,m,r]=await Promise.all([
+      api('/api/feedback/summary'),
+      api(`/api/feedback/quality/models${project?'?project='+project:''}`),
+      api(`/api/feedback${project?'?project='+project:''}`)
+    ]);
+    setSummary(s);setModels(m||[]);setRecent(r||[]);
+  },[project]);
+  useEffect(()=>{load();},[load]);
+
+  return <>
+    <div style={{background:'var(--bg-2)',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'1rem 1.2rem',marginBottom:'1rem'}}>
+      <div style={{fontSize:'.85rem',color:'var(--text-0)',fontWeight:600,marginBottom:'.3rem'}}>💬 Your feedback shapes AgentCost</div>
+      <div style={{fontSize:'.78rem',color:'var(--text-2)'}}>Rate responses with 👍/👎 in the Traces tab. Quality data helps the optimizer recommend better cost/quality tradeoffs.</div>
+    </div>
+
+    {summary&&<div className="grid g4" style={{marginBottom:'1rem'}}>
+      <StatCard title="Total Feedback" value={summary.total||0}/>
+      <StatCard title="Positive" value={summary.positive||0} extra={summary.total>0?`${summary.positive_pct}%`:'—'}/>
+      <StatCard title="Negative" value={summary.negative||0}/>
+      <StatCard title="Neutral" value={summary.neutral||0}/>
+    </div>}
+
+    {models.length>0&&<div className="card" style={{marginBottom:'1rem'}}><div className="card-header"><h3>📊 Quality by Model</h3></div>
+      <table><thead><tr><th>Model</th><th>Feedback</th><th>Positive %</th><th>Negative %</th><th>Avg Score</th><th>Avg Cost</th><th>Cost / Positive</th></tr></thead>
+      <tbody>{models.map((m,i)=><tr key={i}>
+        <td style={{color:'var(--text-0)',fontWeight:500}}>{m.model}</td>
+        <td>{m.total_feedback}</td>
+        <td style={{color:'var(--green)'}}>{m.positive_pct}%</td>
+        <td style={{color:m.negative_pct>20?'var(--red)':'var(--text-2)'}}>{m.negative_pct}%</td>
+        <td style={{fontFamily:'var(--mono)'}}>{m.avg_score?.toFixed(3)}</td>
+        <td style={{fontFamily:'var(--mono)',color:'var(--green)'}}>{fmt$(m.avg_cost||0)}</td>
+        <td style={{fontFamily:'var(--mono)',color:'var(--blue)'}}>{m.cost_per_positive?fmt$(m.cost_per_positive):'—'}</td>
+      </tr>)}</tbody></table>
+    </div>}
+
+    <div className="card"><div className="card-header"><h3>🕐 Recent Feedback</h3></div>
+      {recent.length?<table><thead><tr><th>Trace ID</th><th>Score</th><th>Comment</th><th>Source</th><th>Time</th></tr></thead>
+      <tbody>{recent.slice(0,50).map((f,i)=><tr key={i}>
+        <td style={{fontFamily:'var(--mono)',fontSize:'.72rem'}}>{f.trace_id}</td>
+        <td>{f.score===1?'👍':f.score===-1?'👎':'➖'}</td>
+        <td style={{color:'var(--text-2)',maxWidth:300,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.comment||'—'}</td>
+        <td><span className="badge info">{f.source}</span></td>
+        <td style={{fontFamily:'var(--mono)',fontSize:'.72rem'}}>{fmtTime(new Date(f.created_at*1000).toISOString())}</td>
+      </tr>)}</tbody></table>:<Empty icon="👍" text="No feedback yet. Rate traces in the Traces tab to see quality analytics here."/>}
+    </div>
+  </>;
 }
 
 /* ── Team ────────────────────────────────────────────────────────────────── */
@@ -1025,13 +1102,13 @@ function ModelsExplorer(){
 /* ── App Shell ───────────────────────────────────────────────────────────── */
 
 const NAV = [
-  {section:'Analytics'},{id:'overview',icon:'📊',label:'Overview'},{id:'benchmarks',icon:'🧪',label:'Benchmarks'},{id:'traces',icon:'📡',label:'Traces'},
+  {section:'Analytics'},{id:'overview',icon:'📊',label:'Overview'},{id:'benchmarks',icon:'🧪',label:'Benchmarks'},{id:'traces',icon:'📡',label:'Traces',hasChildren:true},{id:'feedback',icon:'👍',label:'Feedback',parent:'traces'},
   {section:'Intelligence'},{id:'forecast',icon:'🔮',label:'Forecast'},{id:'optimizer',icon:'⚡',label:'Optimizer'},{id:'estimator',icon:'🧮',label:'Estimator'},{id:'models',icon:'🤖',label:'Models'},
   {section:'Governance'},{id:'budgets',icon:'💰',label:'Budgets'},{id:'costcenters',icon:'🏢',label:'Cost Centers'},{id:'policies',icon:'🛡️',label:'Policies'},{id:'approvals',icon:'📋',label:'Approvals'},
   {section:'Operations'},{id:'team',icon:'👥',label:'Team'},{id:'notifications',icon:'🔔',label:'Notifications'},{id:'scorecards',icon:'🏆',label:'Scorecards'},
   {section:'System'},{id:'audit',icon:'📝',label:'Audit Log'},{id:'settings',icon:'⚙️',label:'Settings'},
 ];
-const TITLES = {overview:'Overview',benchmarks:'Benchmarks',traces:'Traces',forecast:'Cost Forecast',optimizer:'Cost Optimizer',estimator:'Cost Estimator',models:'Model Explorer',budgets:'Budgets',costcenters:'Cost Centers',policies:'Policies',approvals:'Approvals',team:'Team',notifications:'Notifications',scorecards:'Agent Scorecards',audit:'Audit Log',settings:'Settings'};
+const TITLES = {overview:'Overview',benchmarks:'Benchmarks',traces:'Traces',feedback:'Feedback & Quality',forecast:'Cost Forecast',optimizer:'Cost Optimizer',estimator:'Cost Estimator',models:'Model Explorer',budgets:'Budgets',costcenters:'Cost Centers',policies:'Policies',approvals:'Approvals',team:'Team',notifications:'Notifications',scorecards:'Agent Scorecards',audit:'Audit Log',settings:'Settings'};
 
 function App(){
   const [tab,setTab]=useState('overview');const [project,setProject]=useState('');
@@ -1041,6 +1118,17 @@ function App(){
   const [user,setUser]=useState(null);
   const [showUserMenu,setShowUserMenu]=useState(false);
   const [showProfile,setShowProfile]=useState(false);
+  const [expanded,setExpanded]=useState({traces:true,Analytics:true,Intelligence:true,Governance:false,Operations:false,System:false});
+  const toggle=(key)=>setExpanded(ex=>({...ex,[key]:!ex[key]}));
+  const selectTab=(id)=>{
+    setTab(id);
+    // Auto-expand parent item and section when clicking links to child tabs
+    const item=NAV.find(n=>n.id===id);
+    if(item&&item.parent) setExpanded(ex=>({...ex,[item.parent]:true}));
+    // Find which section this item belongs to and expand it
+    let currentSection='';
+    for(const n of NAV){if(n.section) currentSection=n.section; else if(n.id===id){setExpanded(ex=>({...ex,[currentSection]:true}));break;}}
+  };
 
   useEffect(()=>{
     // Check auth status
@@ -1078,16 +1166,43 @@ function App(){
     <div className="sidebar">
       <div className="sidebar-header"><h1>🧮 Agent<span>Cost</span></h1><div className="ver">v0.5.0 · Enterprise</div></div>
       <div className="sidebar-nav">
-        {NAV.map((item,i)=>item.section
-          ?<div key={i} className="nav-section">{item.section}</div>
-          :<div key={item.id} className={`nav-item ${tab===item.id?'active':''}`} onClick={()=>setTab(item.id)}>
+        {(()=>{let currentSection='';return NAV.map((item,i)=>{
+          if(item.section){currentSection=item.section;const isExp=expanded[item.section]!==false;
+            return <div key={i} className="nav-section" style={{cursor:'pointer',userSelect:'none',display:'flex',alignItems:'center',justifyContent:'space-between'}} onClick={()=>toggle(item.section)}>
+              <span>{item.section}</span>
+              <span style={{fontSize:'.5rem',color:'var(--text-3)',transition:'transform .2s',transform:isExp?'rotate(90deg)':'rotate(0deg)'}}>▶</span>
+            </div>;}
+          // Hide items when section is collapsed
+          if(!expanded[currentSection]) return null;
+          // Hide children when parent is collapsed
+          if(item.parent && !expanded[item.parent]) return null;
+          // Parent item with toggle
+          if(item.hasChildren){
+            const isExp=expanded[item.id]!==false;
+            return <div key={item.id} className={`nav-item ${tab===item.id?'active':''}`}
+              onClick={()=>{setTab(item.id);}} style={{position:'relative'}}>
+              <span className="icon">{item.icon}</span><span>{item.label}</span>
+              <span onClick={(e)=>{e.stopPropagation();toggle(item.id);}}
+                style={{marginLeft:'auto',fontSize:'.6rem',cursor:'pointer',padding:'0 .3rem',color:'var(--text-3)',transition:'transform .2s',transform:isExp?'rotate(90deg)':'rotate(0deg)'}}>▶</span>
+            </div>;
+          }
+          // Child item (indented)
+          if(item.parent){
+            return <div key={item.id} className={`nav-item ${tab===item.id?'active':''}`}
+              onClick={()=>selectTab(item.id)} style={{paddingLeft:'2.2rem',fontSize:'.78rem'}}>
+              <span className="icon" style={{fontSize:'.85rem'}}>{item.icon}</span><span>{item.label}</span>
+            </div>;
+          }
+          // Normal item
+          return <div key={item.id} className={`nav-item ${tab===item.id?'active':''}`} onClick={()=>selectTab(item.id)}>
             <span className="icon">{item.icon}</span><span>{item.label}</span>
             {item.id==='approvals'&&pending>0&&<span className="badge-count">{pending}</span>}
-          </div>
-        )}
+          </div>;
+        });})()}
       </div>
       <div className="sidebar-footer" style={{position:'relative'}}>
         <div className="status"><div className={`dot ${connected?'':'off'}`}></div><span>{connected?'Connected':'Offline'}</span></div>
+        <div style={{fontSize:'.65rem',color:'var(--text-3)',marginTop:'.4rem',lineHeight:1.3}}>💬 <span style={{cursor:'pointer',textDecoration:'underline',opacity:.7}} onClick={()=>selectTab('feedback')}>Your feedback</span> drives improvement</div>
         {user&&<div style={{marginTop:'.5rem'}}>
           <div className="user-pill" onClick={()=>setShowUserMenu(!showUserMenu)}>
             <div className="avatar">{(user.name||user.email||'?')[0].toUpperCase()}</div>
@@ -1105,7 +1220,7 @@ function App(){
       <div className="main-header">
         <h2>{TITLES[tab]||tab}</h2>
         <div className="controls">
-          {(tab==='overview'||tab==='traces'||tab==='benchmarks'||tab==='forecast'||tab==='optimizer'||tab==='estimator')&&projects.length>0&&<select value={project} onChange={e=>setProject(e.target.value)}>
+          {(tab==='overview'||tab==='traces'||tab==='benchmarks'||tab==='forecast'||tab==='optimizer'||tab==='estimator'||tab==='feedback')&&projects.length>0&&<select value={project} onChange={e=>setProject(e.target.value)}>
             <option value="">All Projects</option>{projects.map(p=><option key={p} value={p}>{p}</option>)}
           </select>}
         </div>
@@ -1114,6 +1229,7 @@ function App(){
         {tab==='overview'&&<Overview project={project}/>}
         {tab==='benchmarks'&&<Benchmarks/>}
         {tab==='traces'&&<Traces project={project}/>}
+        {tab==='feedback'&&<FeedbackView project={project}/>}
         {tab==='forecast'&&<ForecastView project={project}/>}
         {tab==='optimizer'&&<OptimizerView project={project}/>}
         {tab==='estimator'&&<EstimatorView/>}
@@ -1127,6 +1243,13 @@ function App(){
         {tab==='scorecards'&&<Scorecards/>}
         {tab==='audit'&&<Audit/>}
         {tab==='settings'&&<Settings user={user}/>}
+      </div>
+      <div className="feedback-bar">
+        <span>💬 Feedback is integral to AgentCost — your input motivates us for continuous enhancement and improvement</span>
+        <span style={{display:'flex',gap:'.5rem',alignItems:'center'}}>
+          <span className="fb-btn" style={{opacity:.7,fontSize:'.85rem'}} title="Love AgentCost" onClick={()=>{selectTab('feedback')}}>👍</span>
+          <a href="mailto:open@agentcost.in" style={{color:'var(--accent)',textDecoration:'none',fontSize:'.75rem',fontWeight:500}}>Share feedback →</a>
+        </span>
       </div>
     </div>
     {showProfile&&<ProfileModal user={user} onClose={()=>setShowProfile(false)} onSaved={(u)=>{setUser(u);setShowProfile(false);}}/>}

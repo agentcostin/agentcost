@@ -161,6 +161,16 @@ except ImportError:
     pass
 
 
+# ── Feedback (open-source — available in all editions) ───────────────────────
+
+try:
+    from ..feedback.routes import router as feedback_router
+
+    app.include_router(feedback_router)
+except ImportError:
+    pass
+
+
 @app.on_event("startup")
 async def _start_reaction_engine():
     """Start the reaction engine and wire it to the EventBus."""

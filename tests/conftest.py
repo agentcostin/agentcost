@@ -46,6 +46,13 @@ def fresh_test_db(tmp_path):
     except (ImportError, AttributeError):
         pass
 
+    try:
+        from agentcost.feedback import reset_feedback_service
+
+        reset_feedback_service()
+    except (ImportError, AttributeError):
+        pass
+
     yield adapter
 
     reset_db()

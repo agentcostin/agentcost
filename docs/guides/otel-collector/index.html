@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://agentcost.in/docs/guides/autogen/">
+        <link rel="canonical" href="https://agentcost.in/docs/guides/otel-collector/">
       
       
-        <link rel="prev" href="../crewai/">
+        <link rel="prev" href="../exporters/">
       
       
-        <link rel="next" href="../llamaindex/">
+        <link rel="next" href="../self-hosting/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>AutoGen - AgentCost</title>
+        <title>OTel Collector - AgentCost</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#autogen-integration" class="md-skip">
+        <a href="#otel-collector-accept-incoming-spans" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              AutoGen
+              OTel Collector
             
           </span>
         </div>
@@ -1167,37 +1167,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    AutoGen
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../autogen/" class="md-nav__link">
         
   
   
@@ -1213,59 +1186,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-gets-tracked" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Gets Tracked
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1359,10 +1279,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../otel-collector/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OTel Collector
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1378,6 +1325,214 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#if-you-use-traceloop-openllmetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If you use Traceloop / OpenLLMetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-you-use-openinference-arize-phoenix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If you use OpenInference (Arize / Phoenix)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-you-use-any-otel-sdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If you use any OTel SDK
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-api-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct API call
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-attribute-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Attribute Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported Attribute Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#openllmetry-traceloop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenLLMetry / Traceloop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openinference-arize-phoenix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenInference (Arize / Phoenix)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentcost-native" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AgentCost Native
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flat-custom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flat Custom
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-cost-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto Cost Calculation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-llm-spans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-LLM Spans
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1817,10 +1972,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#why-this-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Why This Matters
       
     </span>
   </a>
@@ -1828,10 +1983,132 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Basic Usage
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#if-you-use-traceloop-openllmetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If you use Traceloop / OpenLLMetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-you-use-openinference-arize-phoenix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If you use OpenInference (Arize / Phoenix)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-you-use-any-otel-sdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If you use any OTel SDK
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-api-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct API call
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-attribute-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Attribute Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported Attribute Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#openllmetry-traceloop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenLLMetry / Traceloop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openinference-arize-phoenix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenInference (Arize / Phoenix)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agentcost-native" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AgentCost Native
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flat-custom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flat Custom
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-cost-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto Cost Calculation
       
     </span>
   </a>
@@ -1839,10 +2116,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-gets-tracked" class="md-nav__link">
+  <a href="#project-mapping" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Gets Tracked
+        Project Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-llm-spans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-LLM Spans
       
     </span>
   </a>
@@ -1869,39 +2179,256 @@
   
 
 
-<h1 id="autogen-integration">AutoGen Integration</h1>
-<p>Track costs for AutoGen multi-agent conversations.</p>
-<h2 id="installation">Installation</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>agentcostin<span class="w"> </span>pyautogen
+<h1 id="otel-collector-accept-incoming-spans">OTel Collector — Accept Incoming Spans</h1>
+<p>AgentCost can accept incoming OpenTelemetry spans, not just export them. Teams with existing OTel instrumentation — Traceloop, OpenLLMetry, OpenInference, or custom — can send spans to AgentCost without re-instrumenting their applications.</p>
+<p>LLM spans are auto-detected. Cost is auto-calculated from 2,610+ model pricing. Non-LLM spans are silently skipped.</p>
+<h2 id="why-this-matters">Why This Matters</h2>
+<p>Most teams already have OTel instrumentation. Adding AgentCost shouldn't mean ripping that out or adding a second SDK. With the OTel collector, you change one environment variable and AgentCost starts tracking your LLM costs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Before: spans go to Jaeger</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://jaeger:4318
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># After: spans go to AgentCost (which can also forward to Jaeger)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://agentcost:8100
 </code></pre></div>
-<h2 id="basic-usage">Basic Usage</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">autogen</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssistantAgent</span><span class="p">,</span> <span class="n">UserProxyAgent</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk.integrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">autogen_callback</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">callback</span> <span class="o">=</span> <span class="n">autogen_callback</span><span class="p">(</span><span class="s2">&quot;autogen-project&quot;</span><span class="p">)</span>
+<p>Zero code changes. Zero re-instrumentation.</p>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="if-you-use-traceloop-openllmetry">If you use Traceloop / OpenLLMetry</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">traceloop.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Traceloop</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Just point at AgentCost</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">Traceloop</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">exporter_endpoint</span><span class="o">=</span><span class="s2">&quot;http://localhost:8100&quot;</span><span class="p">)</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">assistant</span> <span class="o">=</span> <span class="n">AssistantAgent</span><span class="p">(</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">llm_config</span><span class="o">=</span><span class="p">{</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="s2">&quot;callbacks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">callback</span><span class="p">],</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="p">},</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">user_proxy</span> <span class="o">=</span> <span class="n">UserProxyAgent</span><span class="p">(</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="s2">&quot;user_proxy&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">human_input_mode</span><span class="o">=</span><span class="s2">&quot;NEVER&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">max_consecutive_auto_reply</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">user_proxy</span><span class="o">.</span><span class="n">initiate_chat</span><span class="p">(</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="n">assistant</span><span class="p">,</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Write a Python function to calculate Fibonacci numbers.&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Your existing LLM calls are now cost-tracked automatically</span>
 </code></pre></div>
-<h2 id="what-gets-tracked">What Gets Tracked</h2>
-<p>Every LLM call within the AutoGen conversation is captured with full cost attribution to the specific agent that made the call.</p>
-<p>View results: <code>agentcost dashboard</code></p>
+<h3 id="if-you-use-openinference-arize-phoenix">If you use OpenInference (Arize / Phoenix)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry.exporter.otlp.proto.http.trace_exporter</span><span class="w"> </span><span class="kn">import</span> <span class="n">OTLPSpanExporter</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry.sdk.trace.export</span><span class="w"> </span><span class="kn">import</span> <span class="n">BatchSpanProcessor</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">exporter</span> <span class="o">=</span> <span class="n">OTLPSpanExporter</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;http://localhost:8100/v1/traces&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Add to your existing tracer provider</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">provider</span><span class="o">.</span><span class="n">add_span_processor</span><span class="p">(</span><span class="n">BatchSpanProcessor</span><span class="p">(</span><span class="n">exporter</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="if-you-use-any-otel-sdk">If you use any OTel SDK</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Environment variable — works with any OTel-instrumented app</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://localhost:8100
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>http/json
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>python<span class="w"> </span>my_app.py
+</code></pre></div>
+<h3 id="direct-api-call">Direct API call</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8100/v1/traces<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s1">    &quot;resourceSpans&quot;: [{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s1">      &quot;resource&quot;: {</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">        &quot;attributes&quot;: [{&quot;key&quot;: &quot;service.name&quot;, &quot;value&quot;: {&quot;stringValue&quot;: &quot;my-app&quot;}}]</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">      },</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">      &quot;scopeSpans&quot;: [{</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">        &quot;spans&quot;: [{</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">          &quot;traceId&quot;: &quot;abc123&quot;,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">          &quot;name&quot;: &quot;openai.chat&quot;,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">          &quot;startTimeUnixNano&quot;: 1710000000000000000,</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">          &quot;endTimeUnixNano&quot;: 1710000001500000000,</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">          &quot;attributes&quot;: [</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">            {&quot;key&quot;: &quot;gen_ai.request.model&quot;, &quot;value&quot;: {&quot;stringValue&quot;: &quot;gpt-4o&quot;}},</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">            {&quot;key&quot;: &quot;gen_ai.system&quot;, &quot;value&quot;: {&quot;stringValue&quot;: &quot;openai&quot;}},</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s1">            {&quot;key&quot;: &quot;gen_ai.usage.prompt_tokens&quot;, &quot;value&quot;: {&quot;intValue&quot;: 150}},</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s1">            {&quot;key&quot;: &quot;gen_ai.usage.completion_tokens&quot;, &quot;value&quot;: {&quot;intValue&quot;: 80}}</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s1">          ]</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s1">        }]</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s1">      }]</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="s1">    }]</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>Response:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span><span class="nt">&quot;accepted&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">}</span>
+</code></pre></div></p>
+<h2 id="supported-attribute-conventions">Supported Attribute Conventions</h2>
+<p>AgentCost understands four attribute naming conventions. You don't need to change yours — it auto-detects the format.</p>
+<h3 id="openllmetry-traceloop">OpenLLMetry / Traceloop</h3>
+<p>The most popular OTel LLM instrumentation library.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Maps to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gen_ai.system</code></td>
+<td>provider</td>
+</tr>
+<tr>
+<td><code>gen_ai.request.model</code></td>
+<td>model</td>
+</tr>
+<tr>
+<td><code>gen_ai.response.model</code></td>
+<td>model (fallback)</td>
+</tr>
+<tr>
+<td><code>gen_ai.usage.prompt_tokens</code></td>
+<td>input_tokens</td>
+</tr>
+<tr>
+<td><code>gen_ai.usage.completion_tokens</code></td>
+<td>output_tokens</td>
+</tr>
+</tbody>
+</table>
+<h3 id="openinference-arize-phoenix">OpenInference (Arize / Phoenix)</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Maps to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>llm.model_name</code></td>
+<td>model</td>
+</tr>
+<tr>
+<td><code>llm.provider</code></td>
+<td>provider</td>
+</tr>
+<tr>
+<td><code>llm.token_count.prompt</code></td>
+<td>input_tokens</td>
+</tr>
+<tr>
+<td><code>llm.token_count.completion</code></td>
+<td>output_tokens</td>
+</tr>
+</tbody>
+</table>
+<h3 id="agentcost-native">AgentCost Native</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Maps to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>llm.model</code></td>
+<td>model</td>
+</tr>
+<tr>
+<td><code>llm.provider</code></td>
+<td>provider</td>
+</tr>
+<tr>
+<td><code>llm.tokens.input</code></td>
+<td>input_tokens</td>
+</tr>
+<tr>
+<td><code>llm.tokens.output</code></td>
+<td>output_tokens</td>
+</tr>
+<tr>
+<td><code>llm.cost</code></td>
+<td>cost (pre-calculated)</td>
+</tr>
+<tr>
+<td><code>llm.project</code></td>
+<td>project</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flat-custom">Flat Custom</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Maps to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>model</td>
+</tr>
+<tr>
+<td><code>provider</code></td>
+<td>provider</td>
+</tr>
+<tr>
+<td><code>input_tokens</code></td>
+<td>input_tokens</td>
+</tr>
+<tr>
+<td><code>output_tokens</code></td>
+<td>output_tokens</td>
+</tr>
+<tr>
+<td><code>cost</code></td>
+<td>cost</td>
+</tr>
+</tbody>
+</table>
+<h2 id="auto-cost-calculation">Auto Cost Calculation</h2>
+<p>When a span includes token counts but no cost, AgentCost automatically calculates cost using its vendored pricing database of 2,610+ models from 40+ providers. No external API calls needed.</p>
+<p>If the span already includes a cost attribute (<code>llm.cost</code>, <code>gen_ai.cost</code>, or <code>cost</code>), the pre-calculated value is preserved.</p>
+<h2 id="project-mapping">Project Mapping</h2>
+<p>AgentCost maps incoming spans to projects using this priority:</p>
+<ol>
+<li><code>llm.project</code> attribute (AgentCost native)</li>
+<li><code>project</code> attribute (flat custom)</li>
+<li><code>service.name</code> resource attribute (OTel standard)</li>
+<li><code>"default"</code> (fallback)</li>
+</ol>
+<p>This means your OTel <code>service.name</code> automatically becomes the AgentCost project — no extra configuration.</p>
+<h2 id="endpoints">Endpoints</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/v1/traces</code></td>
+<td>Standard OTLP/HTTP ingest</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/v1/otel/traces</code></td>
+<td>AgentCost alias</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/v1/otel/status</code></td>
+<td>Collector status and supported conventions</td>
+</tr>
+</tbody>
+</table>
+<h2 id="monitoring">Monitoring</h2>
+<p>Check the collector status:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>http://localhost:8100/v1/otel/status
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;endpoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/v1/traces&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/v1/otel/traces&quot;</span><span class="p">],</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OTLP/HTTP JSON&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">&quot;supported_conventions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="s2">&quot;OpenLLMetry/Traceloop (gen_ai.*)&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="s2">&quot;OpenInference (llm.*)&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="s2">&quot;AgentCost native (llm.model, llm.cost)&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="s2">&quot;Flat attributes (model, input_tokens, output_tokens)&quot;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="nt">&quot;auto_cost_calculation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="nt">&quot;models_supported&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2,610+&quot;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="non-llm-spans">Non-LLM Spans</h2>
+<p>The collector silently skips spans that don't have a model attribute. HTTP spans, database spans, queue spans — they're all ignored. Only LLM-related spans are ingested as trace events. This means you can point your full OTel pipeline at AgentCost without worrying about noise.</p>
 
 
 

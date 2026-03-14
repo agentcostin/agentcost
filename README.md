@@ -234,6 +234,24 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:8100
 # Non-LLM spans (HTTP, DB, etc.) are silently skipped
 ```
 
+## MCP Server (Model Context Protocol)
+
+AgentCost runs as an MCP server — Claude Desktop, Cursor, VS Code, and any MCP-compatible agent can query your cost data, check budgets, get optimization recommendations, and manage prompts directly.
+
+```json
+// Claude Desktop or Cursor config
+{
+  "mcpServers": {
+    "agentcost": {
+      "command": "python",
+      "args": ["-m", "agentcost.mcp"]
+    }
+  }
+}
+```
+
+14 tools available: cost summary, cost by model/project, search traces, check/set budgets, optimization recommendations, cost estimation, feedback, prompt resolution, and more. See the [MCP Server Guide](https://agentcost.in/docs/guides/mcp-server/).
+
 ## Plugin System
 
 Extend AgentCost with plugins:

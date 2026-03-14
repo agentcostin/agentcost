@@ -36,7 +36,7 @@ Portkey is the closest competitor to AgentCost in the AI infrastructure space. B
 | **Anomaly Detection** | Basic alerting | ✅ ML-based cost/latency/error spike detection |
 | **Audit Logs** | ✅ | ✅ Hash-chained compliance trail |
 | **SSO/RBAC** | ✅ | ✅ Any OIDC/SAML provider |
-| **MCP Gateway** | ✅ Tool access control | ❌ (planned) |
+| **MCP Gateway** | ✅ Tool access control, auth, observability | ✅ MCP server with 14 cost governance tools |
 | **Prompt Management** | ✅ Versioning, templates | ✅ Versioning, deployment, cost-per-version analytics |
 | **OTel Support** | ✅ | ✅ Bidirectional — export to OTel/Prometheus + accept incoming OTLP spans |
 | **Self-Hosting** | ✅ Open-source gateway (MIT) | ✅ Docker Compose, single command |
@@ -50,7 +50,7 @@ Portkey is the closest competitor to AgentCost in the AI infrastructure space. B
 
 **Provider coverage for routing.** Portkey's gateway supports 200+ LLMs and 45+ providers with advanced routing: conditional logic, weighted load balancing, and fallback chains. AgentCost's gateway supports OpenAI, Anthropic, and Ollama with automatic model-prefix routing — functional but less comprehensive.
 
-**MCP Gateway.** Portkey recently launched an MCP Gateway for controlling tool access in agentic workflows. AgentCost has MCP support planned but not yet implemented.
+**MCP Gateway.** Portkey's MCP Gateway provides authentication, access control, and observability for MCP server traffic across an organization. AgentCost takes a different approach — it exposes itself as an MCP server with 14 cost governance tools, so Claude Desktop, Cursor, and custom agents can query cost analytics, check budgets, get optimization recommendations, and manage prompts directly via MCP. Portkey governs MCP tool access; AgentCost makes cost governance MCP-native.
 
 **Prompt management.** Both platforms offer prompt versioning. AgentCost adds environment-based deployment and cost-per-version analytics — linking prompt changes directly to cost impact.
 

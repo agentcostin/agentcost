@@ -61,6 +61,7 @@ nav:
     - Plugins: guides/plugins.md
     - Exporters: guides/exporters.md
     - OTel Collector: guides/otel-collector.md
+    - MCP Server: guides/mcp-server.md
     - Self-Hosting: guides/self-hosting.md
     - Air-Gapped Deployment: guides/air-gapped.md
     - Integration into Existing Projects: guides/agentcost-integration-into-existing-projects.md

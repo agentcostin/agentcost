@@ -900,9 +900,69 @@ async def seed_sample_data(
             count += 1
             total_cost += cost
 
+    # ── Seed feedback on ~30% of traces ──────────────────────────
+    feedback_count = 0
+    try:
+        from ..feedback import get_feedback_service
+
+        fb_svc = get_feedback_service()
+        recent = store.get_traces(limit=min(count, 500))
+        comments_pos = [
+            "Accurate and helpful",
+            "Great response",
+            "Exactly what I needed",
+            "Fast and correct",
+            "Well structured answer",
+            "",
+            "",
+            "",
+        ]
+        comments_neg = [
+            "Hallucinated a date",
+            "Too verbose",
+            "Missed the point",
+            "Incorrect information",
+            "Off topic",
+            "",
+            "",
+        ]
+        tags_neg = [
+            ["hallucination"],
+            ["verbose"],
+            ["off-topic"],
+            ["inaccurate"],
+            [],
+            [],
+        ]
+        sources = ["user", "user", "user", "dashboard", "automated", "human-review"]
+        for trace in recent:
+            if _rand.random() < 0.30:
+                # 75% positive, 15% negative, 10% neutral
+                r = _rand.random()
+                if r < 0.75:
+                    score = 1
+                    comment = _rand.choice(comments_pos)
+                elif r < 0.90:
+                    score = -1
+                    comment = _rand.choice(comments_neg)
+                else:
+                    score = 0
+                    comment = ""
+                fb_svc.submit(
+                    trace["trace_id"],
+                    score=score,
+                    comment=comment,
+                    source=_rand.choice(sources),
+                    tags=_rand.choice(tags_neg) if score == -1 else [],
+                )
+                feedback_count += 1
+    except Exception as e:
+        logger.debug("Feedback seeding skipped: %s", e)
+
     return {
         "status": "ok",
         "seeded": count,
+        "feedback_seeded": feedback_count,
         "days": days,
         "total_cost": round(total_cost, 2),
         "cleared": clear,

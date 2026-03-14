@@ -992,6 +992,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/semantic-caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/case-study/" class="md-nav__link">
         
   
@@ -1140,34 +1196,6 @@
     
   
     Heartbeat Monitoring
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../guides/semantic-caching/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Semantic Caching
   
 
     
@@ -1924,7 +1952,7 @@ Langfuse tells you <em>what happened</em>. AgentCost tells you <em>what to do ab
 <tr>
 <td><strong>LLM-as-Judge Evals</strong></td>
 <td>✅ Annotation queues, scoring</td>
-<td>❌</td>
+<td>✅ User feedback (thumbs up/down), per-model and per-prompt quality analytics</td>
 </tr>
 <tr>
 <td><strong>AI Gateway / Proxy</strong></td>
@@ -1999,7 +2027,7 @@ Langfuse tells you <em>what happened</em>. AgentCost tells you <em>what to do ab
 </tbody>
 </table>
 <h2 id="where-langfuse-wins">Where Langfuse Wins</h2>
-<p><strong>Observability depth.</strong> Langfuse has the most mature tracing system in the open-source LLM space. Its trace → span → generation hierarchy provides deep visibility into complex agent workflows. The annotation queues, LLM-as-judge evaluations, and prompt playground are genuinely best-in-class.</p>
+<p><strong>Observability depth.</strong> Langfuse has the most mature tracing system in the open-source LLM space. Its trace → span → generation hierarchy provides deep visibility into complex agent workflows. The annotation queues, LLM-as-judge evaluations, and prompt playground are genuinely best-in-class. AgentCost now supports user feedback (thumbs up/down with comments and tags) on traces, with quality analytics per model and per prompt version — but Langfuse's annotation queues and LLM-as-judge pipelines are more comprehensive.</p>
 <p><strong>Integration ecosystem.</strong> With 50+ framework integrations and native OpenTelemetry support, Langfuse connects to virtually every LLM stack. The OpenAI SDK auto-instrumentation means zero-code tracing for many teams.</p>
 <p><strong>Community and ecosystem.</strong> Langfuse has the largest open-source community in the LLM observability space. After being acquired by ClickHouse in January 2026, it has significant resources behind its development.</p>
 <p><strong>Prompt management.</strong> Full prompt versioning, A/B testing, and a playground for iterating on prompts. AgentCost now offers prompt versioning with environment-based deployment and cost-per-version analytics, though Langfuse's playground and A/B testing are more mature.</p>

@@ -1003,6 +1003,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/semantic-caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/case-study/" class="md-nav__link">
         
   
@@ -1151,34 +1207,6 @@
     
   
     Heartbeat Monitoring
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../guides/semantic-caching/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Semantic Caching
   
 
     
@@ -1916,7 +1944,7 @@ Helicone shows you the cost dashboard. AgentCost shows you the dashboard <em>and
 <tr>
 <td><strong>Response Caching</strong></td>
 <td>✅ Exact + semantic caching</td>
-<td>✅ Exact-match with cost savings tracking</td>
+<td>✅ Exact-match + semantic caching with cost savings tracking</td>
 </tr>
 <tr>
 <td><strong>Cost Forecasting</strong></td>
@@ -2037,7 +2065,7 @@ Helicone shows you the cost dashboard. AgentCost shows you the dashboard <em>and
 </table>
 <h2 id="where-helicone-wins">Where Helicone Wins</h2>
 <p><strong>Gateway performance.</strong> Helicone's Rust-based gateway adds only 8ms P50 latency — significantly faster than any Python-based proxy. For latency-sensitive applications making thousands of calls per second, this matters.</p>
-<p><strong>Semantic caching.</strong> Helicone caches not just identical requests but semantically similar ones using embedding-based matching. AgentCost currently offers exact-match caching. For workloads with many near-duplicate prompts, Helicone's semantic cache delivers better hit rates.</p>
+<p><strong>Semantic caching.</strong> Both platforms now offer semantic caching — matching similar prompts, not just identical ones. Helicone uses cloud-based embedding matching. AgentCost uses n-gram Jaccard similarity (zero dependencies, fully local) with optional sentence-transformers upgrade for higher quality. AgentCost's approach works in air-gapped environments since prompts never leave your infrastructure.</p>
 <p><strong>Simpler setup for pure observability.</strong> If you only need cost visibility and a gateway, Helicone's one-line base URL change is hard to beat for simplicity. No SDK integration, no wrapper — just change the URL and you're logging.</p>
 <p><strong>Prompt management.</strong> Both platforms now offer prompt versioning. AgentCost adds environment-based deployment (dev/staging/production) and automatic cost-per-version analytics.</p>
 <p><strong>Broader model coverage for gateway routing.</strong> Helicone's gateway supports 100+ providers with intelligent failover and circuit breaking.</p>

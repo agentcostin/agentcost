@@ -171,6 +171,16 @@ except ImportError:
     pass
 
 
+# ── OTel Collector (open-source — accept incoming OTLP spans) ────────────────
+
+try:
+    from ..otel.routes import router as otel_collector_router
+
+    app.include_router(otel_collector_router)
+except ImportError:
+    pass
+
+
 @app.on_event("startup")
 async def _start_reaction_engine():
     """Start the reaction engine and wire it to the EventBus."""

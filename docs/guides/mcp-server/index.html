@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://agentcost.in/docs/compare/portkey/">
+        <link rel="canonical" href="https://agentcost.in/docs/guides/mcp-server/">
       
       
-        <link rel="prev" href="../helicone/">
+        <link rel="prev" href="../otel-collector/">
       
       
-        <link rel="next" href="../litellm/">
+        <link rel="next" href="../self-hosting/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>vs Portkey - AgentCost</title>
+        <title>MCP Server - AgentCost</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#agentcost-vs-portkey" class="md-skip">
+        <a href="#mcp-server" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              vs Portkey
+              MCP Server
             
           </span>
         </div>
@@ -244,13 +244,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../compare/" class="md-tabs__link">
           
   
   
@@ -286,11 +284,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../guides/dashboard/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../dashboard/" class="md-tabs__link">
           
   
   
@@ -456,31 +456,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -498,7 +495,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -516,7 +513,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../compare/" class="md-nav__link">
         
   
   
@@ -544,7 +541,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../langfuse/" class="md-nav__link">
+      <a href="../../compare/langfuse/" class="md-nav__link">
         
   
   
@@ -572,7 +569,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../helicone/" class="md-nav__link">
+      <a href="../../compare/helicone/" class="md-nav__link">
         
   
   
@@ -597,37 +594,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    vs Portkey
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../compare/portkey/" class="md-nav__link">
         
   
   
@@ -643,92 +613,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#how-they-compare" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How They Compare
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-portkey-wins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where Portkey Wins
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-agentcost-wins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where AgentCost Wins
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-governance-gap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Governance Gap
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#can-you-use-both" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Can You Use Both?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Start
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -741,7 +625,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../litellm/" class="md-nav__link">
+      <a href="../../compare/litellm/" class="md-nav__link">
         
   
   
@@ -890,28 +774,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -929,7 +816,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -947,7 +834,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/dashboard/" class="md-nav__link">
+      <a href="../dashboard/" class="md-nav__link">
         
   
   
@@ -975,7 +862,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/prompts/" class="md-nav__link">
+      <a href="../prompts/" class="md-nav__link">
         
   
   
@@ -1003,7 +890,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/feedback/" class="md-nav__link">
+      <a href="../feedback/" class="md-nav__link">
         
   
   
@@ -1031,7 +918,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/semantic-caching/" class="md-nav__link">
+      <a href="../semantic-caching/" class="md-nav__link">
         
   
   
@@ -1059,7 +946,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/case-study/" class="md-nav__link">
+      <a href="../case-study/" class="md-nav__link">
         
   
   
@@ -1087,7 +974,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/cursor-costs/" class="md-nav__link">
+      <a href="../cursor-costs/" class="md-nav__link">
         
   
   
@@ -1115,7 +1002,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/intelligence/" class="md-nav__link">
+      <a href="../intelligence/" class="md-nav__link">
         
   
   
@@ -1143,7 +1030,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/goals/" class="md-nav__link">
+      <a href="../goals/" class="md-nav__link">
         
   
   
@@ -1171,7 +1058,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/templates/" class="md-nav__link">
+      <a href="../templates/" class="md-nav__link">
         
   
   
@@ -1199,7 +1086,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/heartbeat/" class="md-nav__link">
+      <a href="../heartbeat/" class="md-nav__link">
         
   
   
@@ -1227,7 +1114,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/langchain/" class="md-nav__link">
+      <a href="../langchain/" class="md-nav__link">
         
   
   
@@ -1255,7 +1142,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/crewai/" class="md-nav__link">
+      <a href="../crewai/" class="md-nav__link">
         
   
   
@@ -1283,7 +1170,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/autogen/" class="md-nav__link">
+      <a href="../autogen/" class="md-nav__link">
         
   
   
@@ -1311,7 +1198,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/llamaindex/" class="md-nav__link">
+      <a href="../llamaindex/" class="md-nav__link">
         
   
   
@@ -1339,7 +1226,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/plugins/" class="md-nav__link">
+      <a href="../plugins/" class="md-nav__link">
         
   
   
@@ -1367,7 +1254,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/exporters/" class="md-nav__link">
+      <a href="../exporters/" class="md-nav__link">
         
   
   
@@ -1395,7 +1282,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/otel-collector/" class="md-nav__link">
+      <a href="../otel-collector/" class="md-nav__link">
         
   
   
@@ -1420,10 +1307,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../guides/mcp-server/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1439,6 +1353,275 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why MCP?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claude-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Desktop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cursor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-access-sse-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Access (SSE Transport)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-stdio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone (stdio)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-analytics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Analytics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#budgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Budgets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intelligence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-conversations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Conversations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Conversations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-much-am-i-spending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "How much am I spending?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-model-should-i-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Which model should I use?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-a-budget-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Set a budget alert"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-before-i-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Check before I call"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1451,7 +1634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/self-hosting/" class="md-nav__link">
+      <a href="../self-hosting/" class="md-nav__link">
         
   
   
@@ -1479,7 +1662,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/air-gapped/" class="md-nav__link">
+      <a href="../air-gapped/" class="md-nav__link">
         
   
   
@@ -1507,7 +1690,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/agentcost-integration-into-existing-projects/" class="md-nav__link">
+      <a href="../agentcost-integration-into-existing-projects/" class="md-nav__link">
         
   
   
@@ -1878,54 +2061,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-they-compare" class="md-nav__link">
+  <a href="#why-mcp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How They Compare
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-portkey-wins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where Portkey Wins
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-agentcost-wins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where AgentCost Wins
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-governance-gap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Governance Gap
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#can-you-use-both" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Can You Use Both?
+        Why MCP?
       
     </span>
   </a>
@@ -1937,6 +2076,233 @@
     <span class="md-ellipsis">
       
         Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claude-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Desktop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cursor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-access-sse-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Access (SSE Transport)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-stdio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone (stdio)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-analytics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Analytics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#budgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Budgets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intelligence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-conversations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Conversations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Conversations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-much-am-i-spending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "How much am I spending?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-model-should-i-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Which model should I use?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-a-budget-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Set a budget alert"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-before-i-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Check before I call"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
       
     </span>
   </a>
@@ -1963,261 +2329,264 @@
   
 
 
-<h1 id="agentcost-vs-portkey">AgentCost vs Portkey</h1>
-<p><strong>Last updated:</strong> March 2026</p>
-<p>Portkey is the closest competitor to AgentCost in the AI infrastructure space. Both offer AI gateways, cost tracking, and some level of governance. But they differ fundamentally in scope: Portkey is a gateway-first platform that added governance features. AgentCost is a governance-first platform with a gateway. This distinction shapes what each tool does best.</p>
-<div class="admonition info">
-<p class="admonition-title">TL;DR</p>
-<p><strong>Portkey</strong> = production AI gateway with routing, guardrails, and virtual key budgeting.
-<strong>AgentCost</strong> = cost governance platform with forecasting, policy engine, approval workflows, and smart routing.
-Portkey governs at the <em>gateway level</em> (routing, rate limits, key budgets). AgentCost governs at the <em>organizational level</em> (policies, approvals, forecasting, scorecards).</p>
-</div>
-<h2 id="how-they-compare">How They Compare</h2>
-<table>
-<thead>
-<tr>
-<th>Capability</th>
-<th>Portkey</th>
-<th>AgentCost</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>AI Gateway / Proxy</strong></td>
-<td>✅ Rust-based, &lt;1ms overhead, 200+ LLMs</td>
-<td>✅ Python/FastAPI, OpenAI-compatible</td>
-</tr>
-<tr>
-<td><strong>Model Routing</strong></td>
-<td>✅ Conditional, load-balanced, fallback chains</td>
-<td>✅ Complexity-based (SIMPLE/MEDIUM/COMPLEX/REASONING)</td>
-</tr>
-<tr>
-<td><strong>Response Caching</strong></td>
-<td>✅ Exact + semantic caching</td>
-<td>✅ Exact-match + semantic caching with cost savings tracking</td>
-</tr>
-<tr>
-<td><strong>Guardrails</strong></td>
-<td>✅ 50+ guardrails (incl. Prisma AIRS)</td>
-<td>✅ Policy engine with JSON rules</td>
-</tr>
-<tr>
-<td><strong>Model Pricing DB</strong></td>
-<td>✅ 2,300+ models</td>
-<td>✅ 2,610+ models from 83+ providers</td>
-</tr>
-<tr>
-<td><strong>Cost Tracking</strong></td>
-<td>✅ Per-request, per-key</td>
-<td>✅ Per-request, per-project, per-model</td>
-</tr>
-<tr>
-<td><strong>Virtual Key Budgets</strong></td>
-<td>✅ Per-key spending limits</td>
-<td>✅ Per-project, per-team, per-goal budgets</td>
-</tr>
-<tr>
-<td><strong>Cost Forecasting</strong></td>
-<td>❌</td>
-<td>✅ Linear, EMA, ensemble — predicts budget exhaustion</td>
-</tr>
-<tr>
-<td><strong>Budget Enforcement with Auto-Downgrade</strong></td>
-<td>❌</td>
-<td>✅ ALLOW → WARN → DOWNGRADE → BLOCK pipeline</td>
-</tr>
-<tr>
-<td><strong>Complexity-Based Prompt Classification</strong></td>
-<td>❌</td>
-<td>✅ Auto-classify and route by prompt complexity</td>
-</tr>
-<tr>
-<td><strong>Policy Engine</strong></td>
-<td>❌</td>
-<td>✅ JSON rules with priority evaluation and dry-run</td>
-</tr>
-<tr>
-<td><strong>Approval Workflows</strong></td>
-<td>❌</td>
-<td>✅ Human-in-the-loop for policy exceptions</td>
-</tr>
-<tr>
-<td><strong>Event-Driven Reactions</strong></td>
-<td>❌</td>
-<td>✅ 11 action types, YAML-configurable, cooldowns</td>
-</tr>
-<tr>
-<td><strong>Agent Scorecards</strong></td>
-<td>❌</td>
-<td>✅ Monthly A–F grading with optimization recommendations</td>
-</tr>
-<tr>
-<td><strong>Goal-Aware Cost Attribution</strong></td>
-<td>❌</td>
-<td>✅ Map spend to business objectives with hierarchical rollup</td>
-</tr>
-<tr>
-<td><strong>Governance Templates</strong></td>
-<td>❌</td>
-<td>✅ Pre-built profiles (startup, enterprise, soc2, agency)</td>
-</tr>
-<tr>
-<td><strong>Heartbeat Agent Monitoring</strong></td>
-<td>❌</td>
-<td>✅ Per-cycle cost tracking with anomaly detection</td>
-</tr>
-<tr>
-<td><strong>Cost Optimizer</strong></td>
-<td>❌</td>
-<td>✅ Model downgrade recommendations with savings estimates</td>
-</tr>
-<tr>
-<td><strong>Chargeback Reports</strong></td>
-<td>❌</td>
-<td>✅ Cost center allocations, per-team spend</td>
-</tr>
-<tr>
-<td><strong>CI/CD Cost Checks</strong></td>
-<td>❌</td>
-<td>✅ GitHub Actions to fail builds on cost regression</td>
-</tr>
-<tr>
-<td><strong>Anomaly Detection</strong></td>
-<td>Basic alerting</td>
-<td>✅ ML-based cost/latency/error spike detection</td>
-</tr>
-<tr>
-<td><strong>Audit Logs</strong></td>
-<td>✅</td>
-<td>✅ Hash-chained compliance trail</td>
-</tr>
-<tr>
-<td><strong>SSO/RBAC</strong></td>
-<td>✅</td>
-<td>✅ Any OIDC/SAML provider</td>
-</tr>
-<tr>
-<td><strong>MCP Gateway</strong></td>
-<td>✅ Tool access control, auth, observability</td>
-<td>✅ MCP server with 14 cost governance tools</td>
-</tr>
-<tr>
-<td><strong>Prompt Management</strong></td>
-<td>✅ Versioning, templates</td>
-<td>✅ Versioning, deployment, cost-per-version analytics</td>
-</tr>
-<tr>
-<td><strong>OTel Support</strong></td>
-<td>✅</td>
-<td>✅ Bidirectional — export to OTel/Prometheus + accept incoming OTLP spans</td>
-</tr>
-<tr>
-<td><strong>Self-Hosting</strong></td>
-<td>✅ Open-source gateway (MIT)</td>
-<td>✅ Docker Compose, single command</td>
-</tr>
-<tr>
-<td><strong>Pricing</strong></td>
-<td>Free (10K logs) → $49/mo → Enterprise</td>
-<td>Free (MIT core), Enterprise BSL 1.1</td>
-</tr>
-</tbody>
-</table>
-<h2 id="where-portkey-wins">Where Portkey Wins</h2>
-<p><strong>Gateway performance and scale.</strong> Portkey processes 500B+ tokens and 125M requests/day across 24,000+ organizations. Its Rust-based gateway adds less than 1ms latency. For teams that need a high-performance, battle-tested proxy handling millions of requests daily, Portkey's infrastructure is proven at a scale AgentCost has not yet reached.</p>
-<p><strong>Guardrails breadth.</strong> Portkey offers 50+ built-in guardrails including integration with Palo Alto Networks' Prisma AIRS for enterprise security. AgentCost's policy engine is flexible (JSON rules can express any condition) but requires manual rule creation rather than offering a library of pre-built guardrails.</p>
-<p><strong>Provider coverage for routing.</strong> Portkey's gateway supports 200+ LLMs and 45+ providers with advanced routing: conditional logic, weighted load balancing, and fallback chains. AgentCost's gateway supports OpenAI, Anthropic, and Ollama with automatic model-prefix routing — functional but less comprehensive.</p>
-<p><strong>MCP Gateway.</strong> Portkey's MCP Gateway provides authentication, access control, and observability for MCP server traffic across an organization. AgentCost takes a different approach — it exposes itself as an MCP server with 14 cost governance tools, so Claude Desktop, Cursor, and custom agents can query cost analytics, check budgets, get optimization recommendations, and manage prompts directly via MCP. Portkey governs MCP tool access; AgentCost makes cost governance MCP-native.</p>
-<p><strong>Prompt management.</strong> Both platforms offer prompt versioning. AgentCost adds environment-based deployment and cost-per-version analytics — linking prompt changes directly to cost impact.</p>
-<p><strong>Enterprise backing.</strong> Portkey's $15M Series A (February 2026), Gartner Cool Vendor recognition, and 24,000+ organizations provide enterprise credibility that early-stage tools cannot match.</p>
-<h2 id="where-agentcost-wins">Where AgentCost Wins</h2>
-<p><strong>Cost forecasting.</strong> This is a capability no competitor offers — not Portkey, not Langfuse, not Helicone, not Braintrust. AgentCost predicts future spending using three methods (linear regression, exponential moving average, and ensemble averaging) and tells you the exact date your budget will be exhausted. According to the Mavvrik AI Cost Governance Report, only 15% of companies can forecast AI costs within 10% accuracy. AgentCost solves this directly.</p>
-<p><strong>Organizational-level budget enforcement.</strong> Portkey offers virtual key budgets — spending limits per API key. AgentCost operates at a higher level: budgets per project, per team, per cost center, and per business goal, with a four-stage enforcement pipeline (ALLOW → WARN → auto-DOWNGRADE → BLOCK). The auto-downgrade capability is unique: when a project hits 90% of its budget, AgentCost automatically routes requests to cheaper models rather than simply blocking them.</p>
-<p><strong>Complexity-based routing.</strong> Portkey routes based on conditions you define (model, headers, metadata). AgentCost's complexity router analyzes each prompt and classifies it automatically as SIMPLE, MEDIUM, COMPLEX, or REASONING — then routes to the cheapest model that can handle that complexity level. The user does not need to define routing rules; the system makes intelligent decisions based on prompt analysis. This typically saves 40-60% by ensuring simple queries never touch premium models.</p>
-<p><strong>Policy engine with approval workflows.</strong> AgentCost's policy engine evaluates JSON rules in priority order with conditions on model, cost, project, and provider. When a request violates a policy, it can block the request, log it, or route it to an approval queue where a human must approve or deny the exception. Portkey's guardrails block or allow — there is no approval workflow.</p>
-<p><strong>Event-driven reactions.</strong> The reactions engine is a complete event-driven automation system: when budget-exceeded fires, execute notify → log → block-calls → suspend-agent, with a 30-minute cooldown and escalation after 2 hours if unresolved. Fifteen default reaction rules ship out of the box, configurable via YAML. Portkey has alerting but not programmable event-driven automation.</p>
-<p><strong>Agent scorecards.</strong> Monthly agent grading (A through F) with specific optimization recommendations. For organizations managing 10-50+ AI agents, this is how you identify which agents are cost-effective and which should be decommissioned — the "HR for AI agents" use case.</p>
-<p><strong>Goal-aware cost attribution.</strong> Tag any LLM call to a business goal. Goals form a hierarchy (goal → parent → grandparent) with cost rollup, enabling "how much did achieving Goal X cost?" reporting. No competitor offers this.</p>
-<p><strong>Governance templates.</strong> Pre-built governance profiles for common organizational patterns: startup (economy-focused, $500/month budget), enterprise (5 cost centers, approval workflows), SOC 2 compliance (full audit trail, no free-tier models), agency (per-client budgets, chargeback), and research lab (unrestricted, analytics focus). Apply a template and your entire governance posture is configured in one step.</p>
-<p><strong>CI/CD cost checks.</strong> GitHub Actions that benchmark model costs per PR and fail the build if costs regress beyond a configurable threshold. This embeds cost awareness into the development workflow — before code is merged, not after costs appear on an invoice.</p>
-<p><strong>No per-seat pricing.</strong> AgentCost's community edition is MIT-licensed with no per-seat charges. The entire team uses it for free. Portkey's Production tier at $49/month plus enterprise pricing can add up quickly for larger organizations.</p>
-<h2 id="the-governance-gap">The Governance Gap</h2>
-<p>The fundamental difference is scope of governance:</p>
-<table>
-<thead>
-<tr>
-<th>Governance Level</th>
-<th>Portkey</th>
-<th>AgentCost</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Per-request</strong></td>
-<td>✅ Guardrails, routing</td>
-<td>✅ Policy checks, cache</td>
-</tr>
-<tr>
-<td><strong>Per-key</strong></td>
-<td>✅ Virtual key budgets</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>Per-project</strong></td>
-<td>—</td>
-<td>✅ Budgets, forecasts, analytics</td>
-</tr>
-<tr>
-<td><strong>Per-team</strong></td>
-<td>—</td>
-<td>✅ Cost centers, chargeback</td>
-</tr>
-<tr>
-<td><strong>Per-goal</strong></td>
-<td>—</td>
-<td>✅ Goal-aware attribution</td>
-</tr>
-<tr>
-<td><strong>Per-agent</strong></td>
-<td>—</td>
-<td>✅ Scorecards, heartbeat monitoring</td>
-</tr>
-<tr>
-<td><strong>Per-organization</strong></td>
-<td>Basic RBAC</td>
-<td>✅ Policy engine, approval workflows, templates</td>
-</tr>
-<tr>
-<td><strong>Predictive</strong></td>
-<td>—</td>
-<td>✅ Forecasting, budget exhaustion</td>
-</tr>
-<tr>
-<td><strong>Automated response</strong></td>
-<td>Alerting</td>
-<td>✅ Reactions engine (11 actions)</td>
-</tr>
-</tbody>
-</table>
-<p>Portkey governs individual requests and API keys. AgentCost governs the entire organizational cost structure — from individual calls up to business objectives.</p>
-<h2 id="can-you-use-both">Can You Use Both?</h2>
-<p>Yes. Portkey's high-performance gateway for routing and guardrails, AgentCost for forecasting, budget enforcement, policy controls, and organizational governance. Requests flowing through Portkey can be logged to AgentCost via its SDK or trace API for cost analysis and governance enforcement.</p>
+<h1 id="mcp-server">MCP Server</h1>
+<p>AgentCost runs as a Model Context Protocol (MCP) server, letting Claude Desktop, Cursor, VS Code, and any MCP-compatible agent query your cost data directly. Ask "what's my spend this month?" or "which model should I switch to?" and get answers from your actual AgentCost data.</p>
+<h2 id="why-mcp">Why MCP?</h2>
+<p>MCP is becoming the standard protocol for how AI agents interact with tools. By exposing AgentCost as an MCP server, your AI assistants can:</p>
+<ul>
+<li>Check costs before and after making LLM calls</li>
+<li>Get budget alerts mid-conversation</li>
+<li>Ask for optimization recommendations in natural language</li>
+<li>Resolve managed prompts on the fly</li>
+<li>Submit quality feedback on traces</li>
+</ul>
+<p>No API calls to write, no dashboard to check — just ask your AI assistant.</p>
 <h2 id="quick-start">Quick Start</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">AgentCost</label><label for="__tabbed_1_2">Portkey (Gateway)</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">8100</span>:8100<span class="w"> </span>agentcost/agentcost:latest
+<h3 id="claude-desktop">Claude Desktop</h3>
+<p>Add to your <code>claude_desktop_config.json</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;agentcost&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;agentcost.mcp&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
 </code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npx<span class="w"> </span>@portkey-ai/gateway
+<p>Restart Claude Desktop. You'll see AgentCost tools available. Try asking:</p>
+<ul>
+<li>"What's my total AI spend this month?"</li>
+<li>"Which models are costing the most in the support project?"</li>
+<li>"Show me the last 20 traces"</li>
+<li>"Set a $50 daily budget for the sales project"</li>
+</ul>
+<h3 id="cursor">Cursor</h3>
+<p>Add to <code>.cursor/mcp.json</code> in your project:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;agentcost&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;agentcost.mcp&quot;</span><span class="p">]</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
 </code></pre></div>
-</div>
-</div>
-</div>
-<hr />
-<p><strong>Try it yourself:</strong> <a href="https://demo.agentcost.in">Live Demo</a> · <a href="https://github.com/agentcostin/agentcost">GitHub</a> · <a href="https://docs.agentcost.in">Docs</a></p>
+<h3 id="remote-access-sse-transport">Remote Access (SSE Transport)</h3>
+<p>For shared team access, run the MCP server with SSE transport:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>-m<span class="w"> </span>agentcost.mcp<span class="w"> </span>--transport<span class="w"> </span>sse<span class="w"> </span>--port<span class="w"> </span><span class="m">8300</span>
+</code></pre></div>
+<p>Then configure your MCP client to connect to <code>http://your-server:8300</code>.</p>
+<h3 id="standalone-stdio">Standalone (stdio)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>-m<span class="w"> </span>agentcost.mcp
+</code></pre></div>
+<h2 id="available-tools">Available Tools</h2>
+<p>AgentCost exposes 14 tools via MCP:</p>
+<h3 id="cost-analytics">Cost Analytics</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_cost_summary</code></td>
+<td>Total spend, calls, tokens, model count (filter by project)</td>
+</tr>
+<tr>
+<td><code>get_cost_by_model</code></td>
+<td>Cost breakdown per model with calls, tokens, latency</td>
+</tr>
+<tr>
+<td><code>get_cost_by_project</code></td>
+<td>Cost breakdown per project</td>
+</tr>
+<tr>
+<td><code>list_projects</code></td>
+<td>All projects that have trace data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="traces">Traces</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>search_traces</code></td>
+<td>Search recent traces, filter by project and model</td>
+</tr>
+<tr>
+<td><code>get_trace_count</code></td>
+<td>Total trace count per project</td>
+</tr>
+</tbody>
+</table>
+<h3 id="budgets">Budgets</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>check_budget</code></td>
+<td>Budget status — spend, limits, utilization %</td>
+</tr>
+<tr>
+<td><code>set_budget</code></td>
+<td>Set daily and monthly budget limits for a project</td>
+</tr>
+</tbody>
+</table>
+<h3 id="intelligence">Intelligence</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_optimization_recommendations</code></td>
+<td>Model downgrade suggestions with savings estimates</td>
+</tr>
+<tr>
+<td><code>estimate_cost</code></td>
+<td>Pre-call cost estimation for any model + token count</td>
+</tr>
+</tbody>
+</table>
+<h3 id="feedback">Feedback</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>submit_feedback</code></td>
+<td>Thumbs up/down on a trace (source tagged as "mcp")</td>
+</tr>
+<tr>
+<td><code>get_quality_by_model</code></td>
+<td>Quality ratings breakdown per model</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prompts">Prompts</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resolve_prompt</code></td>
+<td>Get deployed prompt content with variables filled</td>
+</tr>
+<tr>
+<td><code>list_prompts</code></td>
+<td>All managed prompts with versions and deployments</td>
+</tr>
+</tbody>
+</table>
+<h2 id="resources">Resources</h2>
+<p>The server also exposes one MCP resource:</p>
+<table>
+<thead>
+<tr>
+<th>URI</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agentcost://status</code></td>
+<td>Server status, total traces, total cost, projects, feature list</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-conversations">Example Conversations</h2>
+<h3 id="how-much-am-i-spending">"How much am I spending?"</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>You: What&#39;s my total AI spend?
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Claude: [calls get_cost_summary]
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>       Your total spend across all projects is $26.40 over 1,832 calls.
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>       You&#39;re using 8 models across 5 projects. The average call costs $0.014.
+</code></pre></div>
+<h3 id="which-model-should-i-use">"Which model should I use?"</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You: I&#39;m building a support bot. Which model gives the best cost/quality ratio?
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Claude: [calls get_quality_by_model, get_cost_by_model]
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>       Based on your data, gpt-4.1-mini has 78% positive feedback at $0.0006/call,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       while gpt-4.1 has 92% positive at $0.0034/call. The mini variant is 4x more
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>       cost-efficient per positive response.
+</code></pre></div>
+<h3 id="set-a-budget-alert">"Set a budget alert"</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>You: Set a $100/month budget for the research project
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Claude: [calls set_budget]
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>       Done. Monthly budget for &#39;research&#39; set to $100. You&#39;ll get alerts at 80% utilization.
+</code></pre></div>
+<h3 id="check-before-i-call">"Check before I call"</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>You: How much would 2000 input + 1000 output tokens cost on claude-sonnet-4-6?
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Claude: [calls estimate_cost]
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>       That would cost approximately $0.021 — $0.006 for input and $0.015 for output.
+</code></pre></div>
+<h2 id="architecture">Architecture</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>  Claude Desktop / Cursor / Custom Agent
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>            │
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>            │  MCP Protocol (stdio or SSE)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>            ▼
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  ┌─────────────────────┐
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  │  AgentCost MCP      │
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  │  Server             │
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  │  (14 tools)         │
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  ├─────────────────────┤
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  │  AgentCost Core     │
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  │  ├─ EventStore      │
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  │  ├─ Budgets         │
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  │  ├─ Optimizer       │
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  │  ├─ Feedback        │
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  │  └─ Prompts         │
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  ├─────────────────────┤
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>  │  SQLite/PostgreSQL   │
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>  └─────────────────────┘
+</code></pre></div>
+<p>The MCP server is a thin layer that calls the same internal services as the REST API and dashboard. No separate data store, no sync issues.</p>
+<h2 id="configuration">Configuration</h2>
+<table>
+<thead>
+<tr>
+<th>Environment Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AGENTCOST_DB</code></td>
+<td><code>~/.agentcost/benchmarks.db</code></td>
+<td>SQLite database path</td>
+</tr>
+<tr>
+<td><code>AGENTCOST_DATABASE_URL</code></td>
+<td>—</td>
+<td>PostgreSQL connection string (overrides SQLite)</td>
+</tr>
+</tbody>
+</table>
+<p>The MCP server uses the same database as the API server and dashboard — all three see the same data.</p>
 
 
 

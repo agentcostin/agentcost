@@ -181,6 +181,16 @@ except ImportError:
     pass
 
 
+# ── Simulator (open-source — live cost chaos simulation) ─────────────────────
+
+try:
+    from ..simulator.routes import router as simulator_router
+
+    app.include_router(simulator_router)
+except ImportError:
+    pass
+
+
 @app.on_event("startup")
 async def _start_reaction_engine():
     """Start the reaction engine and wire it to the EventBus."""

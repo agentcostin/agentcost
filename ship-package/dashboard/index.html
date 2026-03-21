@@ -153,7 +153,7 @@ select:focus,input:focus{border-color:var(--accent)}
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState,useEffect,useCallback,useRef} = React;
+const {useState,useEffect,useCallback} = React;
 const {LineChart,Line,BarChart,Bar,XAxis,YAxis,Tooltip,ResponsiveContainer,CartesianGrid,PieChart,Pie,Cell} = Recharts;
 
 const BASE = window.location.origin;
@@ -1215,56 +1215,6 @@ function SimulatorPage(){
   const[search,setSearch]=useState('');
   const ref=useRef(null);
   const stateRef=useRef({tick:0,config,activeEvents,metrics,loads,risks});
-  // Phase 2 state
-  const[baseline,setBaseline]=useState(null);
-  const[archConfig,setArchConfig]=useState(null);
-  const[savedScenarios,setSavedScenarios]=useState([]);
-  const[connected,setConnected]=useState(false);
-  const[saving,setSaving]=useState(false);
-  const[saveName,setSaveName]=useState('');
-  const[showSaveModal,setShowSaveModal]=useState(false);
-  const[showWhatIf,setShowWhatIf]=useState(false);
-  const[whatIfChanges,setWhatIfChanges]=useState({price_multiplier:1,traffic_multiplier:1,cache_hit_rate:0.72});
-  const[whatIfResult,setWhatIfResult]=useState(null);
-  const[whatIfLoading,setWhatIfLoading]=useState(false);
-
-  // Phase 2: Fetch real data on mount
-  useEffect(()=>{
-    const load=async()=>{
-      try{
-        const[bRes,cRes,sRes]=await Promise.allSettled([
-          fetch('/api/simulator/baseline').then(r=>r.ok?r.json():null),
-          fetch('/api/simulator/config').then(r=>r.ok?r.json():null),
-          fetch('/api/simulator/scenarios').then(r=>r.ok?r.json():null),
-        ]);
-        const b=bRes.status==='fulfilled'?bRes.value:null;
-        const c=cRes.status==='fulfilled'?cRes.value:null;
-        const s=sRes.status==='fulfilled'?sRes.value:null;
-        if(b){
-          setBaseline(b);setConnected(true);
-          // Override defaults from real data
-          const sd=b.simulator_defaults||{};
-          if(sd.traffic)setConfig(p=>({...p,traffic:sd.traffic}));
-          if(sd.budget)setConfig(p=>({...p,budget:sd.budget}));
-          setEvtLog(p=>[{t:0,msg:`📡 Connected: ${b.total_calls} traces, ${b.model_count} models`,c:'#34d399'},...p]);
-        }
-        if(c){
-          setArchConfig(c);
-          // Update node tags from real architecture
-          if(c.node_overrides){
-            Object.entries(c.node_overrides).forEach(([nid,overrides])=>{
-              const node=SIM_NODES.find(n=>n.id===nid);
-              if(node&&overrides.tags)node.tags=overrides.tags;
-            });
-          }
-        }
-        if(s&&Array.isArray(s))setSavedScenarios(s);
-      }catch(e){
-        setEvtLog(p=>[{t:0,msg:'⚪ Offline mode — using default values',c:'var(--text-3)'},...p]);
-      }
-    };
-    load();
-  },[]);
 
   useEffect(()=>{stateRef.current={tick,config,activeEvents,metrics,loads,risks};},[tick,config,activeEvents,metrics,loads,risks]);
 
@@ -1292,55 +1242,17 @@ function SimulatorPage(){
     rm.forEach(e=>setEvtLog(p=>[{t:tick,msg:`🔧 Fixed: ${e.label}`,c:'#34d399'},...p.slice(0,99)]));
   };
   const loadScenario=(sc)=>{
-    setRunning(false);setTick(0);setMetrics({rps:0,lat:14,avl:99.9,cph:0,spent:0,tok:0,budget:config.budget||5000,chr:.72});setLoads({});setRisks([]);
-    setConfig(p=>({...p,traffic:sc.traffic}));
-    const evtIds=sc.events||sc.chaos_events||[];
-    const evts=evtIds.map(id=>SIM_CHAOS_MAP[id]).filter(Boolean);
+    setRunning(false);setTick(0);setMetrics({rps:0,lat:14,avl:99.9,cph:0,spent:0,tok:0,budget:5000,chr:.72});setLoads({});setRisks([]);
+    setConfig({traffic:sc.traffic,budget:5000});
+    const evts=sc.events.map(id=>SIM_CHAOS_MAP[id]).filter(Boolean);
     setActiveEvents(evts);
     setEvtLog([{t:0,msg:`📋 Loaded: ${sc.name}`,c:'#60a5fa'},...evts.map(e=>({t:0,msg:`🔴 Scenario: ${e.label}`,c:'#60a5fa'}))]);
     setTimeout(()=>setRunning(true),100);
   };
   const resetSim=()=>{
     setRunning(false);setTick(0);setActiveEvents([]);
-    setMetrics({rps:0,lat:14,avl:99.9,cph:0,spent:0,tok:0,budget:config.budget||5000,chr:.72});
-    setLoads({});setRisks([]);setEvtLog([]);
-    const sd=baseline?.simulator_defaults;
-    setConfig({traffic:sd?.traffic||50,budget:sd?.budget||5000});
-  };
-  // Phase 2: Save scenario
-  const saveScenario=async()=>{
-    if(!saveName.trim())return;
-    setSaving(true);
-    try{
-      const res=await fetch('/api/simulator/scenarios',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name:saveName,description:`Traffic: ${config.traffic}, ${activeEvents.length} events`,
-          chaos_events:activeEvents.map(e=>e.id),traffic:config.traffic,budget:config.budget,
-          results:{spent:metrics.spent,costRate:metrics.cph,tick}})});
-      if(res.ok){
-        const saved=await res.json();
-        setSavedScenarios(p=>[saved,...p]);
-        setEvtLog(p=>[{t:tick,msg:`💾 Saved: ${saveName}`,c:'#60a5fa'},...p]);
-        setSaveName('');setShowSaveModal(false);
-      }
-    }catch(e){}
-    setSaving(false);
-  };
-  // Phase 2: Delete saved scenario
-  const deleteScenario=async(id)=>{
-    try{
-      await fetch(`/api/simulator/scenarios/${id}`,{method:'DELETE'});
-      setSavedScenarios(p=>p.filter(s=>s.id!==id));
-    }catch(e){}
-  };
-  // Phase 2: What-If projection
-  const runWhatIf=async()=>{
-    setWhatIfLoading(true);setWhatIfResult(null);
-    try{
-      const res=await fetch('/api/simulator/whatif',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({hours:24,days:30,changes:whatIfChanges})});
-      if(res.ok)setWhatIfResult(await res.json());
-    }catch(e){setWhatIfResult({error:'Backend not available. Run what-if projections with real data by starting the AgentCost server.'});}
-    setWhatIfLoading(false);
+    setMetrics({rps:0,lat:14,avl:99.9,cph:0,spent:0,tok:0,budget:5000,chr:.72});
+    setLoads({});setRisks([]);setEvtLog([]);setConfig({traffic:50,budget:5000});
   };
 
   const fmt=n=>n>=1e6?`${(n/1e6).toFixed(1)}M`:n>=1e3?`${(n/1e3).toFixed(1)}K`:n.toFixed(0);
@@ -1351,7 +1263,6 @@ function SimulatorPage(){
   const risksByNode={};risks.forEach(r=>{if(!risksByNode[r.n])risksByNode[r.n]=[];risksByNode[r.n].push(r);});
   const filtered=SIM_CHAOS.map(cat=>({...cat,items:cat.items.filter(i=>!search||i.label.toLowerCase().includes(search.toLowerCase())||i.desc.toLowerCase().includes(search.toLowerCase()))})).filter(c=>c.items.length>0);
   const hrs=Math.floor(tick/3600),mins=Math.floor((tick%3600)/60),secs=tick%60;
-  const allScenarios=[...SIM_SCENARIOS,...savedScenarios.map(s=>({...s,events:s.chaos_events||[],isSaved:true}))];
 
   const edgePath=(a,b)=>{const x1=a.x+a.w/2,y1=a.y+a.h/2,x2=b.x+b.w/2,y2=b.y+b.h/2,mx=(x1+x2)/2;return`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;};
 
@@ -1360,15 +1271,12 @@ function SimulatorPage(){
     {/* ── Sidebar ── */}
     <div style={{width:234,background:'var(--bg-1)',borderRight:'1px solid var(--border)',display:'flex',flexDirection:'column',overflow:'hidden',flexShrink:0}}>
       <div style={{padding:'12px 14px',borderBottom:'1px solid var(--border)'}}>
-        <div style={{display:'flex',alignItems:'center',gap:6}}>
-          <span style={{fontSize:18}}>🔬</span><span style={{fontWeight:800,fontSize:14,color:'var(--accent)'}}>Cost</span><span style={{fontSize:13,fontWeight:600,color:'var(--text-1)'}}>Simulator</span>
-          <span style={{marginLeft:'auto',width:7,height:7,borderRadius:4,background:connected?'#34d399':'var(--text-3)'}} title={connected?'Connected to real data':'Offline mode'}/>
-        </div>
-        <div style={{fontSize:10,color:'var(--text-3)',marginTop:2}}>{connected?`${baseline?.model_count||0} models · ${baseline?.total_calls||0} traces`:'Chaos engineering for AI costs'}</div>
+        <div style={{display:'flex',alignItems:'center',gap:6}}><span style={{fontSize:18}}>🔬</span><span style={{fontWeight:800,fontSize:14,color:'var(--accent)'}}>Cost</span><span style={{fontSize:13,fontWeight:600,color:'var(--text-1)'}}>Simulator</span></div>
+        <div style={{fontSize:10,color:'var(--text-3)',marginTop:2}}>Chaos engineering for AI costs</div>
       </div>
       <div style={{display:'flex',borderBottom:'1px solid var(--border)'}}>
-        {[{id:'chaos',label:'Chaos'},{id:'scenarios',label:'Scenarios'},{id:'whatif',label:'What-If'},{id:'log',label:`Log`}].map(t=>(
-          <button key={t.id} onClick={()=>setSideTab(t.id)} style={{flex:1,padding:'7px 2px',border:'none',cursor:'pointer',fontSize:9,fontWeight:600,background:sideTab===t.id?'var(--bg-2)':'transparent',color:sideTab===t.id?'#fff':'var(--text-3)',borderBottom:sideTab===t.id?'2px solid var(--accent)':'2px solid transparent',fontFamily:'var(--font)'}}>{t.label}</button>
+        {[{id:'chaos',label:'Chaos Items'},{id:'scenarios',label:'Scenarios'},{id:'log',label:`Log (${evtLog.length})`}].map(t=>(
+          <button key={t.id} onClick={()=>setSideTab(t.id)} style={{flex:1,padding:'7px 2px',border:'none',cursor:'pointer',fontSize:10,fontWeight:600,background:sideTab===t.id?'var(--bg-2)':'transparent',color:sideTab===t.id?'#fff':'var(--text-3)',borderBottom:sideTab===t.id?'2px solid var(--accent)':'2px solid transparent',fontFamily:'var(--font)'}}>{t.label}</button>
         ))}
       </div>
       {sideTab==='chaos'&&<div style={{padding:'8px 10px'}}><input type="text" placeholder="Search chaos events..." value={search} onChange={e=>setSearch(e.target.value)} style={{width:'100%',padding:'6px 10px',fontSize:11,background:'var(--bg-3)',border:'1px solid var(--border)',borderRadius:6,color:'var(--text-1)',outline:'none',fontFamily:'var(--font)'}}/></div>}
@@ -1384,84 +1292,11 @@ function SimulatorPage(){
             {isA&&<span style={{width:6,height:6,borderRadius:3,flexShrink:0,background:'#f87171',animation:'sim-pulse 1s infinite'}}/>}
           </div>;})}
         </div>)}
-        {sideTab==='scenarios'&&<div style={{padding:'8px 6px'}}>
-          {/* Save button */}
-          {activeEvents.length>0&&<div style={{padding:'8px 10px',margin:'0 0 8px',borderRadius:8,background:'var(--bg-3)',border:'1px solid var(--border)'}}>
-            {!showSaveModal?<button onClick={()=>setShowSaveModal(true)} style={{width:'100%',padding:'6px',borderRadius:6,border:'1px solid var(--accent)',background:'transparent',color:'var(--accent)',cursor:'pointer',fontSize:11,fontWeight:600,fontFamily:'var(--font)'}}>💾 Save Current Scenario</button>
-            :<div><input value={saveName} onChange={e=>setSaveName(e.target.value)} placeholder="Scenario name..." style={{width:'100%',padding:'5px 8px',fontSize:11,background:'var(--bg-2)',border:'1px solid var(--border)',borderRadius:4,color:'var(--text-1)',outline:'none',fontFamily:'var(--font)',marginBottom:6}} onKeyDown={e=>e.key==='Enter'&&saveScenario()}/>
-              <div style={{display:'flex',gap:4}}><button onClick={saveScenario} disabled={saving||!saveName.trim()} style={{flex:1,padding:'4px',borderRadius:4,border:'none',background:'var(--accent)',color:'#fff',cursor:'pointer',fontSize:10,fontWeight:600,fontFamily:'var(--font)',opacity:saving?.5:1}}>{saving?'Saving...':'Save'}</button>
-              <button onClick={()=>setShowSaveModal(false)} style={{padding:'4px 8px',borderRadius:4,border:'none',background:'var(--bg-2)',color:'var(--text-3)',cursor:'pointer',fontSize:10,fontFamily:'var(--font)'}}>✕</button></div>
-            </div>}
-          </div>}
-          {/* Saved scenarios */}
-          {savedScenarios.length>0&&<div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'.8px',padding:'4px 12px',color:'#60a5fa'}}>💾 Your Scenarios</div>}
-          {savedScenarios.map(sc=><div key={sc.id} style={{padding:'8px 12px',margin:'4px 0',borderRadius:8,background:'var(--bg-2)',border:'1px solid var(--border)',cursor:'pointer',transition:'all .15s',position:'relative'}} onClick={()=>loadScenario(sc)}>
-            <div style={{fontSize:12,fontWeight:700}}>{sc.name}</div>
-            <div style={{fontSize:9,color:'var(--text-3)',marginTop:3}}>{(sc.chaos_events||[]).length} events · Traffic: {sc.traffic}</div>
-            <span onClick={(e)=>{e.stopPropagation();deleteScenario(sc.id);}} style={{position:'absolute',top:8,right:8,fontSize:10,color:'var(--text-3)',cursor:'pointer',opacity:.5}} title="Delete">✕</span>
-          </div>)}
-          {savedScenarios.length>0&&<div style={{height:1,background:'var(--border)',margin:'8px 12px'}}/>}
-          {/* Preset scenarios */}
-          <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'.8px',padding:'4px 12px',color:'var(--text-3)'}}>📋 Presets</div>
-          {SIM_SCENARIOS.map(sc=><div key={sc.id} onClick={()=>loadScenario(sc)} style={{padding:'8px 12px',margin:'4px 0',borderRadius:8,background:'var(--bg-2)',border:'1px solid var(--border)',cursor:'pointer',transition:'all .15s'}}>
-            <div style={{fontSize:12,fontWeight:700}}>{sc.name}</div>
-            <div style={{fontSize:10,color:'var(--text-2)',marginTop:3,lineHeight:1.3}}>{sc.desc}</div>
-            <div style={{fontSize:9,color:'var(--text-3)',marginTop:4}}>{sc.events.length} event{sc.events.length!==1?'s':''} · Traffic: {sc.traffic}</div>
-          </div>)}
-        </div>}
-        {/* What-If Panel */}
-        {sideTab==='whatif'&&<div style={{padding:'10px'}}>
-          <div style={{fontSize:11,fontWeight:700,color:'var(--text-1)',marginBottom:8}}>🔮 What-If Projection</div>
-          <div style={{fontSize:10,color:'var(--text-3)',marginBottom:12,lineHeight:1.4}}>Adjust parameters below and run a 30-day cost projection based on your real trace data.</div>
-          {/* Price multiplier */}
-          <div style={{marginBottom:10}}>
-            <div style={{fontSize:10,color:'var(--text-2)',marginBottom:4}}>Token Price Multiplier</div>
-            <div style={{display:'flex',alignItems:'center',gap:6}}>
-              <input type="range" min={0.5} max={5} step={0.5} value={whatIfChanges.price_multiplier} onChange={e=>setWhatIfChanges(p=>({...p,price_multiplier:+e.target.value}))} style={{flex:1,accentColor:'var(--accent)'}}/>
-              <span style={{fontSize:12,fontWeight:700,color:whatIfChanges.price_multiplier>1?'#f87171':'#34d399',minWidth:30,textAlign:'right'}}>{whatIfChanges.price_multiplier}×</span>
-            </div>
-          </div>
-          {/* Traffic multiplier */}
-          <div style={{marginBottom:10}}>
-            <div style={{fontSize:10,color:'var(--text-2)',marginBottom:4}}>Traffic Multiplier</div>
-            <div style={{display:'flex',alignItems:'center',gap:6}}>
-              <input type="range" min={0.5} max={5} step={0.5} value={whatIfChanges.traffic_multiplier} onChange={e=>setWhatIfChanges(p=>({...p,traffic_multiplier:+e.target.value}))} style={{flex:1,accentColor:'var(--accent)'}}/>
-              <span style={{fontSize:12,fontWeight:700,color:whatIfChanges.traffic_multiplier>1?'#fbbf24':'#34d399',minWidth:30,textAlign:'right'}}>{whatIfChanges.traffic_multiplier}×</span>
-            </div>
-          </div>
-          {/* Cache hit rate */}
-          <div style={{marginBottom:12}}>
-            <div style={{fontSize:10,color:'var(--text-2)',marginBottom:4}}>Cache Hit Rate</div>
-            <div style={{display:'flex',alignItems:'center',gap:6}}>
-              <input type="range" min={0} max={0.95} step={0.05} value={whatIfChanges.cache_hit_rate} onChange={e=>setWhatIfChanges(p=>({...p,cache_hit_rate:+e.target.value}))} style={{flex:1,accentColor:'var(--accent)'}}/>
-              <span style={{fontSize:12,fontWeight:700,color:whatIfChanges.cache_hit_rate<.2?'#f87171':'#34d399',minWidth:35,textAlign:'right'}}>{(whatIfChanges.cache_hit_rate*100).toFixed(0)}%</span>
-            </div>
-          </div>
-          <button onClick={runWhatIf} disabled={whatIfLoading} style={{width:'100%',padding:'8px',borderRadius:6,border:'none',background:'var(--accent)',color:'#fff',cursor:'pointer',fontSize:11,fontWeight:700,fontFamily:'var(--font)',opacity:whatIfLoading?.5:1,marginBottom:12}}>{whatIfLoading?'Projecting...':'🔮 Run 30-Day Projection'}</button>
-          {/* Results */}
-          {whatIfResult&&!whatIfResult.error&&<div>
-            <div style={{background:'var(--bg-2)',borderRadius:8,padding:10,marginBottom:8}}>
-              <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
-                <div><div style={{fontSize:9,color:'var(--text-3)',textTransform:'uppercase'}}>Current</div><div style={{fontSize:14,fontWeight:700,color:'var(--text-1)'}}>${whatIfResult.baseline?.cost_per_month?.toFixed(0)||0}/mo</div></div>
-                <div style={{textAlign:'right'}}><div style={{fontSize:9,color:'var(--text-3)',textTransform:'uppercase'}}>Projected</div><div style={{fontSize:14,fontWeight:700,color:whatIfResult.delta>0?'#f87171':'#34d399'}}>${whatIfResult.projected?.cost_per_month?.toFixed(0)||0}/mo</div></div>
-              </div>
-              <div style={{textAlign:'center',padding:'4px 0',borderTop:'1px solid var(--border)',marginTop:4}}>
-                <span style={{fontSize:13,fontWeight:800,color:whatIfResult.delta>0?'#f87171':'#34d399'}}>{whatIfResult.delta>0?'+':''}${whatIfResult.delta?.toFixed(0)} ({whatIfResult.delta>0?'+':''}{whatIfResult.delta_pct?.toFixed(1)}%)</span>
-              </div>
-            </div>
-            {/* Risks */}
-            {whatIfResult.risk_events?.length>0&&<div style={{marginBottom:8}}>
-              {whatIfResult.risk_events.map((r,i)=><div key={i} style={{padding:'6px 8px',borderRadius:6,background:r.severity==='critical'?'rgba(248,113,113,.1)':'rgba(251,191,36,.1)',border:`1px solid ${r.severity==='critical'?'rgba(248,113,113,.25)':'rgba(251,191,36,.25)'}`,marginBottom:4,fontSize:10,color:'var(--text-1)'}}>{r.severity==='critical'?'🔴':'🟡'} {r.message}</div>)}
-            </div>}
-            {/* Recommendations */}
-            {whatIfResult.recommendations?.length>0&&<div>
-              <div style={{fontSize:10,fontWeight:600,color:'var(--text-2)',marginBottom:4}}>💡 Recommendations</div>
-              {whatIfResult.recommendations.map((r,i)=><div key={i} style={{padding:'5px 8px',borderRadius:6,background:'rgba(96,165,250,.08)',border:'1px solid rgba(96,165,250,.15)',marginBottom:3,fontSize:9,color:'var(--text-2)',lineHeight:1.4}}>{r}</div>)}
-            </div>}
-          </div>}
-          {whatIfResult?.error&&<div style={{padding:10,borderRadius:8,background:'var(--bg-2)',fontSize:10,color:'var(--text-3)',lineHeight:1.4}}>{whatIfResult.error}</div>}
-          {!connected&&<div style={{padding:10,borderRadius:8,background:'var(--bg-2)',fontSize:10,color:'var(--text-3)',lineHeight:1.4,marginTop:8}}>⚪ What-If projections require the AgentCost backend with trace data. Start the server and seed data to enable.</div>}
-        </div>}
+        {sideTab==='scenarios'&&<div style={{padding:'8px 6px'}}>{SIM_SCENARIOS.map(sc=><div key={sc.id} onClick={()=>loadScenario(sc)} style={{padding:'10px 12px',margin:'4px 0',borderRadius:8,background:'var(--bg-2)',border:'1px solid var(--border)',cursor:'pointer',transition:'all .15s'}}>
+          <div style={{fontSize:12,fontWeight:700}}>{sc.name}</div>
+          <div style={{fontSize:10,color:'var(--text-2)',marginTop:3,lineHeight:1.3}}>{sc.desc}</div>
+          <div style={{fontSize:9,color:'var(--text-3)',marginTop:5}}>{sc.events.length} event{sc.events.length!==1?'s':''} · Traffic: {sc.traffic}</div>
+        </div>)}</div>}
         {sideTab==='log'&&<div style={{padding:8}}>
           {evtLog.length===0&&<div style={{color:'var(--text-3)',textAlign:'center',padding:30,fontSize:11}}>No events yet. Inject chaos to see activity.</div>}
           {evtLog.map((e,i)=><div key={i} style={{padding:'4px 8px',fontSize:10,borderLeft:`2px solid ${e.c}`,marginBottom:4,color:'var(--text-2)'}}><span style={{color:'var(--text-3)',fontFamily:'var(--mono)',fontSize:9}}>[{String(Math.floor((e.t||0)/60)).padStart(2,'0')}:{String((e.t||0)%60).padStart(2,'0')}]</span> {e.msg}</div>)}
@@ -1502,7 +1337,7 @@ function SimulatorPage(){
             {running&&<div style={{position:'absolute',bottom:0,left:0,right:0,height:3,borderRadius:'0 0 10px 10px',overflow:'hidden',background:'var(--bg-0)'}}><div style={{height:3,width:ld+'%',background:ld>80?'#f87171':ld>50?'#fbbf24':'#34d399',transition:'width .5s'}}/></div>}
             {running&&ld>35&&<div style={{position:'absolute',bottom:-16,left:'50%',transform:'translateX(-50%)',fontSize:9,color:ld>80?'#f87171':'var(--text-3)',fontWeight:600}}>LOAD: {ld.toFixed(0)}%</div>}
           </div>;})}
-        {!running&&<div style={{position:'absolute',top:'50%',left:'55%',transform:'translate(-50%,-50%)',textAlign:'center',pointerEvents:'none',opacity:.3}}><div style={{fontSize:36,marginBottom:8}}>🔬</div><div style={{fontSize:14,fontWeight:700,color:'var(--text-2)'}}>Click START to begin simulation</div><div style={{fontSize:11,color:'var(--text-3)',marginTop:4}}>{connected?'Seeded from your real trace data':'Inject chaos events from the sidebar to stress-test your AI costs'}</div></div>}
+        {!running&&<div style={{position:'absolute',top:'50%',left:'55%',transform:'translate(-50%,-50%)',textAlign:'center',pointerEvents:'none',opacity:.3}}><div style={{fontSize:36,marginBottom:8}}>🔬</div><div style={{fontSize:14,fontWeight:700,color:'var(--text-2)'}}>Click START to begin simulation</div><div style={{fontSize:11,color:'var(--text-3)',marginTop:4}}>Inject chaos events from the sidebar to stress-test your AI costs</div></div>}
       </div>
       {/* Controls */}
       <div style={{display:'flex',alignItems:'center',gap:16,padding:'8px 16px',background:'var(--bg-1)',borderTop:'1px solid var(--border)',flexShrink:0}}>

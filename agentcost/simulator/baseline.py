@@ -18,7 +18,7 @@ from ..data.events import EventStore
 def get_baseline_metrics(project: str | None = None, hours: int = 24) -> dict:
     """
     Compute baseline metrics from real trace data for the last N hours.
-    
+
     Returns a dict that the simulator frontend uses to seed realistic defaults:
     - avg_rps, avg_cost_per_hour, avg_tokens_per_request
     - cache_hit_rate (from gateway if available)
@@ -102,9 +102,13 @@ def get_baseline_metrics(project: str | None = None, hours: int = 24) -> dict:
         GROUP BY hour ORDER BY hour""",
         params,
     )
-    hourly = {int(r["hour"]): {"calls": r["calls"], "cost": r["cost"]} for r in hourly_rows}
+    hourly = {
+        int(r["hour"]): {"calls": r["calls"], "cost": r["cost"]} for r in hourly_rows
+    }
     hourly_calls = [hourly.get(h, {}).get("calls", 0) for h in range(24)]
-    avg_hourly = max(sum(hourly_calls) / max(len([x for x in hourly_calls if x > 0]), 1), 1)
+    avg_hourly = max(
+        sum(hourly_calls) / max(len([x for x in hourly_calls if x > 0]), 1), 1
+    )
     peak_calls = max(hourly_calls) if hourly_calls else 0
     peak_multiplier = round(peak_calls / avg_hourly, 2) if avg_hourly > 0 else 1.0
 
@@ -139,29 +143,33 @@ def get_baseline_metrics(project: str | None = None, hours: int = 24) -> dict:
         "avg_latency_ms": round(agg.get("avg_latency", 0), 1),
         "error_rate_pct": error_rate,
         "hours_analyzed": hours,
-
         # Distributions
         "model_count": agg.get("model_count", 0),
         "model_distribution": model_dist,
         "agent_count": agg.get("agent_count", 0),
         "agent_distribution": agent_dist,
-
         # Traffic patterns
         "hourly_pattern": hourly_calls,
         "peak_hour_multiplier": peak_multiplier,
-
         # Configuration
         "budget_config": budget_config,
         "cache_stats": cache_stats,
-
         # Simulator-ready defaults (mapped to engine/constants.js names)
         "simulator_defaults": {
-            "traffic": min(100, max(10, int(avg_rps / 22 * 50))),  # Map RPS to traffic slider
+            "traffic": min(
+                100, max(10, int(avg_rps / 22 * 50))
+            ),  # Map RPS to traffic slider
             "avgTokensPerRequest": int(avg_tokens) if avg_tokens > 0 else 850,
-            "budget": budget_config[0]["monthly_limit"] if budget_config and budget_config[0].get("monthly_limit") else 5000,
-            "baseCacheHitRate": cache_stats.get("hit_rate_pct", 0) / 100 if cache_stats.get("hit_rate_pct") else 0.72,
+            "budget": budget_config[0]["monthly_limit"]
+            if budget_config and budget_config[0].get("monthly_limit")
+            else 5000,
+            "baseCacheHitRate": cache_stats.get("hit_rate_pct", 0) / 100
+            if cache_stats.get("hit_rate_pct")
+            else 0.72,
             "models_in_use": [m["model"] for m in model_dist[:5]],
-            "active_agents": [a["agent_id"] for a in agent_dist if a["agent_id"] != "unknown"][:10],
+            "active_agents": [
+                a["agent_id"] for a in agent_dist if a["agent_id"] != "unknown"
+            ][:10],
         },
     }
 
@@ -169,7 +177,7 @@ def get_baseline_metrics(project: str | None = None, hours: int = 24) -> dict:
 def get_architecture_config() -> dict:
     """
     Auto-detect the user's AI agent architecture from existing data.
-    
+
     Scans trace data, budgets, gateway config, and models to build
     a realistic architecture diagram for the simulator.
     """
@@ -203,6 +211,7 @@ def get_architecture_config() -> dict:
     gateway_enabled = False
     try:
         import urllib.request
+
         req = urllib.request.Request(f"{gateway_url}/health", method="GET")
         resp = urllib.request.urlopen(req, timeout=2)
         gateway_enabled = resp.status == 200
@@ -210,11 +219,16 @@ def get_architecture_config() -> dict:
         pass
 
     # Budget enforcement configured?
-    budgets = db.fetch_all("SELECT project, monthly_limit FROM budgets WHERE monthly_limit > 0")
+    budgets = db.fetch_all(
+        "SELECT project, monthly_limit FROM budgets WHERE monthly_limit > 0"
+    )
     budget_enforcement = len(budgets) > 0
 
     # Build node tags from real data
-    model_tags = [m["model"].split("/")[-1][:12] for m in models_in_use[:2]] or ["GPT-4o", "Sonnet"]
+    model_tags = [m["model"].split("/")[-1][:12] for m in models_in_use[:2]] or [
+        "GPT-4o",
+        "Sonnet",
+    ]
     agent_tags = [a["agent_id"][:8] for a in active_agents[:2]] or ["CrewAI", "LC"]
 
     return {
@@ -225,12 +239,15 @@ def get_architecture_config() -> dict:
         "gateway_enabled": gateway_enabled,
         "budget_enforcement": budget_enforcement,
         "budget_count": len(budgets),
-
         # Suggested node customizations for the simulator
         "node_overrides": {
             "llm": {"tags": model_tags},
             "ag": {"tags": agent_tags},
-            "ch": {"tags": ["Redis", f"{cache_stats.get('hit_rate_pct', 0):.0f}% hit"] if cache_enabled else ["disabled"]},
+            "ch": {
+                "tags": ["Redis", f"{cache_stats.get('hit_rate_pct', 0):.0f}% hit"]
+                if cache_enabled
+                else ["disabled"]
+            },
             "gw": {"tags": ["gateway" if gateway_enabled else "direct", "REST"]},
             "db": {"tags": ["PG" if db.is_postgres() else "SQLite", "OLTP"]},
         },
@@ -244,10 +261,10 @@ def compute_whatif_projection(
 ) -> dict:
     """
     Run a what-if cost projection.
-    
+
     Takes baseline metrics and a dict of changes, then projects
     costs forward for N days.
-    
+
     changes can include:
     - price_multiplier: float (e.g., 2.0 for 2× price increase)
     - cache_hit_rate: float (e.g., 0.85 for 85% hit rate)
@@ -269,7 +286,9 @@ def compute_whatif_projection(
     # Calculate cost impact
     # Cost ~ (RPS × (1 - cache_hit_rate) × tokens × price)
     base_effective = base_rps * (1 - base_cache) * base_tokens
-    new_effective = (base_rps * traffic_mult) * (1 - new_cache) * new_tokens * price_mult
+    new_effective = (
+        (base_rps * traffic_mult) * (1 - new_cache) * new_tokens * price_mult
+    )
 
     ratio = new_effective / max(base_effective, 0.001) if base_effective > 0 else 1.0
     new_cost_per_hour = base_cost_per_hour * ratio
@@ -282,12 +301,15 @@ def compute_whatif_projection(
     for day in range(1, days + 1):
         # Apply hourly pattern variation (±15% random for realism)
         import random
+
         variance = 1.0 + (random.random() - 0.5) * 0.3
-        daily_breakdown.append({
-            "day": day,
-            "baseline_cost": round(base_daily * variance, 2),
-            "projected_cost": round(new_daily * variance, 2),
-        })
+        daily_breakdown.append(
+            {
+                "day": day,
+                "baseline_cost": round(base_daily * variance, 2),
+                "projected_cost": round(new_daily * variance, 2),
+            }
+        )
 
     base_monthly = base_daily * 30
     new_monthly = new_daily * 30
@@ -297,34 +319,46 @@ def compute_whatif_projection(
     risk_events = []
     budget = baseline.get("simulator_defaults", {}).get("budget", 5000)
     if new_monthly > budget:
-        risk_events.append({
-            "type": "budget_breach",
-            "severity": "critical",
-            "message": f"Projected monthly cost ${new_monthly:.0f} exceeds budget ${budget:.0f}",
-            "day_of_breach": max(1, int(budget / max(new_daily, 0.01))),
-        })
+        risk_events.append(
+            {
+                "type": "budget_breach",
+                "severity": "critical",
+                "message": f"Projected monthly cost ${new_monthly:.0f} exceeds budget ${budget:.0f}",
+                "day_of_breach": max(1, int(budget / max(new_daily, 0.01))),
+            }
+        )
     if new_monthly > base_monthly * 2:
-        risk_events.append({
-            "type": "cost_spike",
-            "severity": "warning",
-            "message": f"Cost increase of {((new_monthly / max(base_monthly, 0.01)) - 1) * 100:.0f}% projected",
-        })
+        risk_events.append(
+            {
+                "type": "cost_spike",
+                "severity": "warning",
+                "message": f"Cost increase of {((new_monthly / max(base_monthly, 0.01)) - 1) * 100:.0f}% projected",
+            }
+        )
     if new_cache < 0.1 and base_cache > 0.5:
-        risk_events.append({
-            "type": "cache_degradation",
-            "severity": "warning",
-            "message": f"Cache hit rate dropping from {base_cache*100:.0f}% to {new_cache*100:.0f}%",
-        })
+        risk_events.append(
+            {
+                "type": "cache_degradation",
+                "severity": "warning",
+                "message": f"Cache hit rate dropping from {base_cache * 100:.0f}% to {new_cache * 100:.0f}%",
+            }
+        )
 
     # Recommendations
     recommendations = []
     if new_monthly > budget:
         savings_with_cache = new_daily * 24 * 0.7 * 30  # assume 70% cache hit saves 70%
-        recommendations.append(f"Enable semantic caching to potentially save ~${base_monthly - savings_with_cache:.0f}/mo")
+        recommendations.append(
+            f"Enable semantic caching to potentially save ~${base_monthly - savings_with_cache:.0f}/mo"
+        )
     if len(baseline.get("model_distribution", [])) == 1:
-        recommendations.append("Consider multi-model routing to reduce single-provider risk")
+        recommendations.append(
+            "Consider multi-model routing to reduce single-provider risk"
+        )
     if not baseline.get("budget_config"):
-        recommendations.append("Set up budget alerts to catch cost spikes before they exceed limits")
+        recommendations.append(
+            "Set up budget alerts to catch cost spikes before they exceed limits"
+        )
 
     return {
         "baseline": {
@@ -352,7 +386,10 @@ def _get_cache_stats() -> dict:
     try:
         import urllib.request
         import json as _json
-        req = urllib.request.Request(f"{gateway_url}/v1/gateway/cache/stats", method="GET")
+
+        req = urllib.request.Request(
+            f"{gateway_url}/v1/gateway/cache/stats", method="GET"
+        )
         resp = urllib.request.urlopen(req, timeout=2)
         return _json.loads(resp.read().decode())
     except Exception:

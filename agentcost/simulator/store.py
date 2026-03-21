@@ -117,7 +117,16 @@ class SimulatorStore:
         org_id: str = "default",
         **kwargs,
     ) -> dict | None:
-        allowed = {"name", "description", "chaos_events", "traffic", "budget", "results", "tags", "architecture"}
+        allowed = {
+            "name",
+            "description",
+            "chaos_events",
+            "traffic",
+            "budget",
+            "results",
+            "tags",
+            "architecture",
+        }
         sets = []
         params = []
         for key, val in kwargs.items():

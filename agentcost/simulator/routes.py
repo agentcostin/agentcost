@@ -134,7 +134,9 @@ async def save_scenario(
     body = await request.json()
     store = SimulatorStore()
     org_id = getattr(user, "org_id", "default") if user else "default"
-    user_name = getattr(user, "name", None) or getattr(user, "email", None) if user else None
+    user_name = (
+        getattr(user, "name", None) or getattr(user, "email", None) if user else None
+    )
 
     result = store.save_scenario(
         name=body["name"],

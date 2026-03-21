@@ -153,7 +153,7 @@ select:focus,input:focus{border-color:var(--accent)}
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState,useEffect,useCallback} = React;
+const {useState,useEffect,useCallback,useRef} = React;
 const {LineChart,Line,BarChart,Bar,XAxis,YAxis,Tooltip,ResponsiveContainer,CartesianGrid,PieChart,Pie,Cell} = Recharts;
 
 const BASE = window.location.origin;
@@ -1099,6 +1099,259 @@ function ModelsExplorer(){
   </div>;
 }
 
+/* ── Cost Simulator ──────────────────────────────────────────────────────── */
+
+const SIM_NODES=[
+  {id:'gw',label:'API Gateway',icon:'🛡️',tags:['REST','gRPC'],color:'#6C63FF',x:40,y:195,w:130,h:80},
+  {id:'rtr',label:'Model Router',icon:'🔀',tags:['LB','smart'],color:'#00BFA6',x:220,y:195,w:130,h:80},
+  {id:'ch',label:'Semantic Cache',icon:'⚡',tags:['Redis','embed'],color:'#00BFA6',x:410,y:80,w:130,h:80},
+  {id:'llm',label:'LLM Provider',icon:'🧠',tags:['GPT-4o','Sonnet'],color:'#6C63FF',x:410,y:310,w:130,h:80},
+  {id:'ag',label:'Agent Runtime',icon:'🤖',tags:['CrewAI','LC'],color:'#f87171',x:600,y:195,w:130,h:80},
+  {id:'db',label:'Cost Database',icon:'🗄️',tags:['PG','OLTP'],color:'#fbbf24',x:790,y:195,w:130,h:80},
+];
+const SIM_EDGES=[['gw','rtr'],['rtr','ch'],['rtr','llm'],['ch','ag'],['llm','ag'],['ag','db']];
+const SIM_CHAOS=[
+  {cat:'Cost Chaos',clr:'#f87171',icon:'💰',items:[
+    {id:'cc01',label:'Token Price Spike (2×)',icon:'📈',desc:'Provider raises prices 2×',tgt:'llm',fx:'cost_2x'},
+    {id:'cc02',label:'Token Price Spike (3×)',icon:'📈',desc:'Emergency pricing change, 3×',tgt:'llm',fx:'cost_3x'},
+    {id:'cc03',label:'Token Price Spike (5×)',icon:'🔥',desc:'Extreme pricing event, 5×',tgt:'llm',fx:'cost_5x'},
+    {id:'cc04',label:'Cache Miss Storm',icon:'🌊',desc:'Cache hit rate drops to <5%',tgt:'ch',fx:'cachemiss'},
+    {id:'cc05',label:'Cache Eviction',icon:'💨',desc:'Cache capacity exceeded',tgt:'ch',fx:'cache_evict'},
+    {id:'cc06',label:'Runaway Agent',icon:'🔄',desc:'Single agent recursive loop, 5× burn',tgt:'ag',fx:'runaway'},
+    {id:'cc07',label:'Runaway Cascade',icon:'💥',desc:'Multi-agent cascade, 20× burn',tgt:'ag',fx:'runaway_cascade'},
+    {id:'cc08',label:'Budget Hard Breach',icon:'🚫',desc:'Budget exhausted, requests blocked',tgt:'db',fx:'budget_hard'},
+    {id:'cc09',label:'Retry Storm',icon:'🔁',desc:'Aggressive retries, 4× cost',tgt:'rtr',fx:'retry_storm'},
+    {id:'cc10',label:'Context Overflow',icon:'📦',desc:'Prompts split → 2× calls',tgt:'ag',fx:'context_overflow'},
+  ]},
+  {cat:'Model Chaos',clr:'#fbbf24',icon:'🧠',items:[
+    {id:'mc01',label:'Provider Outage',icon:'⚠️',desc:'Primary LLM completely down',tgt:'llm',fx:'outage'},
+    {id:'mc02',label:'Partial Degradation',icon:'🟡',desc:'50% error rate',tgt:'llm',fx:'partial_down'},
+    {id:'mc03',label:'Rate Limit Hit',icon:'🚦',desc:'Exceeded RPM limit',tgt:'llm',fx:'ratelimit'},
+    {id:'mc04',label:'Model Deprecated',icon:'🪦',desc:'Model version end-of-life',tgt:'rtr',fx:'deprec'},
+    {id:'mc05',label:'Quality Degradation',icon:'📉',desc:'Output quality drops',tgt:'ag',fx:'quality'},
+    {id:'mc06',label:'Latency Spike (10×)',icon:'🐢',desc:'Response 10× slower',tgt:'llm',fx:'latency_10x'},
+  ]},
+  {cat:'Governance',clr:'#34d399',icon:'⚖️',items:[
+    {id:'gc01',label:'Attribution Gap',icon:'🕳️',desc:'30% costs untraced',tgt:'db',fx:'noattr'},
+    {id:'gc02',label:'Prompt Injection',icon:'💉',desc:'Malicious prompt bypasses filters',tgt:'gw',fx:'inject'},
+    {id:'gc03',label:'Shadow AI Usage',icon:'👻',desc:'Untracked direct API calls',tgt:'gw',fx:'shadow'},
+    {id:'gc04',label:'Compliance Violation',icon:'⚖️',desc:'PII sent to wrong model',tgt:'rtr',fx:'compliance'},
+    {id:'gc05',label:'API Key Leaked',icon:'🔓',desc:'Production key exposed',tgt:'gw',fx:'key_leak'},
+  ]},
+  {cat:'Optimizations',clr:'#60a5fa',icon:'✨',items:[
+    {id:'pe01',label:'Cache Warmup Complete',icon:'🔥',desc:'Hit rate jumps to 88%',tgt:'ch',fx:'cache_warm'},
+    {id:'pe02',label:'Prompt Compression',icon:'🗜️',desc:'Tokens per request −30%',tgt:'ag',fx:'prompt_compress'},
+    {id:'pe03',label:'Fallback Activated',icon:'🔄',desc:'Backup routing working',tgt:'rtr',fx:'fallback_ok'},
+  ]},
+];
+const SIM_CHAOS_MAP={};SIM_CHAOS.forEach(c=>c.items.forEach(i=>{SIM_CHAOS_MAP[i.id]=i;}));
+const SIM_SCENARIOS=[
+  {id:'normal',name:'🟢 Normal Operations',desc:'Baseline — no chaos',traffic:50,events:[]},
+  {id:'price_shock',name:'📈 Price Shock',desc:'Provider triples prices overnight',traffic:50,events:['cc02']},
+  {id:'cache_fail',name:'🌊 Cache Down at Peak',desc:'Cache fails during peak traffic',traffic:85,events:['cc04']},
+  {id:'runaway',name:'🔄 Runaway Agent',desc:'Recursive loop, no budget guard',traffic:50,events:['cc06','gc01']},
+  {id:'outage',name:'⚠️ Provider Outage',desc:'Primary LLM goes down',traffic:70,events:['mc01']},
+  {id:'outage_fb',name:'✅ Outage + Fallback',desc:'Outage handled by backup routing',traffic:70,events:['mc01','pe03']},
+  {id:'governance',name:'👻 Governance Gaps',desc:'Shadow AI + no attribution + stale data',traffic:60,events:['gc03','gc01']},
+  {id:'storm',name:'🌪️ Perfect Storm',desc:'Price spike + cache down + runaway + shadow AI',traffic:90,events:['cc02','cc04','cc06','gc03']},
+  {id:'optimized',name:'🚀 Fully Optimized',desc:'Cache warmed + prompt compression',traffic:80,events:['pe01','pe02']},
+];
+
+const RISK_MAP={
+  outage:{n:'llm',l:'SPOF',c:'#f87171'},partial_down:{n:'llm',l:'DEGRADED',c:'#fbbf24'},
+  cost_5x:{n:'llm',l:'5× PRICE',c:'#f87171'},cost_3x:{n:'llm',l:'3× PRICE',c:'#f87171'},cost_2x:{n:'llm',l:'2× PRICE',c:'#fbbf24'},
+  cachemiss:{n:'ch',l:'COST SPIKE',c:'#fbbf24'},cache_evict:{n:'ch',l:'EVICTION',c:'#fbbf24'},
+  runaway:{n:'ag',l:'RUNAWAY',c:'#f87171'},runaway_cascade:{n:'ag',l:'CASCADE',c:'#f87171'},
+  context_overflow:{n:'ag',l:'OVERFLOW',c:'#fbbf24'},budget_hard:{n:'db',l:'OVER BUDGET',c:'#f87171'},
+  noattr:{n:'db',l:'BLIND SPOT',c:'#fbbf24'},inject:{n:'gw',l:'INJECTION',c:'#f87171'},
+  shadow:{n:'gw',l:'SHADOW AI',c:'#fbbf24'},key_leak:{n:'gw',l:'KEY LEAKED',c:'#f87171'},
+  compliance:{n:'rtr',l:'COMPLIANCE',c:'#f87171'},deprec:{n:'rtr',l:'DEPRECATED',c:'#fbbf24'},
+  ratelimit:{n:'llm',l:'RATE LIMIT',c:'#fbbf24'},retry_storm:{n:'rtr',l:'RETRY STORM',c:'#f87171'},
+  quality:{n:'ag',l:'QUALITY ↓',c:'#fbbf24'},latency_10x:{n:'llm',l:'SLOW 10×',c:'#f87171'},
+  cache_warm:{n:'ch',l:'CACHE HOT',c:'#34d399'},prompt_compress:{n:'ag',l:'OPTIMIZED',c:'#34d399'},
+  fallback_ok:{n:'rtr',l:'FALLBACK OK',c:'#34d399'},
+};
+
+function simTick(state){
+  const fx=new Set();state.activeEvents.forEach(e=>{if(e.fx)fx.add(e.fx);});
+  const tr=state.config.traffic,base=tr*22;
+  let rm=1;if(fx.has('outage'))rm=.08;else if(fx.has('ratelimit'))rm=.35;else if(fx.has('partial_down'))rm=.5;
+  const rps=Math.max(0,base*rm+(Math.random()-.5)*80);
+  let chr=.72;if(fx.has('cachemiss'))chr=.05;if(fx.has('cache_evict'))chr*=.3;if(fx.has('cache_warm'))chr=.88;
+  const llmR=rps*(1-chr);
+  let tpr=850;if(fx.has('runaway'))tpr*=5;if(fx.has('runaway_cascade'))tpr*=20;if(fx.has('context_overflow'))tpr*=2;
+  if(fx.has('retry_storm'))tpr*=4;if(fx.has('prompt_compress'))tpr*=.7;
+  let cm=1;if(fx.has('cost_2x'))cm=2;if(fx.has('cost_3x'))cm=3;if(fx.has('cost_5x'))cm=5;
+  const cps=(llmR*tpr*.0000025*cm)+(llmR*tpr*.4*.00001*cm);
+  let lat=14+tr*.6;if(fx.has('outage'))lat=9500;else if(fx.has('ratelimit'))lat=2400;
+  else if(fx.has('cachemiss'))lat=520;else if(fx.has('latency_10x'))lat*=10;
+  lat=Math.max(1,lat+(Math.random()-.5)*10);
+  let avl=99.9;if(fx.has('outage'))avl=fx.has('fallback_ok')?85:11.2;
+  else if(fx.has('ratelimit'))avl=64.8;else if(fx.has('budget_hard'))avl=0;
+  avl=Math.max(0,Math.min(100,avl-fx.size*.25));
+  const ld={};SIM_NODES.forEach(n=>{let b=state.loads[n.id]||20;b+=(Math.random()-.4)*18;
+    if(n.id==='llm'&&fx.has('outage'))b=0;if(n.id==='ch'&&fx.has('cachemiss'))b=95;
+    if(n.id==='ag'&&fx.has('runaway'))b=98;ld[n.id]=Math.max(0,Math.min(100,b));});
+  const m={rps,lat,avl,cph:Math.max(0,cps*3600),spent:state.metrics.spent+Math.max(0,cps),
+    tok:state.metrics.tok+rps*1.6,budget:state.config.budget||5000,chr};
+  const risks=[];fx.forEach(f=>{if(RISK_MAP[f])risks.push({...RISK_MAP[f]});});
+  const bp=m.budget>0?m.spent/m.budget:0;
+  if(bp>=.95&&!fx.has('budget_hard'))risks.push({n:'db',l:'95% BUDGET',c:'#f87171'});
+  else if(bp>=.8&&!fx.has('budget_hard'))risks.push({n:'db',l:'80% BUDGET',c:'#fbbf24'});
+  return{...state,tick:state.tick+1,metrics:m,loads:ld,risks};
+}
+
+function SimulatorPage(){
+  const[running,setRunning]=useState(false);
+  const[tick,setTick]=useState(0);
+  const[spd,setSpd]=useState(1);
+  const[config,setConfig]=useState({traffic:50,budget:5000});
+  const[activeEvents,setActiveEvents]=useState([]);
+  const[metrics,setMetrics]=useState({rps:0,lat:14,avl:99.9,cph:0,spent:0,tok:0,budget:5000,chr:.72});
+  const[loads,setLoads]=useState({});
+  const[risks,setRisks]=useState([]);
+  const[evtLog,setEvtLog]=useState([]);
+  const[sideTab,setSideTab]=useState('chaos');
+  const[search,setSearch]=useState('');
+  const ref=useRef(null);
+  const stateRef=useRef({tick:0,config,activeEvents,metrics,loads,risks});
+
+  useEffect(()=>{stateRef.current={tick,config,activeEvents,metrics,loads,risks};},[tick,config,activeEvents,metrics,loads,risks]);
+
+  const doTick=useCallback(()=>{
+    const s=stateRef.current;
+    const next=simTick({...s,config:s.config,activeEvents:s.activeEvents,metrics:s.metrics,loads:s.loads});
+    setTick(next.tick);setMetrics(next.metrics);setLoads(next.loads);setRisks(next.risks);
+  },[]);
+
+  useEffect(()=>{
+    clearInterval(ref.current);
+    if(running){ref.current=setInterval(doTick,1000/spd);}
+    return()=>clearInterval(ref.current);
+  },[running,spd,doTick]);
+
+  const inject=(item)=>{
+    const isActive=activeEvents.some(e=>e.id===item.id);
+    const next=isActive?activeEvents.filter(e=>e.id!==item.id):[...activeEvents,item];
+    setActiveEvents(next);
+    setEvtLog(p=>[{t:tick,msg:isActive?`✅ Resolved: ${item.label}`:`🔴 Injected: ${item.label}`,c:isActive?'#34d399':'#f87171'},...p.slice(0,99)]);
+  };
+  const fixNode=(nid)=>{
+    const rm=activeEvents.filter(e=>e.tgt===nid);
+    setActiveEvents(activeEvents.filter(e=>e.tgt!==nid));
+    rm.forEach(e=>setEvtLog(p=>[{t:tick,msg:`🔧 Fixed: ${e.label}`,c:'#34d399'},...p.slice(0,99)]));
+  };
+  const loadScenario=(sc)=>{
+    setRunning(false);setTick(0);setMetrics({rps:0,lat:14,avl:99.9,cph:0,spent:0,tok:0,budget:5000,chr:.72});setLoads({});setRisks([]);
+    setConfig({traffic:sc.traffic,budget:5000});
+    const evts=sc.events.map(id=>SIM_CHAOS_MAP[id]).filter(Boolean);
+    setActiveEvents(evts);
+    setEvtLog([{t:0,msg:`📋 Loaded: ${sc.name}`,c:'#60a5fa'},...evts.map(e=>({t:0,msg:`🔴 Scenario: ${e.label}`,c:'#60a5fa'}))]);
+    setTimeout(()=>setRunning(true),100);
+  };
+  const resetSim=()=>{
+    setRunning(false);setTick(0);setActiveEvents([]);
+    setMetrics({rps:0,lat:14,avl:99.9,cph:0,spent:0,tok:0,budget:5000,chr:.72});
+    setLoads({});setRisks([]);setEvtLog([]);setConfig({traffic:50,budget:5000});
+  };
+
+  const fmt=n=>n>=1e6?`${(n/1e6).toFixed(1)}M`:n>=1e3?`${(n/1e3).toFixed(1)}K`:n.toFixed(0);
+  const m=metrics;const budgetPct=m.budget>0?m.spent/m.budget*100:0;
+  const latStr=m.lat>1000?`${(m.lat/1000).toFixed(1)}s`:`${m.lat.toFixed(0)}ms`;
+  const activeIds=new Set(activeEvents.map(e=>e.id));
+  const hotNodes=new Set(risks.filter(r=>r.c!=='#34d399').map(r=>r.n));
+  const risksByNode={};risks.forEach(r=>{if(!risksByNode[r.n])risksByNode[r.n]=[];risksByNode[r.n].push(r);});
+  const filtered=SIM_CHAOS.map(cat=>({...cat,items:cat.items.filter(i=>!search||i.label.toLowerCase().includes(search.toLowerCase())||i.desc.toLowerCase().includes(search.toLowerCase()))})).filter(c=>c.items.length>0);
+  const hrs=Math.floor(tick/3600),mins=Math.floor((tick%3600)/60),secs=tick%60;
+
+  const edgePath=(a,b)=>{const x1=a.x+a.w/2,y1=a.y+a.h/2,x2=b.x+b.w/2,y2=b.y+b.h/2,mx=(x1+x2)/2;return`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;};
+
+  return <div style={{display:'flex',height:'100%',background:'var(--bg-0)',color:'var(--text-1)',fontSize:13,overflow:'hidden'}}>
+    <style>{`@keyframes sim-pulse{0%,100%{opacity:1}50%{opacity:.3}}`}</style>
+    {/* ── Sidebar ── */}
+    <div style={{width:234,background:'var(--bg-1)',borderRight:'1px solid var(--border)',display:'flex',flexDirection:'column',overflow:'hidden',flexShrink:0}}>
+      <div style={{padding:'12px 14px',borderBottom:'1px solid var(--border)'}}>
+        <div style={{display:'flex',alignItems:'center',gap:6}}><span style={{fontSize:18}}>🔬</span><span style={{fontWeight:800,fontSize:14,color:'var(--accent)'}}>Cost</span><span style={{fontSize:13,fontWeight:600,color:'var(--text-1)'}}>Simulator</span></div>
+        <div style={{fontSize:10,color:'var(--text-3)',marginTop:2}}>Chaos engineering for AI costs</div>
+      </div>
+      <div style={{display:'flex',borderBottom:'1px solid var(--border)'}}>
+        {[{id:'chaos',label:'Chaos Items'},{id:'scenarios',label:'Scenarios'},{id:'log',label:`Log (${evtLog.length})`}].map(t=>(
+          <button key={t.id} onClick={()=>setSideTab(t.id)} style={{flex:1,padding:'7px 2px',border:'none',cursor:'pointer',fontSize:10,fontWeight:600,background:sideTab===t.id?'var(--bg-2)':'transparent',color:sideTab===t.id?'#fff':'var(--text-3)',borderBottom:sideTab===t.id?'2px solid var(--accent)':'2px solid transparent',fontFamily:'var(--font)'}}>{t.label}</button>
+        ))}
+      </div>
+      {sideTab==='chaos'&&<div style={{padding:'8px 10px'}}><input type="text" placeholder="Search chaos events..." value={search} onChange={e=>setSearch(e.target.value)} style={{width:'100%',padding:'6px 10px',fontSize:11,background:'var(--bg-3)',border:'1px solid var(--border)',borderRadius:6,color:'var(--text-1)',outline:'none',fontFamily:'var(--font)'}}/></div>}
+      <div style={{flex:1,overflowY:'auto',paddingBottom:8}}>
+        {sideTab==='chaos'&&filtered.map(cat=><div key={cat.cat}>
+          <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'.8px',padding:'10px 12px 4px',color:cat.clr}}>{cat.icon} {cat.cat}</div>
+          {cat.items.map(item=>{const isA=activeIds.has(item.id);return<div key={item.id} onClick={()=>inject(item)} style={{display:'flex',alignItems:'center',gap:8,padding:'6px 10px',margin:'2px 6px',borderRadius:6,cursor:'pointer',transition:'all .15s',background:isA?'rgba(248,113,113,.12)':'transparent',border:isA?'1px solid rgba(248,113,113,.25)':'1px solid transparent'}}>
+            <span style={{fontSize:15,flexShrink:0}}>{item.icon}</span>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:11,fontWeight:600,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</div>
+              <div style={{fontSize:9,color:'var(--text-3)',marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.desc}</div>
+            </div>
+            {isA&&<span style={{width:6,height:6,borderRadius:3,flexShrink:0,background:'#f87171',animation:'sim-pulse 1s infinite'}}/>}
+          </div>;})}
+        </div>)}
+        {sideTab==='scenarios'&&<div style={{padding:'8px 6px'}}>{SIM_SCENARIOS.map(sc=><div key={sc.id} onClick={()=>loadScenario(sc)} style={{padding:'10px 12px',margin:'4px 0',borderRadius:8,background:'var(--bg-2)',border:'1px solid var(--border)',cursor:'pointer',transition:'all .15s'}}>
+          <div style={{fontSize:12,fontWeight:700}}>{sc.name}</div>
+          <div style={{fontSize:10,color:'var(--text-2)',marginTop:3,lineHeight:1.3}}>{sc.desc}</div>
+          <div style={{fontSize:9,color:'var(--text-3)',marginTop:5}}>{sc.events.length} event{sc.events.length!==1?'s':''} · Traffic: {sc.traffic}</div>
+        </div>)}</div>}
+        {sideTab==='log'&&<div style={{padding:8}}>
+          {evtLog.length===0&&<div style={{color:'var(--text-3)',textAlign:'center',padding:30,fontSize:11}}>No events yet. Inject chaos to see activity.</div>}
+          {evtLog.map((e,i)=><div key={i} style={{padding:'4px 8px',fontSize:10,borderLeft:`2px solid ${e.c}`,marginBottom:4,color:'var(--text-2)'}}><span style={{color:'var(--text-3)',fontFamily:'var(--mono)',fontSize:9}}>[{String(Math.floor((e.t||0)/60)).padStart(2,'0')}:{String((e.t||0)%60).padStart(2,'0')}]</span> {e.msg}</div>)}
+        </div>}
+      </div>
+      {activeEvents.length>0&&<div style={{padding:'8px 12px',borderTop:'1px solid var(--border)',fontSize:11,color:'#f87171',fontWeight:600,textAlign:'center'}}>🔴 {activeEvents.length} active event{activeEvents.length!==1?'s':''}</div>}
+    </div>
+    {/* ── Main ── */}
+    <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+      {/* Metrics bar */}
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'8px 16px',background:'var(--bg-1)',borderBottom:'1px solid var(--border)',flexWrap:'wrap',gap:4,flexShrink:0}}>
+        <div style={{display:'flex',alignItems:'center'}}>
+          {[{v:'⚡ '+fmt(m.rps),l:'Req/s',c:m.rps<200?'#f87171':'#34d399'},{v:'🔴 '+latStr,l:'Latency',c:m.lat>2000?'#f87171':'#fbbf24'},{v:'💚 '+m.avl.toFixed(1)+'%',l:'Avail',c:m.avl<90?'#f87171':m.avl<99?'#fbbf24':'#34d399'},{v:'⚡ '+(m.chr*100).toFixed(0)+'%',l:'Cache Hit',c:m.chr<.2?'#f87171':'#34d399'}].map((x,i)=><div key={i} style={{textAlign:'center',padding:'0 12px'}}><div style={{fontSize:17,fontWeight:700,letterSpacing:'-.5px',color:x.c,lineHeight:1.2}}>{x.v}</div><div style={{fontSize:9,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'.5px',marginTop:2}}>{x.l}</div></div>)}
+        </div>
+        <div style={{display:'flex',alignItems:'center'}}>
+          {[{v:'$'+m.cph.toFixed(2)+'/h',l:'Cost Rate',c:'var(--accent)'},{v:'$'+m.spent.toFixed(2),l:'Spent',c:budgetPct>90?'#f87171':budgetPct>70?'#fbbf24':'var(--text-0)'},{v:'$'+fmt(m.budget)+'/mo',l:'Budget',c:'var(--text-3)'},{v:fmt(m.tok),l:'Tokens',c:'#60a5fa'}].map((x,i)=><div key={i} style={{textAlign:'center',padding:'0 12px'}}><div style={{fontSize:17,fontWeight:700,letterSpacing:'-.5px',color:x.c,lineHeight:1.2}}>{x.v}</div><div style={{fontSize:9,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'.5px',marginTop:2}}>{x.l}</div></div>)}
+        </div>
+      </div>
+      {/* Budget bar */}
+      <div style={{height:3,background:'var(--bg-2)',flexShrink:0}}><div style={{height:3,width:Math.min(100,budgetPct)+'%',background:budgetPct>90?'#f87171':budgetPct>70?'#fbbf24':'var(--accent)',transition:'width .5s'}}/></div>
+      {/* Canvas */}
+      <div style={{flex:1,position:'relative',overflow:'hidden'}}>
+        <svg width="100%" height="100%" style={{position:'absolute',top:0,left:0,pointerEvents:'none'}}>
+          <defs><marker id="sim-arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="none" stroke="var(--border-h)" strokeWidth="1.5"/></marker></defs>
+          {SIM_EDGES.map(([a,b],i)=>{const na=SIM_NODES.find(n=>n.id===a),nb=SIM_NODES.find(n=>n.id===b);if(!na||!nb)return null;const hot=hotNodes.has(a)||hotNodes.has(b);const d=edgePath(na,nb);
+            return<g key={i}><path d={d} fill="none" stroke={hot?'rgba(248,113,113,.45)':'var(--border-h)'} strokeWidth={hot?2.5:1.5} strokeDasharray={running?undefined:'6 4'} markerEnd="url(#sim-arr)"/>
+            {running&&<circle r="3" fill={hot?'#f87171':'#34d399'} opacity={.7}><animateMotion dur={`${2/spd}s`} repeatCount="indefinite" path={d}/></circle>}</g>;})}
+        </svg>
+        {SIM_NODES.map(node=>{const nRisks=risksByNode[node.id]||[];const ld=loads[node.id]||0;const hasCrit=nRisks.some(r=>r.c==='#f87171');const hasRisk=nRisks.filter(r=>r.c!=='#34d399').length>0;
+          return<div key={node.id} style={{position:'absolute',left:node.x,top:node.y,width:node.w,height:node.h,borderRadius:10,background:hasCrit?'rgba(248,113,113,.1)':'var(--bg-1)',border:`1.5px solid ${hasCrit?'#f87171':hasRisk?'#fbbf24':node.color+'44'}`,transition:'all .3s',boxShadow:hasRisk?`0 0 24px ${nRisks[0].c}18`:'none',zIndex:10}}>
+            {nRisks.map((r,i)=><div key={i} style={{position:'absolute',top:-12-i*22,right:-8,background:r.c,color:'#000',fontSize:9,fontWeight:800,padding:'2px 6px',borderRadius:4,whiteSpace:'nowrap',letterSpacing:'.5px',zIndex:20+i}}>{r.l}</div>)}
+            {hasRisk&&<div onClick={()=>fixNode(node.id)} style={{position:'absolute',top:nRisks.length*-22-12,right:-8,background:'#34d399',color:'#000',fontSize:9,fontWeight:800,padding:'2px 6px',borderRadius:4,cursor:'pointer',display:'flex',alignItems:'center',gap:3,zIndex:30}}>🔧 FIX</div>}
+            <div style={{padding:'6px 8px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:'100%',gap:2}}>
+              <span style={{fontSize:22,lineHeight:1}}>{node.icon}</span>
+              <div style={{fontSize:11,fontWeight:700,textAlign:'center',lineHeight:1.2}}>{node.label}</div>
+              <div style={{display:'flex',gap:3,marginTop:2}}>{node.tags.map((tg,i)=><span key={i} style={{fontSize:8,padding:'1px 4px',borderRadius:3,background:'var(--bg-3)',color:'var(--text-3)'}}>{tg}</span>)}</div>
+            </div>
+            {running&&<div style={{position:'absolute',bottom:0,left:0,right:0,height:3,borderRadius:'0 0 10px 10px',overflow:'hidden',background:'var(--bg-0)'}}><div style={{height:3,width:ld+'%',background:ld>80?'#f87171':ld>50?'#fbbf24':'#34d399',transition:'width .5s'}}/></div>}
+            {running&&ld>35&&<div style={{position:'absolute',bottom:-16,left:'50%',transform:'translateX(-50%)',fontSize:9,color:ld>80?'#f87171':'var(--text-3)',fontWeight:600}}>LOAD: {ld.toFixed(0)}%</div>}
+          </div>;})}
+        {!running&&<div style={{position:'absolute',top:'50%',left:'55%',transform:'translate(-50%,-50%)',textAlign:'center',pointerEvents:'none',opacity:.3}}><div style={{fontSize:36,marginBottom:8}}>🔬</div><div style={{fontSize:14,fontWeight:700,color:'var(--text-2)'}}>Click START to begin simulation</div><div style={{fontSize:11,color:'var(--text-3)',marginTop:4}}>Inject chaos events from the sidebar to stress-test your AI costs</div></div>}
+      </div>
+      {/* Controls */}
+      <div style={{display:'flex',alignItems:'center',gap:16,padding:'8px 16px',background:'var(--bg-1)',borderTop:'1px solid var(--border)',flexShrink:0}}>
+        <button onClick={()=>running?setRunning(false):setRunning(true)} style={{padding:'6px 16px',borderRadius:6,border:'none',cursor:'pointer',fontWeight:700,fontSize:12,fontFamily:'var(--font)',background:running?'#f87171':'#34d399',color:'#fff',transition:'all .2s'}}>{running?'⏸ PAUSE':'▶ START'} SIMULATION</button>
+        <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--text-2)'}}>Speed: <input type="range" min={.5} max={3} step={.5} value={spd} onChange={e=>setSpd(+e.target.value)} style={{width:60,accentColor:'var(--accent)'}}/><span style={{color:'var(--text-0)',fontWeight:600,minWidth:24}}>{spd}×</span></div>
+        <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--text-2)'}}>Traffic: <input type="range" min={10} max={100} value={config.traffic} onChange={e=>setConfig({...config,traffic:+e.target.value})} style={{width:80,accentColor:'var(--accent)'}}/><span style={{color:'var(--text-0)',fontWeight:600,minWidth:20}}>{config.traffic}</span></div>
+        <div style={{flex:1}}/>
+        <div style={{fontSize:11,color:'var(--text-3)',fontFamily:'var(--mono)',background:'var(--bg-3)',padding:'4px 10px',borderRadius:4}}>SIM {hrs}h {String(mins).padStart(2,'0')}m {String(secs).padStart(2,'0')}s</div>
+        <button onClick={resetSim} style={{padding:'6px 14px',borderRadius:6,border:'none',cursor:'pointer',fontWeight:600,fontSize:11,fontFamily:'var(--font)',background:'var(--bg-3)',color:'var(--text-2)'}}>↺ RESET</button>
+      </div>
+    </div>
+  </div>;
+}
+
 /* ── App Shell ───────────────────────────────────────────────────────────── */
 
 const NAV = [
@@ -1106,9 +1359,10 @@ const NAV = [
   {section:'Intelligence'},{id:'forecast',icon:'🔮',label:'Forecast'},{id:'optimizer',icon:'⚡',label:'Optimizer'},{id:'estimator',icon:'🧮',label:'Estimator'},{id:'models',icon:'🤖',label:'Models'},
   {section:'Governance'},{id:'budgets',icon:'💰',label:'Budgets'},{id:'costcenters',icon:'🏢',label:'Cost Centers'},{id:'policies',icon:'🛡️',label:'Policies'},{id:'approvals',icon:'📋',label:'Approvals'},
   {section:'Operations'},{id:'team',icon:'👥',label:'Team'},{id:'notifications',icon:'🔔',label:'Notifications'},{id:'scorecards',icon:'🏆',label:'Scorecards'},
+  {section:'Tools'},{id:'simulator',icon:'🔬',label:'Cost Simulator'},
   {section:'System'},{id:'audit',icon:'📝',label:'Audit Log'},{id:'settings',icon:'⚙️',label:'Settings'},
 ];
-const TITLES = {overview:'Overview',benchmarks:'Benchmarks',traces:'Traces',feedback:'Feedback & Quality',forecast:'Cost Forecast',optimizer:'Cost Optimizer',estimator:'Cost Estimator',models:'Model Explorer',budgets:'Budgets',costcenters:'Cost Centers',policies:'Policies',approvals:'Approvals',team:'Team',notifications:'Notifications',scorecards:'Agent Scorecards',audit:'Audit Log',settings:'Settings'};
+const TITLES = {overview:'Overview',benchmarks:'Benchmarks',traces:'Traces',feedback:'Feedback & Quality',forecast:'Cost Forecast',optimizer:'Cost Optimizer',estimator:'Cost Estimator',models:'Model Explorer',budgets:'Budgets',costcenters:'Cost Centers',policies:'Policies',approvals:'Approvals',team:'Team',notifications:'Notifications',scorecards:'Agent Scorecards',audit:'Audit Log',settings:'Settings',simulator:'Cost Simulator'};
 
 function App(){
   const [tab,setTab]=useState('overview');const [project,setProject]=useState('');
@@ -1197,6 +1451,7 @@ function App(){
           return <div key={item.id} className={`nav-item ${tab===item.id?'active':''}`} onClick={()=>selectTab(item.id)}>
             <span className="icon">{item.icon}</span><span>{item.label}</span>
             {item.id==='approvals'&&pending>0&&<span className="badge-count">{pending}</span>}
+            {item.id==='simulator'&&<span style={{fontSize:'.55rem',fontWeight:700,background:'var(--accent)',color:'#fff',padding:'1px 5px',borderRadius:3,marginLeft:'auto',letterSpacing:'.5px'}}>BETA</span>}
           </div>;
         });})()}
       </div>
@@ -1217,15 +1472,15 @@ function App(){
       </div>
     </div>
     <div className="main">
-      <div className="main-header">
+      {tab!=='simulator'&&<div className="main-header">
         <h2>{TITLES[tab]||tab}</h2>
         <div className="controls">
           {(tab==='overview'||tab==='traces'||tab==='benchmarks'||tab==='forecast'||tab==='optimizer'||tab==='estimator'||tab==='feedback')&&projects.length>0&&<select value={project} onChange={e=>setProject(e.target.value)}>
             <option value="">All Projects</option>{projects.map(p=><option key={p} value={p}>{p}</option>)}
           </select>}
         </div>
-      </div>
-      <div className="main-content">
+      </div>}
+      <div className="main-content" style={tab==='simulator'?{padding:0,overflow:'hidden'}:{}}>
         {tab==='overview'&&<Overview project={project}/>}
         {tab==='benchmarks'&&<Benchmarks/>}
         {tab==='traces'&&<Traces project={project}/>}
@@ -1243,14 +1498,15 @@ function App(){
         {tab==='scorecards'&&<Scorecards/>}
         {tab==='audit'&&<Audit/>}
         {tab==='settings'&&<Settings user={user}/>}
+        {tab==='simulator'&&<SimulatorPage/>}
       </div>
-      <div className="feedback-bar">
+      {tab!=='simulator'&&<div className="feedback-bar">
         <span>💬 Feedback is integral to AgentCost — your input motivates us for continuous enhancement and improvement</span>
         <span style={{display:'flex',gap:'.5rem',alignItems:'center'}}>
           <span className="fb-btn" style={{opacity:.7,fontSize:'.85rem'}} title="Love AgentCost" onClick={()=>{selectTab('feedback')}}>👍</span>
           <a href="mailto:open@agentcost.in" style={{color:'var(--accent)',textDecoration:'none',fontSize:'.75rem',fontWeight:500}}>Share feedback →</a>
         </span>
-      </div>
+      </div>}
     </div>
     {showProfile&&<ProfileModal user={user} onClose={()=>setShowProfile(false)} onSaved={(u)=>{setUser(u);setShowProfile(false);}}/>}
   </div>;

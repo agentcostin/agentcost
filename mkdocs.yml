@@ -40,6 +40,7 @@ nav:
     - vs Helicone: compare/helicone.md
     - vs Portkey: compare/portkey.md
     - vs LiteLLM: compare/litellm.md
+  - Blog: blog/index.md
   - Getting Started:
     - Installation: getting-started.md
     - Core Concepts: concepts.md
@@ -91,6 +92,10 @@ markdown_extensions:
 
 plugins:
   - search
+  - blog:
+      blog_dir: blog
+      post_date_format: long
+      post_url_format: "{slug}"
 
 extra:
   social:

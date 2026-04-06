@@ -40,7 +40,9 @@ nav:
     - vs Helicone: compare/helicone.md
     - vs Portkey: compare/portkey.md
     - vs LiteLLM: compare/litellm.md
-  - Blog: blog/index.md
+  - Blog: 
+    - blog/posts/litellm-supply-chain-attack.md
+    - blog/posts/ai-agent-budget-bounds-not-dashboards.md
   - Getting Started:
     - Installation: getting-started.md
     - Core Concepts: concepts.md

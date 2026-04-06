@@ -14,6 +14,8 @@
       
       
       
+        <link rel="next" href="../ai-agent-budget-bounds-not-dashboards/">
+      
       
         
       
@@ -260,20 +262,19 @@
   
   
   
-    
-  
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="../" class="md-tabs__link">
-        
-  
   
     
+    
+      <li class="md-tabs__item">
+        <a href="./" class="md-tabs__link">
+          
+  
   
   Blog
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -674,15 +675,29 @@
       
   
   
-    
   
   
     
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      <a href="../" class="md-nav__link">
+    
+    
+    
+      
+      
         
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -696,7 +711,253 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The litellm Supply Chain Attack Proves AI Cost Tools Need Fewer Dependencies, Not More
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The litellm Supply Chain Attack Proves AI Cost Tools Need Fewer Dependencies, Not More
+  
+
+    
+  </span>
+  
+  
+
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-we-built-agentcost-with-4-dependencies-and-why-that-decision-matters-more-than-ever-after-march-24-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How we built AgentCost with 4 dependencies — and why that decision matters more than ever after March 24, 2026.
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-actually-happened" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What actually happened
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-blast-radius-its-not-just-litellm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The blast radius: it's not just litellm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-dependency-problem-in-ai-tooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The dependency problem in AI tooling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-we-built-agentcost-with-4-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How we built AgentCost with 4 dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How we built AgentCost with 4 dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-we-vendor-our-own-pricing-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. We vendor our own pricing database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-we-wrap-provider-sdks-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. We wrap provider SDKs directly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-we-avoid-deep-dependency-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. We avoid deep dependency trees
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-we-pin-exact-versions-in-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. We pin exact versions in CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-do-right-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you should do right now
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-bigger-lesson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The bigger lesson
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai-agent-budget-bounds-not-dashboards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why AI Agents Need Budget Bounds, Not Dashboards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 

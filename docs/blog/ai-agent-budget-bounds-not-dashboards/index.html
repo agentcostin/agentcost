@@ -6,17 +6,15 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="AI Agent Cost Governance — track, control, and optimize LLM spending across 2,610+ models">
+        <meta name="description" content="Observability dashboards show what happened. Budget bounds prevent it. Why cost governance, not monitoring, is the missing piece in agentic AI systems.">
       
       
       
-        <link rel="canonical" href="https://agentcost.in/docs/guides/templates/">
+        <link rel="canonical" href="https://agentcost.in/docs/blog/ai-agent-budget-bounds-not-dashboards/">
       
       
-        <link rel="prev" href="../goals/">
+        <link rel="prev" href="../the-litellm-supply-chain-attack-proves-ai-cost-tools-need-fewer-dependencies-not-more/">
       
-      
-        <link rel="next" href="../heartbeat/">
       
       
         
@@ -27,7 +25,7 @@
     
     
       
-        <title>Governance Templates - AgentCost</title>
+        <title>Why AI Agents Need Budget Bounds, Not Dashboards - AgentCost</title>
       
     
     
@@ -80,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#governance-templates" class="md-skip">
+        <a href="#why-ai-agents-need-budget-bounds-not-dashboards" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Governance Templates
+              Why AI Agents Need Budget Bounds, Not Dashboards
             
           </span>
         </div>
@@ -268,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../blog/the-litellm-supply-chain-attack-proves-ai-cost-tools-need-fewer-dependencies-not-more/" class="md-tabs__link">
+        <a href="../the-litellm-supply-chain-attack-proves-ai-cost-tools-need-fewer-dependencies-not-more/" class="md-tabs__link">
           
   
   
@@ -304,13 +302,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../dashboard/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../guides/dashboard/" class="md-tabs__link">
           
   
   
@@ -411,7 +407,9 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -734,7 +732,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../blog/the-litellm-supply-chain-attack-proves-ai-cost-tools-need-fewer-dependencies-not-more/" class="md-nav__link">
+      <a href="../the-litellm-supply-chain-attack-proves-ai-cost-tools-need-fewer-dependencies-not-more/" class="md-nav__link">
         
   
   
@@ -759,10 +757,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../blog/ai-agent-budget-bounds-not-dashboards/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why AI Agents Need Budget Bounds, Not Dashboards
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -778,6 +803,153 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-structural-drift-problem-one-request-many-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Structural Drift Problem: One Request, Many Calls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observability-vs-governance-a-fundamental-distinction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observability vs Governance: A Fundamental Distinction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-runaway-agent-problem-when-dashboards-arrive-too-late" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Runaway Agent Problem: When Dashboards Arrive Too Late
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-implement-ai-agent-budget-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Implement AI Agent Budget Enforcement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Implement AI Agent Budget Enforcement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-per-agent-cost-attribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Per-Agent Cost Attribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-policy-as-code-via-cel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Policy-as-Code via CEL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-real-time-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Real-Time Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supply-chain-security-why-vendored-pricing-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supply Chain Security: Why Vendored Pricing Matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-ha-ratio-measuring-governance-maturity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The H:A Ratio: Measuring Governance Maturity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps-from-visibility-to-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps: From Visibility to Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discussion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discussion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -911,31 +1083,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -953,7 +1122,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -971,7 +1140,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dashboard/" class="md-nav__link">
+      <a href="../../guides/dashboard/" class="md-nav__link">
         
   
   
@@ -999,7 +1168,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompts/" class="md-nav__link">
+      <a href="../../guides/prompts/" class="md-nav__link">
         
   
   
@@ -1027,7 +1196,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../feedback/" class="md-nav__link">
+      <a href="../../guides/feedback/" class="md-nav__link">
         
   
   
@@ -1055,7 +1224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../semantic-caching/" class="md-nav__link">
+      <a href="../../guides/semantic-caching/" class="md-nav__link">
         
   
   
@@ -1083,7 +1252,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../case-study/" class="md-nav__link">
+      <a href="../../guides/case-study/" class="md-nav__link">
         
   
   
@@ -1111,7 +1280,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cursor-costs/" class="md-nav__link">
+      <a href="../../guides/cursor-costs/" class="md-nav__link">
         
   
   
@@ -1139,7 +1308,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../intelligence/" class="md-nav__link">
+      <a href="../../guides/intelligence/" class="md-nav__link">
         
   
   
@@ -1167,7 +1336,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../goals/" class="md-nav__link">
+      <a href="../../guides/goals/" class="md-nav__link">
         
   
   
@@ -1192,37 +1361,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Templates
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../guides/templates/" class="md-nav__link">
         
   
   
@@ -1238,137 +1380,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#built-in-templates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Built-in Templates
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-templates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using Templates
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Using Templates">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#preview-before-applying" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preview Before Applying
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#apply-a-template" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Apply a Template
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-templates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Templates
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Custom Templates">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#create-from-yaml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Create from YAML
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#load-and-apply" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Load and Apply
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#export-current-config" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Export Current Config
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#template-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Template Sections
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1381,7 +1392,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../heartbeat/" class="md-nav__link">
+      <a href="../../guides/heartbeat/" class="md-nav__link">
         
   
   
@@ -1409,7 +1420,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../langchain/" class="md-nav__link">
+      <a href="../../guides/langchain/" class="md-nav__link">
         
   
   
@@ -1437,7 +1448,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../crewai/" class="md-nav__link">
+      <a href="../../guides/crewai/" class="md-nav__link">
         
   
   
@@ -1465,7 +1476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../autogen/" class="md-nav__link">
+      <a href="../../guides/autogen/" class="md-nav__link">
         
   
   
@@ -1493,7 +1504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../llamaindex/" class="md-nav__link">
+      <a href="../../guides/llamaindex/" class="md-nav__link">
         
   
   
@@ -1521,7 +1532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../plugins/" class="md-nav__link">
+      <a href="../../guides/plugins/" class="md-nav__link">
         
   
   
@@ -1549,7 +1560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../exporters/" class="md-nav__link">
+      <a href="../../guides/exporters/" class="md-nav__link">
         
   
   
@@ -1577,7 +1588,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../otel-collector/" class="md-nav__link">
+      <a href="../../guides/otel-collector/" class="md-nav__link">
         
   
   
@@ -1605,7 +1616,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mcp-server/" class="md-nav__link">
+      <a href="../../guides/mcp-server/" class="md-nav__link">
         
   
   
@@ -1633,7 +1644,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../self-hosting/" class="md-nav__link">
+      <a href="../../guides/self-hosting/" class="md-nav__link">
         
   
   
@@ -1661,7 +1672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../air-gapped/" class="md-nav__link">
+      <a href="../../guides/air-gapped/" class="md-nav__link">
         
   
   
@@ -1689,7 +1700,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agentcost-integration-into-existing-projects/" class="md-nav__link">
+      <a href="../../guides/agentcost-integration-into-existing-projects/" class="md-nav__link">
         
   
   
@@ -2041,6 +2052,8 @@
             
             
               
+                
+              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -2060,10 +2073,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#built-in-templates" class="md-nav__link">
+  <a href="#the-structural-drift-problem-one-request-many-calls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in Templates
+        The Structural Drift Problem: One Request, Many Calls
       
     </span>
   </a>
@@ -2071,22 +2084,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#using-templates" class="md-nav__link">
+  <a href="#observability-vs-governance-a-fundamental-distinction" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Templates
+        Observability vs Governance: A Fundamental Distinction
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using Templates">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-runaway-agent-problem-when-dashboards-arrive-too-late" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Runaway Agent Problem: When Dashboards Arrive Too Late
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-implement-ai-agent-budget-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Implement AI Agent Budget Enforcement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Implement AI Agent Budget Enforcement">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#preview-before-applying" class="md-nav__link">
+  <a href="#step-1-per-agent-cost-attribution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preview Before Applying
+        Step 1: Per-Agent Cost Attribution
       
     </span>
   </a>
@@ -2094,10 +2129,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#apply-a-template" class="md-nav__link">
+  <a href="#step-2-policy-as-code-via-cel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Apply a Template
+        Step 2: Policy-as-Code via CEL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-real-time-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Real-Time Enforcement
       
     </span>
   </a>
@@ -2110,60 +2156,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-templates" class="md-nav__link">
+  <a href="#supply-chain-security-why-vendored-pricing-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Templates
+        Supply Chain Security: Why Vendored Pricing Matters
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Custom Templates">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#create-from-yaml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Create from YAML
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#load-and-apply" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Load and Apply
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#export-current-config" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Export Current Config
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#template-sections" class="md-nav__link">
+  <a href="#the-ha-ratio-measuring-governance-maturity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template Sections
+        The H:A Ratio: Measuring Governance Maturity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps-from-visibility-to-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps: From Visibility to Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discussion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discussion
       
     </span>
   </a>
@@ -2179,206 +2208,237 @@
             
           
           
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-  
-  
-
-
-<h1 id="governance-templates">Governance Templates</h1>
-<p>Pre-configured cost governance profiles that set up policies, budgets, tier restrictions, reactions, and notifications in one step. Inspired by Paperclip's Clipmart pattern.</p>
-<h2 id="built-in-templates">Built-in Templates</h2>
-<table>
-<thead>
-<tr>
-<th>Template</th>
-<th>Description</th>
-<th>Tier</th>
-<th>Budgets</th>
-<th>Policies</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>startup</strong></td>
-<td>Cost-conscious, economy-focused</td>
-<td>Economy + Standard</td>
-<td>$500/month</td>
-<td>Block premium in dev</td>
-</tr>
-<tr>
-<td><strong>enterprise</strong></td>
-<td>Full governance, 5 cost centers</td>
-<td>All tiers, premium needs approval</td>
-<td>$5K prod, $1K staging</td>
-<td>Premium requires approval</td>
-</tr>
-<tr>
-<td><strong>soc2-compliance</strong></td>
-<td>Audit trail, no free-tier</td>
-<td>No free tier</td>
-<td>—</td>
-<td>Block free, log premium</td>
-</tr>
-<tr>
-<td><strong>agency</strong></td>
-<td>Multi-client, per-client budgets</td>
-<td>Economy + Standard</td>
-<td>Per-client</td>
-<td>Chargeback reports</td>
-</tr>
-<tr>
-<td><strong>research-lab</strong></td>
-<td>No restrictions, analytics focus</td>
-<td>All tiers including free</td>
-<td>$10K experiments</td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<h2 id="using-templates">Using Templates</h2>
-<h3 id="preview-before-applying">Preview Before Applying</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.templates</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_template_registry</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">reg</span> <span class="o">=</span> <span class="n">get_template_registry</span><span class="p">()</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># List available templates</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">list_templates</span><span class="p">():</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Preview what would change</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">preview</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">preview</span><span class="p">(</span><span class="s2">&quot;startup&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">preview</span><span class="p">[</span><span class="s2">&quot;tier_restrictions&quot;</span><span class="p">])</span>  <span class="c1"># {&#39;allowed_tiers&#39;: [&#39;economy&#39;, &#39;standard&#39;]}</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">preview</span><span class="p">[</span><span class="s2">&quot;budgets&quot;</span><span class="p">])</span>            <span class="c1"># [{&#39;project&#39;: &#39;default&#39;, &#39;monthly_limit&#39;: 500}]</span>
-</code></pre></div>
-<h3 id="apply-a-template">Apply a Template</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">&quot;enterprise&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># {&#39;template&#39;: &#39;enterprise&#39;, &#39;sections&#39;: [</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">#   {&#39;section&#39;: &#39;tier_restrictions&#39;, &#39;items&#39;: 1},</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">#   {&#39;section&#39;: &#39;budgets&#39;, &#39;items&#39;: 3},</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#   {&#39;section&#39;: &#39;policies&#39;, &#39;items&#39;: 2},</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">#   {&#39;section&#39;: &#39;cost_centers&#39;, &#39;items&#39;: 5},</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">#   ...</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># ]}</span>
-</code></pre></div>
-<h2 id="custom-templates">Custom Templates</h2>
-<h3 id="create-from-yaml">Create from YAML</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># my-team.yaml</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-team</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Custom setup for our ML team</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">ml</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">research</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nt">tier_restrictions</span><span class="p">:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">allowed_tiers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">economy</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">standard</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">premium</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">require_approval_for</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">premium</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nt">budgets</span><span class="p">:</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">training</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">monthly_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000.0</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="nt">alert_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.80</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inference</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="nt">monthly_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000.0</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="nt">policies</span><span class="p">:</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Log all premium usage</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nt">conditions</span><span class="p">:</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">field</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tier</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="nt">op</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eq</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">premium</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">log_only</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="nt">priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="nt">reactions</span><span class="p">:</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="nt">budget-warning</span><span class="p">:</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">    </span><span class="nt">auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">    </span><span class="nt">actions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">notify</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">log</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2h</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="nt">goals</span><span class="p">:</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reduce-cost-30pct</span>
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reduce inference cost by 30%</span>
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">    </span><span class="nt">budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000</span>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="nt">settings</span><span class="p">:</span>
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="w">  </span><span class="nt">complexity_routing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">  </span><span class="nt">token_analyzer_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
-<h3 id="load-and-apply">Load and Apply</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">reg</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="s2">&quot;my-team.yaml&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">reg</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">&quot;my-team&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="export-current-config">Export Current Config</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">yaml_str</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">export_current</span><span class="p">(</span><span class="s2">&quot;my-backup&quot;</span><span class="p">,</span> <span class="s2">&quot;Snapshot of current config&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;backup.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml_str</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="template-sections">Template Sections</h2>
-<p>Each template can configure:</p>
-<table>
-<thead>
-<tr>
-<th>Section</th>
-<th>What it sets up</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>tier_restrictions</code></td>
-<td>Allowed tiers, approval requirements</td>
-</tr>
-<tr>
-<td><code>budgets</code></td>
-<td>Per-project monthly/daily limits</td>
-</tr>
-<tr>
-<td><code>policies</code></td>
-<td>Policy engine rules (deny, approve, log)</td>
-</tr>
-<tr>
-<td><code>reactions</code></td>
-<td>Event-driven automation (YAML reactions)</td>
-</tr>
-<tr>
-<td><code>cost_centers</code></td>
-<td>Cost center definitions with ERP codes</td>
-</tr>
-<tr>
-<td><code>notifications</code></td>
-<td>Slack, PagerDuty, webhook channels</td>
-</tr>
-<tr>
-<td><code>goals</code></td>
-<td>Business objectives with budgets</td>
-</tr>
-<tr>
-<td><code>settings</code></td>
-<td>Feature flags (complexity routing, audit, etc.)</td>
-</tr>
-</tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../" class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
             </div>
+            
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://github.com/agentcostin.png" alt="AgentCost Team">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          AgentCost Team
+                        
+                      </strong>
+                      <br>
+                      AgentCost Engineering
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2026-04-06 00:00:00+00:00" class="md-ellipsis">April 6, 2026</time>
+                      </div>
+                    </li>
+                    
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              5 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
           
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+
+  
+  
+
+
+<h1 id="why-ai-agents-need-budget-bounds-not-dashboards">Why AI Agents Need Budget Bounds, Not Dashboards</h1>
+<p>Your observability dashboard displays that AI agents spent $47,000 last month. The metrics are crisp, attribution is precise, and graphs are beautiful. You cannot prevent any of it from happening again.</p>
+<p><strong>This is the central paradox in AI cost management today.</strong> Engineering teams have conflated monitoring with governance. Visibility and control are not the same. Observability platforms show what happened after your budget burns. Budget bounds prevent spending before it occurs.</p>
+<p>Agentic AI amplifies this problem. <strong>AI agents need budget bounds, not just dashboards.</strong> A single user request can trigger 47+ API calls through agent loops and tool use. Your dashboard reveals this linearly: 47 separate calls, perfect attribution, zero prevention. This distinction separates reactive cost monitoring from proactive cost governance.</p>
+<p><strong>This post explores three things:</strong> Why structural drift breaks cost prediction. How budget enforcement differs fundamentally from observability. How to implement governance through per-agent limits and policy-as-code.</p>
+<h2 id="the-structural-drift-problem-one-request-many-calls">The Structural Drift Problem: One Request, Many Calls</h2>
+<p>Traditional cost models assume linearity. One API request equals one task. Agentic AI breaks this assumption completely.</p>
+<p>A customer support agent built with CrewAI receives one question: "Why was my order delayed?" This triggers:</p>
+<ul>
+<li>3 calls to retrieve order history</li>
+<li>5 calls to analyze shipping data</li>
+<li>12 calls to generate response drafts</li>
+<li>8 calls to fact-check information</li>
+<li>4 calls to format the final response</li>
+</ul>
+<p>That's 32 API calls for one user question. Your dashboard shows 32 separate line items. It provides zero insight into preventing the 33rd call that might push you over budget.</p>
+<p>This is structural drift: execution breaks the assumption that tasks map to calls. Agentic loops, tool use chains, and multi-turn reasoning multiply the cost per request unpredictably.</p>
+<p><strong>Why prediction fails under structural drift:</strong> You cannot forecast whether an agent will need 1 call or 47 calls to solve a problem. The only reliable approach is setting bounds and enforcing them in real-time, not predicting costs upfront.</p>
+<p>Dashboards excel at post-hoc analysis. They cannot prevent drift.</p>
+<h2 id="observability-vs-governance-a-fundamental-distinction">Observability vs Governance: A Fundamental Distinction</h2>
+<p>The AI tooling market has convinced teams that visibility equals control. This is fundamentally incorrect.</p>
+<p><strong>What observability tools do:</strong> Track what happened. Show beautiful cost breakdowns. Enable post-incident analysis. Alert after thresholds are exceeded.</p>
+<p><strong>What governance tools do:</strong> Prevent what's allowed to happen. Set hard budget limits. Block API calls when bounds are breached. Enforce policy before incidents occur.</p>
+<p>Langfuse, Helicone, and similar platforms added cost tracking as an observability feature. They show what your agents spent, but cannot prevent the spending. This is equivalent to installing a speedometer in a car and calling it cruise control.</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Observability</th>
+<th>Governance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cost Attribution</strong></td>
+<td>Total spend tracking</td>
+<td>Per-agent budget enforcement</td>
+</tr>
+<tr>
+<td><strong>Prevention</strong></td>
+<td>Alerts (reactive)</td>
+<td>Hard limits (proactive)</td>
+</tr>
+<tr>
+<td><strong>Policy Enforcement</strong></td>
+<td>Static thresholds</td>
+<td>Dynamic CEL rules</td>
+</tr>
+<tr>
+<td><strong>Runaway Protection</strong></td>
+<td>Post-mortem analysis</td>
+<td>Real-time API blocking</td>
+</tr>
+<tr>
+<td><strong>Design Priority</strong></td>
+<td>Understanding costs</td>
+<td>Controlling costs</td>
+</tr>
+</tbody>
+</table>
+<p><strong>AgentCost applies financial risk management to AI costs:</strong> Bound, don't predict. Set hard limits. Enforce them through policy-as-code. Measure drift against bounds. This is governance, not observability.</p>
+<p>The paradigm shift is critical: You cannot forecast agentic behavior reliably. You can enforce budget limits reliably.</p>
+<h2 id="the-runaway-agent-problem-when-dashboards-arrive-too-late">The Runaway Agent Problem: When Dashboards Arrive Too Late</h2>
+<p>At 3 AM on Sunday, an AI agent enters an infinite loop. It burns $400 per hour for 6 hours before anyone notices. Your monthly bill contains a $2,400 surprise.</p>
+<p>This scenario is occurring across the industry as teams deploy multi-agent systems without proper cost controls. Common failure modes include:</p>
+<p><strong>Tool misuse:</strong> Agent calls expensive APIs in uncontrolled loops, accumulating costs with each iteration.</p>
+<p><strong>Hallucinated endpoints:</strong> Agent invents API calls that don't exist but still incur charges before failing.</p>
+<p><strong>Context explosion:</strong> Agent includes entire conversation history in every prompt, quadrupling token counts.</p>
+<p><strong>Chain reactions:</strong> One agent's output triggers cascading cost in dependent agents, creating multiplicative effects.</p>
+<p>Observability tools excel at explaining what happened. They'll show exactly when runaway started, which prompts triggered it, and total cost. They cannot prevent it from happening next time.</p>
+<p><strong>Budget enforcement with hard limits would have blocked the 15th API call.</strong> The agent would fail fast instead of failing expensive. Governance prevents incidents. Dashboards document them.</p>
+<h2 id="how-to-implement-ai-agent-budget-enforcement">How to Implement AI Agent Budget Enforcement</h2>
+<p>Real governance requires three components: per-agent attribution, policy-as-code enforcement, and hard blocking.</p>
+<h3 id="step-1-per-agent-cost-attribution">Step 1: Per-Agent Cost Attribution</h3>
+<p>Every agent gets its own cost bucket. This is essential for multi-agent systems where you need to understand which agent is expensive, not just total system cost.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">trace</span><span class="p">,</span> <span class="n">budget</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nd">@trace</span><span class="p">(</span><span class="n">agent_id</span><span class="o">=</span><span class="s2">&quot;customer_support&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nd">@budget</span><span class="p">(</span><span class="n">daily_limit</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">currency</span><span class="o">=</span><span class="s2">&quot;USD&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">handle_customer_query</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="c1"># Agent logic here</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="c1"># Cost automatically attributed to customer_support agent</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="c1"># Budget automatically enforced</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">llm_call</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">return</span> <span class="n">response</span>
+</code></pre></div>
+<p>One line of code wraps your LLM client. From that point forward, every API call is tracked, attributed to the agent, and checked against budget limits.</p>
+<h3 id="step-2-policy-as-code-via-cel">Step 2: Policy-as-Code via CEL</h3>
+<p>Use Google Common Expression Language (CEL) to define dynamic budget rules that adapt to context:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Soft limit: warn at 80% of budget</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Hard limit: block at 100% of budget</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">policy</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s2">request.agent_id == &#39;customer_support&#39; &amp;&amp;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">daily_spend &gt; 80.0 ? &#39;WARN&#39; :</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">daily_spend &gt; 100.0 ? &#39;BLOCK&#39; : &#39;ALLOW&#39;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<p>Policies can reference agent ID, time of day, request type, or any tracked metadata. Rules adapt dynamically without code changes.</p>
+<h3 id="step-3-real-time-enforcement">Step 3: Real-Time Enforcement</h3>
+<p>Budget enforcement happens at the API gateway level. Calls are blocked before they reach the LLM provider. This prevents runaway costs in real-time.</p>
+<p>The result is predictable AI spend with hard upper bounds, regardless of agent behavior in production.</p>
+<h2 id="supply-chain-security-why-vendored-pricing-matters">Supply Chain Security: Why Vendored Pricing Matters</h2>
+<p>The LiteLLM supply chain attack (CVE-2026-33634) exposed a critical vulnerability in AI infrastructure: external dependencies for pricing data.</p>
+<p>Most cost tracking tools rely on external APIs to fetch current model pricing. When dependencies are compromised, your entire cost attribution system becomes vulnerable.</p>
+<p><strong>AgentCost maintains a vendored pricing database for 2,610+ models from 40+ providers.</strong> Zero external dependencies. All pricing data is embedded locally.</p>
+<p>This architectural choice proved prescient during the LiteLLM incident. While other platforms scrambled to patch compromised external dependencies, AgentCost continued operating normally because all pricing data is embedded. Independence from external APIs is a governance requirement, not a convenience.</p>
+<h2 id="the-ha-ratio-measuring-governance-maturity">The H:A Ratio: Measuring Governance Maturity</h2>
+<p>The real question isn't whether you have cost visibility. It's whether you have cost control.</p>
+<p>Consider your H:A ratio: how many humans are managing how many AI agents in production? A 20:1 ratio with proper budget governance looks very different from 20:1 with runaway loops.</p>
+<p><strong>Teams building production AI systems need to shift from reactive monitoring to proactive governance.</strong> This means:</p>
+<ul>
+<li>Setting hard budget limits per agent, not just dashboard alerts</li>
+<li>Implementing real-time enforcement, not post-incident analysis</li>
+<li>Using policy-as-code for dynamic rules, not static thresholds</li>
+<li>Maintaining vendor independence through vendored dependencies</li>
+</ul>
+<p>The future of AI cost management isn't better dashboards. It's better bounds.</p>
+<h2 id="next-steps-from-visibility-to-control">Next Steps: From Visibility to Control</h2>
+<p>Ready to move from cost monitoring to cost governance?</p>
+<p><strong><a href="https://demo.agentcost.in">Try the interactive demo</a></strong> to see per-agent cost attribution and budget enforcement in action.</p>
+<p><strong><a href="https://github.com/agentcostin/agentcost">Explore the open source repository</a></strong> to integrate budget governance into your AI agents. For teams building multi-agent systems with CrewAI, AutoGen, or LangChain, <a href="https://agentcost.in/docs/cost-tracking">per-agent cost attribution</a> is table stakes for production deployment.</p>
+<p><strong><a href="https://agentcost.in/docs/budget-enforcement">Read the CEL policy engine documentation</a></strong> to define dynamic budget rules that adapt to your team's governance requirements.</p>
+<h2 id="discussion">Discussion</h2>
+<p>What's the biggest AI cost surprise your team has experienced? Was it from runaway agents, unpredictable token usage, or something else? How are you currently preventing runaway costs in production?</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
           
   <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
 

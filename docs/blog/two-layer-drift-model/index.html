@@ -6,17 +6,15 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Observability dashboards show what happened. Budget bounds prevent it. Why cost governance, not monitoring, is the missing piece in agentic AI systems.">
+        <meta name="description" content="Structural and metrological drift make AI cost tracking blind. Learn why observability tools can't enforce budgets and how cost governance prevents runaway agent loops.">
       
       
       
-        <link rel="canonical" href="https://agentcost.in/docs/blog/ai-agent-budget-bounds-not-dashboards/">
+        <link rel="canonical" href="https://agentcost.in/docs/blog/two-layer-drift-model/">
       
       
-        <link rel="prev" href="../the-litellm-supply-chain-attack-proves-ai-cost-tools-need-fewer-dependencies-not-more/">
+        <link rel="prev" href="../ai-agent-budget-bounds-not-dashboards/">
       
-      
-        <link rel="next" href="../two-layer-drift-model/">
       
       
         
@@ -27,7 +25,7 @@
     
     
       
-        <title>Why AI Agents Need Budget Bounds, Not Dashboards - AgentCost</title>
+        <title>The Two-Layer Drift Model: Why Your AI Cost Tracking Is Blind - AgentCost</title>
       
     
     
@@ -80,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#why-ai-agents-need-budget-bounds-not-dashboards" class="md-skip">
+        <a href="#the-two-layer-drift-model-why-your-ai-cost-tracking-is-blind" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Why AI Agents Need Budget Bounds, Not Dashboards
+              The Two-Layer Drift Model: Why Your AI Cost Tracking Is Blind
             
           </span>
         </div>
@@ -759,37 +757,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Why AI Agents Need Budget Bounds, Not Dashboards
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../ai-agent-budget-bounds-not-dashboards/" class="md-nav__link">
         
   
   
@@ -805,153 +776,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-structural-drift-problem-one-request-many-calls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Structural Drift Problem: One Request, Many Calls
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#observability-vs-governance-a-fundamental-distinction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Observability vs Governance: A Fundamental Distinction
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-runaway-agent-problem-when-dashboards-arrive-too-late" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Runaway Agent Problem: When Dashboards Arrive Too Late
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-implement-ai-agent-budget-enforcement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How to Implement AI Agent Budget Enforcement
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="How to Implement AI Agent Budget Enforcement">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-per-agent-cost-attribution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 1: Per-Agent Cost Attribution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-policy-as-code-via-cel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: Policy-as-Code via CEL
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-real-time-enforcement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Real-Time Enforcement
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supply-chain-security-why-vendored-pricing-matters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supply Chain Security: Why Vendored Pricing Matters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-ha-ratio-measuring-governance-maturity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The H:A Ratio: Measuring Governance Maturity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps-from-visibility-to-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps: From Visibility to Control
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#discussion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Discussion
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2075,10 +1899,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-structural-drift-problem-one-request-many-calls" class="md-nav__link">
+  <a href="#what-is-structural-drift-in-agentic-ai-systems" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Structural Drift Problem: One Request, Many Calls
+        What Is Structural Drift in Agentic AI Systems?
       
     </span>
   </a>
@@ -2086,10 +1910,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#observability-vs-governance-a-fundamental-distinction" class="md-nav__link">
+  <a href="#how-metrological-drift-hides-in-your-cost-attribution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Observability vs Governance: A Fundamental Distinction
+        How Metrological Drift Hides in Your Cost Attribution
       
     </span>
   </a>
@@ -2097,55 +1921,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-runaway-agent-problem-when-dashboards-arrive-too-late" class="md-nav__link">
+  <a href="#why-observability-tools-cannot-enforce-governance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Runaway Agent Problem: When Dashboards Arrive Too Late
+        Why Observability Tools Cannot Enforce Governance
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-implement-ai-agent-budget-enforcement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How to Implement AI Agent Budget Enforcement
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="How to Implement AI Agent Budget Enforcement">
+    <nav class="md-nav" aria-label="Why Observability Tools Cannot Enforce Governance">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-per-agent-cost-attribution" class="md-nav__link">
+  <a href="#the-observability-governance-gap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Per-Agent Cost Attribution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-policy-as-code-via-cel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: Policy-as-Code via CEL
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-real-time-enforcement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Real-Time Enforcement
+        The Observability-Governance Gap
       
     </span>
   </a>
@@ -2158,10 +1949,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supply-chain-security-why-vendored-pricing-matters" class="md-nav__link">
+  <a href="#from-prediction-to-bounds-the-control-framework" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supply Chain Security: Why Vendored Pricing Matters
+        From Prediction to Bounds: The Control Framework
       
     </span>
   </a>
@@ -2169,10 +1960,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-ha-ratio-measuring-governance-maturity" class="md-nav__link">
+  <a href="#real-time-anomaly-detection-for-runaway-agents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The H:A Ratio: Measuring Governance Maturity
+        Real-Time Anomaly Detection for Runaway Agents
       
     </span>
   </a>
@@ -2180,10 +1971,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps-from-visibility-to-control" class="md-nav__link">
+  <a href="#per-agent-cost-attribution-at-scale" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps: From Visibility to Control
+        Per-Agent Cost Attribution at Scale
       
     </span>
   </a>
@@ -2191,10 +1982,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#discussion" class="md-nav__link">
+  <a href="#implementation-one-line-sdk-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Discussion
+        Implementation: One-Line SDK Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-means-for-your-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Means for Your Team
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
       
     </span>
   </a>
@@ -2257,7 +2070,7 @@
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2026-04-06 00:00:00+00:00" class="md-ellipsis">April 6, 2026</time>
+                        <time datetime="2026-04-07 00:00:00+00:00" class="md-ellipsis">April 7, 2026</time>
                       </div>
                     </li>
                     
@@ -2269,7 +2082,7 @@
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              5 min read
+                              6 min read
                             
                           </span>
                         </div>
@@ -2296,130 +2109,145 @@
   
 
 
-<h1 id="why-ai-agents-need-budget-bounds-not-dashboards">Why AI Agents Need Budget Bounds, Not Dashboards</h1>
-<p>Your observability dashboard displays that AI agents spent $47,000 last month. The metrics are crisp, attribution is precise, and graphs are beautiful. You cannot prevent any of it from happening again.</p>
-<p><strong>This is the central paradox in AI cost management today.</strong> Engineering teams have conflated monitoring with governance. Visibility and control are not the same. Observability platforms show what happened after your budget burns. Budget bounds prevent spending before it occurs.</p>
-<p>Agentic AI amplifies this problem. <strong>AI agents need budget bounds, not just dashboards.</strong> A single user request can trigger 47+ API calls through agent loops and tool use. Your dashboard reveals this linearly: 47 separate calls, perfect attribution, zero prevention. This distinction separates reactive cost monitoring from proactive cost governance.</p>
-<p><strong>This post explores three things:</strong> Why structural drift breaks cost prediction. How budget enforcement differs fundamentally from observability. How to implement governance through per-agent limits and policy-as-code.</p>
-<h2 id="the-structural-drift-problem-one-request-many-calls">The Structural Drift Problem: One Request, Many Calls</h2>
-<p>Traditional cost models assume linearity. One API request equals one task. Agentic AI breaks this assumption completely.</p>
-<p>A customer support agent built with CrewAI receives one question: "Why was my order delayed?" This triggers:</p>
+<h1 id="the-two-layer-drift-model-why-your-ai-cost-tracking-is-blind">The Two-Layer Drift Model: Why Your AI Cost Tracking Is Blind</h1>
+<p>Your AI cost tracking is fundamentally blind to two critical problems. First, structural drift: one user request generates 15-47 API calls through agent retries, fallbacks, and chained operations. Your cost dashboard shows the spike, but you expected one call, not forty-seven. Second, metrological drift: two identical 1,000-token prompts can have wildly different business value (customer support versus code generation). Token counters are semantically blind. Most engineering teams experience 3-5x budget overruns despite comprehensive dashboards because they're using observability tools to solve governance problems. Observability answers "What did we spend?" Governance answers "How much are we allowed to spend?" These require different solutions. Understanding this two-layer drift model explains why budget surprises happen and how to prevent them through real-time cost enforcement.</p>
+<h2 id="what-is-structural-drift-in-agentic-ai-systems">What Is Structural Drift in Agentic AI Systems?</h2>
+<p>Structural drift breaks the foundational assumption of traditional API cost modeling: one user request equals one API call. In production agentic systems, this assumption collapses.</p>
+<p>Picture a typical customer support agent handling a single support ticket:</p>
 <ul>
-<li>3 calls to retrieve order history</li>
-<li>5 calls to analyze shipping data</li>
-<li>12 calls to generate response drafts</li>
-<li>8 calls to fact-check information</li>
-<li>4 calls to format the final response</li>
+<li>Initial reasoning call (1 API request)</li>
+<li>Knowledge base query with retry logic (2 additional calls)</li>
+<li>Search refinement with expanded terms (3 more calls)</li>
+<li>Response generation (1 final call)</li>
+<li>Fallback to alternative model on timeout (2 additional calls)</li>
 </ul>
-<p>That's 32 API calls for one user question. Your dashboard shows 32 separate line items. It provides zero insight into preventing the 33rd call that might push you over budget.</p>
-<p>This is structural drift: execution breaks the assumption that tasks map to calls. Agentic loops, tool use chains, and multi-turn reasoning multiply the cost per request unpredictably.</p>
-<p><strong>Why prediction fails under structural drift:</strong> You cannot forecast whether an agent will need 1 call or 47 calls to solve a problem. The only reliable approach is setting bounds and enforcing them in real-time, not predicting costs upfront.</p>
-<p>Dashboards excel at post-hoc analysis. They cannot prevent drift.</p>
-<h2 id="observability-vs-governance-a-fundamental-distinction">Observability vs Governance: A Fundamental Distinction</h2>
-<p>The AI tooling market has convinced teams that visibility equals control. This is fundamentally incorrect.</p>
-<p><strong>What observability tools do:</strong> Track what happened. Show beautiful cost breakdowns. Enable post-incident analysis. Alert after thresholds are exceeded.</p>
-<p><strong>What governance tools do:</strong> Prevent what's allowed to happen. Set hard budget limits. Block API calls when bounds are breached. Enforce policy before incidents occur.</p>
-<p>Langfuse, Helicone, and similar platforms added cost tracking as an observability feature. They show what your agents spent, but cannot prevent the spending. This is equivalent to installing a speedometer in a car and calling it cruise control.</p>
-<table>
-<thead>
-<tr>
-<th>Capability</th>
-<th>Observability</th>
-<th>Governance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Cost Attribution</strong></td>
-<td>Total spend tracking</td>
-<td>Per-agent budget enforcement</td>
-</tr>
-<tr>
-<td><strong>Prevention</strong></td>
-<td>Alerts (reactive)</td>
-<td>Hard limits (proactive)</td>
-</tr>
-<tr>
-<td><strong>Policy Enforcement</strong></td>
-<td>Static thresholds</td>
-<td>Dynamic CEL rules</td>
-</tr>
-<tr>
-<td><strong>Runaway Protection</strong></td>
-<td>Post-mortem analysis</td>
-<td>Real-time API blocking</td>
-</tr>
-<tr>
-<td><strong>Design Priority</strong></td>
-<td>Understanding costs</td>
-<td>Controlling costs</td>
-</tr>
-</tbody>
-</table>
-<p><strong>AgentCost applies financial risk management to AI costs:</strong> Bound, don't predict. Set hard limits. Enforce them through policy-as-code. Measure drift against bounds. This is governance, not observability.</p>
-<p>The paradigm shift is critical: You cannot forecast agentic behavior reliably. You can enforce budget limits reliably.</p>
-<h2 id="the-runaway-agent-problem-when-dashboards-arrive-too-late">The Runaway Agent Problem: When Dashboards Arrive Too Late</h2>
-<p>At 3 AM on Sunday, an AI agent enters an infinite loop. It burns $400 per hour for 6 hours before anyone notices. Your monthly bill contains a $2,400 surprise.</p>
-<p>This scenario is occurring across the industry as teams deploy multi-agent systems without proper cost controls. Common failure modes include:</p>
-<p><strong>Tool misuse:</strong> Agent calls expensive APIs in uncontrolled loops, accumulating costs with each iteration.</p>
-<p><strong>Hallucinated endpoints:</strong> Agent invents API calls that don't exist but still incur charges before failing.</p>
-<p><strong>Context explosion:</strong> Agent includes entire conversation history in every prompt, quadrupling token counts.</p>
-<p><strong>Chain reactions:</strong> One agent's output triggers cascading cost in dependent agents, creating multiplicative effects.</p>
-<p>Observability tools excel at explaining what happened. They'll show exactly when runaway started, which prompts triggered it, and total cost. They cannot prevent it from happening next time.</p>
-<p><strong>Budget enforcement with hard limits would have blocked the 15th API call.</strong> The agent would fail fast instead of failing expensive. Governance prevents incidents. Dashboards document them.</p>
-<h2 id="how-to-implement-ai-agent-budget-enforcement">How to Implement AI Agent Budget Enforcement</h2>
-<p>Real governance requires three components: per-agent attribution, policy-as-code enforcement, and hard blocking.</p>
-<h3 id="step-1-per-agent-cost-attribution">Step 1: Per-Agent Cost Attribution</h3>
-<p>Every agent gets its own cost bucket. This is essential for multi-agent systems where you need to understand which agent is expensive, not just total system cost.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">trace</span><span class="p">,</span> <span class="n">budget</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nd">@trace</span><span class="p">(</span><span class="n">agent_id</span><span class="o">=</span><span class="s2">&quot;customer_support&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nd">@budget</span><span class="p">(</span><span class="n">daily_limit</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">currency</span><span class="o">=</span><span class="s2">&quot;USD&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">handle_customer_query</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="c1"># Agent logic here</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="c1"># Cost automatically attributed to customer_support agent</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="c1"># Budget automatically enforced</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">llm_call</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">return</span> <span class="n">response</span>
+<p>Total: 9 API calls for one user request. Your budget projected 1.</p>
+<p>This multiplier cascades across multi-agent systems. A customer onboarding workflow involving document processing, data validation, notifications, and audit logging can trigger 11-26 API calls per customer. Your budget was calculated assuming 1 call per onboarding event.</p>
+<p>The real-world impact: Teams report that typical agentic tasks with retry logic and fallback queries generate 15-47 API calls per user request (versus 1 call in traditional request-response patterns). ReAct-style agents average 3-4 API calls per reasoning step. Multi-agent tool use averages 6.2 tool invocations per task.</p>
+<p>This is structural drift: your cost model assumes one thing, your agents do another.</p>
+<h2 id="how-metrological-drift-hides-in-your-cost-attribution">How Metrological Drift Hides in Your Cost Attribution</h2>
+<p>Structural drift is visible if you examine your logs carefully. Metrological drift is invisible because it operates at the semantic level, not the syntactic level.</p>
+<p>Two prompts with identical token counts can have orders of magnitude different business value:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Prompt A (Customer support): &quot;Summarize support ticket...&quot; [1000 tokens]
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Cost: $0.002 | Business value: $0.10 (faster support response)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Prompt B (Code generation): &quot;Generate API endpoint...&quot; [1000 tokens]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Cost: $0.002 | Business value: $500 (3 hours engineering time saved)
 </code></pre></div>
-<p>One line of code wraps your LLM client. From that point forward, every API call is tracked, attributed to the agent, and checked against budget limits.</p>
-<h3 id="step-2-policy-as-code-via-cel">Step 2: Policy-as-Code via CEL</h3>
-<p>Use Google Common Expression Language (CEL) to define dynamic budget rules that adapt to context:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Soft limit: warn at 80% of budget</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Hard limit: block at 100% of budget</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">policy</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s2">request.agent_id == &#39;customer_support&#39; &amp;&amp;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">daily_spend &gt; 80.0 ? &#39;WARN&#39; :</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">daily_spend &gt; 100.0 ? &#39;BLOCK&#39; : &#39;ALLOW&#39;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">&quot;&quot;&quot;</span>
-</code></pre></div>
-<p>Policies can reference agent ID, time of day, request type, or any tracked metadata. Rules adapt dynamically without code changes.</p>
-<h3 id="step-3-real-time-enforcement">Step 3: Real-Time Enforcement</h3>
-<p>Budget enforcement happens at the API gateway level. Calls are blocked before they reach the LLM provider. This prevents runaway costs in real-time.</p>
-<p>The result is predictable AI spend with hard upper bounds, regardless of agent behavior in production.</p>
-<h2 id="supply-chain-security-why-vendored-pricing-matters">Supply Chain Security: Why Vendored Pricing Matters</h2>
-<p>The LiteLLM supply chain attack (CVE-2026-33634) exposed a critical vulnerability in AI infrastructure: external dependencies for pricing data.</p>
-<p>Most cost tracking tools rely on external APIs to fetch current model pricing. When dependencies are compromised, your entire cost attribution system becomes vulnerable.</p>
-<p><strong>AgentCost maintains a vendored pricing database for 2,610+ models from 40+ providers.</strong> Zero external dependencies. All pricing data is embedded locally.</p>
-<p>This architectural choice proved prescient during the LiteLLM incident. While other platforms scrambled to patch compromised external dependencies, AgentCost continued operating normally because all pricing data is embedded. Independence from external APIs is a governance requirement, not a convenience.</p>
-<h2 id="the-ha-ratio-measuring-governance-maturity">The H:A Ratio: Measuring Governance Maturity</h2>
-<p>The real question isn't whether you have cost visibility. It's whether you have cost control.</p>
-<p>Consider your H:A ratio: how many humans are managing how many AI agents in production? A 20:1 ratio with proper budget governance looks very different from 20:1 with runaway loops.</p>
-<p><strong>Teams building production AI systems need to shift from reactive monitoring to proactive governance.</strong> This means:</p>
+<p>Token counters are semantically blind. Your cost attribution system treats these identically. Your P&amp;L impact is 5,000x different.</p>
+<p>This creates blind spots when you're trying to:</p>
 <ul>
-<li>Setting hard budget limits per agent, not just dashboard alerts</li>
-<li>Implementing real-time enforcement, not post-incident analysis</li>
-<li>Using policy-as-code for dynamic rules, not static thresholds</li>
-<li>Maintaining vendor independence through vendored dependencies</li>
+<li>Allocate AI costs to business units</li>
+<li>Calculate ROI per use case</li>
+<li>Budget for next quarter's agent deployment</li>
+<li>Justify AI spend to the CFO</li>
 </ul>
-<p>The future of AI cost management isn't better dashboards. It's better bounds.</p>
-<h2 id="next-steps-from-visibility-to-control">Next Steps: From Visibility to Control</h2>
-<p>Ready to move from cost monitoring to cost governance?</p>
-<p><strong><a href="https://demo.agentcost.in">Try the interactive demo</a></strong> to see per-agent cost attribution and budget enforcement in action.</p>
-<p><strong><a href="https://github.com/agentcostin/agentcost">Explore the open source repository</a></strong> to integrate budget governance into your AI agents. For teams building multi-agent systems with CrewAI, AutoGen, or LangChain, <a href="https://agentcost.in/docs/cost-tracking">per-agent cost attribution</a> is table stakes for production deployment.</p>
-<p><strong><a href="https://agentcost.in/docs/budget-enforcement">Read the CEL policy engine documentation</a></strong> to define dynamic budget rules that adapt to your team's governance requirements.</p>
-<h2 id="discussion">Discussion</h2>
-<p>What's the biggest AI cost surprise your team has experienced? Was it from runaway agents, unpredictable token usage, or something else? How are you currently preventing runaway costs in production?</p>
+<p>Traditional cost tracking tools aggregate by API key, model, or time period. None capture business value or agent intent.</p>
+<h2 id="why-observability-tools-cannot-enforce-governance">Why Observability Tools Cannot Enforce Governance</h2>
+<p>Current AI cost tracking platforms (Langfuse, Helicone, Portkey) are observability systems. They excel at showing you what happened. They cannot prevent what's about to happen.</p>
+<h3 id="the-observability-governance-gap">The Observability-Governance Gap</h3>
+<p><strong>Langfuse:</strong>
+Provides comprehensive tracing and cost breakdown. No budget enforcement. No anomaly detection. No policy engine. When an agent enters a runaway loop at 3 AM Saturday, Langfuse shows a perfect dashboard of exactly how it burned $2,400 over the weekend. It won't stop the agent from running.</p>
+<p><strong>Helicone:</strong>
+Offers semantic caching to reduce duplicate calls. Helps with cost optimization after expensive patterns are identified. No per-agent attribution. No real-time budget gates. When your Q4 plan assumes $50,000 in AI costs but you hit $180,000 by October, Helicone identifies which models were most expensive. It doesn't identify which agent or business process drove the overage.</p>
+<p><strong>Portkey:</strong>
+Provides an AI gateway with load balancing and fallbacks. This is infrastructure, not governance. Gateway-level budgets are blunt instruments applied per-API-key, not per-agent. In multi-tenant systems where dozens of agents share one API key, a budget overrun shuts down everything.</p>
+<p>Core Problem: Observability tells you what happened. Governance prevents it from happening. These are fundamentally different problems requiring fundamentally different solutions.</p>
+<h2 id="from-prediction-to-bounds-the-control-framework">From Prediction to Bounds: The Control Framework</h2>
+<p>Cost governance requires a different mental model than cost observability. Instead of predicting what you'll spend (impossible with agentic systems), you set bounds on what you're allowed to spend and enforce them in real-time.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Traditional observability approach (no enforcement)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nd">@trace</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">expensive_agent_task</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">return</span> <span class="n">llm</span><span class="o">.</span><span class="n">completion</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Governance approach (real-time bounds)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nd">@trace</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nd">@budget</span><span class="p">(</span><span class="n">max_cost</span><span class="o">=</span><span class="mf">5.00</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s2">&quot;1h&quot;</span><span class="p">)</span>  <span class="c1"># Hard limit per agent per hour</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">controlled_agent_task</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="k">return</span> <span class="n">llm</span><span class="o">.</span><span class="n">completion</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></pre></div>
+<p>When the controlled agent hits its hourly budget, AgentCost returns a budget exceeded error instead of making the API call. The agent can handle this gracefully (fallback to cached response, simpler model, human handoff). The runaway loop stops before it burns your budget.</p>
+<p>This approach addresses both drift layers:</p>
+<p>Structural drift protection: Budget limits enforce regardless of how many internal API calls an agent makes. One user request generating 47 calls hits the same budget limit as 47 separate requests.</p>
+<p>Metrological drift protection: Budget allocation reflects business value, not token counts. Code generation agents get $20/hour budgets. Summarization agents get $2/hour budgets.</p>
+<h2 id="real-time-anomaly-detection-for-runaway-agents">Real-Time Anomaly Detection for Runaway Agents</h2>
+<p>Governance isn't just hard budget limits. It's detecting abnormal patterns before they become expensive problems.</p>
+<p>AgentCost's anomaly detection uses heartbeat analysis to identify agents consuming budget faster than expected:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">anomaly_policy</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;customer_support_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="s2">&quot;baseline_cost_per_hour&quot;</span><span class="p">:</span> <span class="mf">2.50</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="s2">&quot;anomaly_threshold&quot;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>  <span class="c1"># 3x baseline triggers alert</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="s2">&quot;escalation_threshold&quot;</span><span class="p">:</span> <span class="mf">5.0</span>  <span class="c1"># 5x baseline triggers shutdown</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="p">},</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="s2">&quot;code_generation_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="s2">&quot;baseline_cost_per_hour&quot;</span><span class="p">:</span> <span class="mf">15.00</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="s2">&quot;anomaly_threshold&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="s2">&quot;escalation_threshold&quot;</span><span class="p">:</span> <span class="mf">3.0</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="p">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">}</span>
+</code></pre></div>
+<p>When the customer support agent burns $7.50/hour (3x baseline), you get an alert. At $12.50/hour (5x baseline), it gets automatically rate-limited pending human review.</p>
+<p>This catches runaway loops, infinite retry scenarios, and prompt injection attacks before they destroy your monthly budget.</p>
+<h2 id="per-agent-cost-attribution-at-scale">Per-Agent Cost Attribution at Scale</h2>
+<p>Meaningful AI cost governance requires granular attribution. You need to know not just what you spent, but which agent spent it, for which business process, serving which customer.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@trace</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">agent_id</span><span class="o">=</span><span class="s2">&quot;customer_onboarding_v2&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">business_unit</span><span class="o">=</span><span class="s2">&quot;growth&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">customer_tier</span><span class="o">=</span><span class="s2">&quot;enterprise&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">process_stage</span><span class="o">=</span><span class="s2">&quot;document_validation&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">process_customer_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">):</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">validation_results</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">analyze_document</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="n">validation_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="k">return</span> <span class="n">validation_results</span>
+</code></pre></div>
+<p>This attribution feeds into chargeback reporting, budget allocation planning, and ROI analysis per business unit. When your CFO asks "How much does customer onboarding cost?" you answer: "$23.50 per enterprise customer for document validation."</p>
+<h2 id="implementation-one-line-sdk-integration">Implementation: One-Line SDK Integration</h2>
+<p>AgentCost wraps your existing LLM client calls with zero refactoring:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Before: direct OpenAI calls</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openai</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">OpenAI</span><span class="p">()</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello&quot;</span><span class="p">}]</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># After: wrapped with AgentCost governance</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentcost.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap_openai</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openai</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">client</span> <span class="o">=</span> <span class="n">wrap_openai</span><span class="p">(</span><span class="n">openai</span><span class="o">.</span><span class="n">OpenAI</span><span class="p">())</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello&quot;</span><span class="p">}]</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="p">)</span>
+</code></pre></div>
+<p>The wrapper automatically adds:</p>
+<ul>
+<li>Per-call cost calculation using AgentCost's vendored pricing database (2,610+ models, zero external dependencies)</li>
+<li>Budget enforcement based on configured policies</li>
+<li>Semantic caching to prevent duplicate expensive calls</li>
+<li>Real-time anomaly detection for cost spikes</li>
+<li>Multi-dimensional attribution for chargeback and ROI analysis</li>
+</ul>
+<p>Works with OpenAI, Anthropic, Google, and 40+ other providers.</p>
+<h2 id="what-this-means-for-your-team">What This Means for Your Team</h2>
+<p>The two-layer drift model explains why your current approach isn't working. You're using observability tools to solve governance problems. You're measuring after the fact instead of controlling during execution.</p>
+<p>If your team experiences:</p>
+<ul>
+<li>Monthly AI bills 3-5x your projections</li>
+<li>No clear way to attribute costs to specific agents or business processes</li>
+<li>Runaway loops burning budget over weekends</li>
+<li>Executive pressure to justify AI spend with concrete ROI numbers</li>
+</ul>
+<p>You need cost governance, not cost observability. You need bounds, not predictions.</p>
+<h2 id="next-steps">Next Steps</h2>
+<p>Try the chaos simulator to see how different budget policies handle cost spikes: <a href="https://demo.agentcost.in">demo.agentcost.in</a></p>
+<p>Read the integration docs for your LLM framework (LangChain, CrewAI, AutoGen): <a href="https://docs.agentcost.in">docs.agentcost.in</a></p>
+<p>Star the open-source repo and join the community: <a href="https://github.com/agentcostin/agentcost">github.com/agentcostin/agentcost</a></p>
+<p>The next runaway agent is already in your production system. The question is whether you'll find out when it burns your budget, or prevent it from happening at all.</p>
 
 
 

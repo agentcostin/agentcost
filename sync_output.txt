@@ -10,11 +10,11 @@ WARNINGS:
   - Entry '512-x-512/max-steps/stability.stable-diffusion-xl-v0' missing cost fields
 
 Diff summary:
-  Models before: 2610
-  Models after:  2691
-  Added:         82
-  Removed:       1
-  Price changed: 2
-  Price changes: mistral/mistral-large-latest, mistral/mistral-small-latest
+  Models before: 2691
+  Models after:  2688
+  Added:         134
+  Removed:       137
+  Price changed: 1
+  Price changes: gemini/gemini-1.5-flash
 
-Synced 2691 models to model_prices.json
+Synced 2688 models to model_prices.json
